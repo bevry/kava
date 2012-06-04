@@ -1,0 +1,40 @@
+{
+	"name": "joe",
+	"version": "0.1.0",
+	"description": "Node.js asynchronous testing framework, runner and reporter",
+	"homepage": "https://github.com/bevry/joe",
+	"keywords": [
+		"test",
+		"testing",
+		"framework",
+		"runner"
+	],
+	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+	"maintainers": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"contributors": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"bugs": {
+		"url": "https://github.com/bevry/joe/issues"
+	},
+	"repository" : {
+		"type": "git",
+		"url": "http://github.com/bevry/joe.git"
+	},
+	"engines" : {
+		"node": ">=0.4.0"
+	},
+	"devDependencies": {
+		"bal-util": "1.7.x",
+		"coffee-script": "1.3.x"
+	},
+	"directories": {
+		"lib": "lib"
+	},
+	"scripts": {
+		"test": "node out/test/joe.test.js"
+	},
+	"main": "./lib/joe"
+}
