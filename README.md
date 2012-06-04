@@ -1,6 +1,9 @@
 # Joe
 Node.js asynchronous testing framework, runner and reporter
 
+## Using
+[You can discover how to use Joe by referring to the `Using Page` on the Wiki](https://github.com/bevry/joe/wiki/Using)
+
 ## History
 You can discover the history inside the [History.md](https://github.com/bevry/joe/blob/master/History.md#files) file
 

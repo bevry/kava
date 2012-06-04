@@ -36,7 +36,7 @@
         _base4.failHeading = 'Failure #%s:';
       }
       if ((_ref5 = (_base5 = this.config).summaryPass) == null) {
-        _base5.summaryPass = "" + this.passed + "/" + this.total + " tests ran successfully, everything passed";
+        _base5.summaryPass = "%s/%s tests ran successfully, everything passed";
       }
       if ((_ref6 = (_base6 = this.config).summaryFail) == null) {
         _base6.summaryFail = "%s/%s tests ran successfully, %s failed";

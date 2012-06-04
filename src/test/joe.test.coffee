@@ -1,7 +1,8 @@
 # Require
-joe = if require? then require(__dirname+'/../lib/joe') else @joe
-joe.reporters.push new (if require? then require(__dirname+'/../lib/reporters/console') else @joe.ConsoleReporter)
 assert = if require? then require('assert') else @assert
+joe = if require? then require(__dirname+'/../lib/joe') else @joe
+Reporter = if require? then require(__dirname+'/../lib/reporters/list') else @joe.ConsoleReporter
+joe.reporters.push(new Reporter())
 
 # Prepare
 wait = (delay,fn) -> setTimeout(fn,delay)

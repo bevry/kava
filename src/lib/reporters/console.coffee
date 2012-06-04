@@ -17,7 +17,7 @@ class ConsoleReporter
 		@config.pass ?= ' ✔  '
 		@config.sub ?= ' ➞  '
 		@config.failHeading ?= 'Failure #%s:'
-		@config.summaryPass ?= "#{@passed}/#{@total} tests ran successfully, everything passed"
+		@config.summaryPass ?= "%s/%s tests ran successfully, everything passed"
 		@config.summaryFail ?= "%s/%s tests ran successfully, %s failed"
 		if cliColor?
 			@config.fail = cliColor.red(@config.fail)
