@@ -4,6 +4,8 @@
 
   joe = typeof require !== "undefined" && require !== null ? require(__dirname + '/../lib/joe') : this.joe;
 
+  joe.reporters.push(new (typeof require !== "undefined" && require !== null ? require(__dirname + '/../lib/reporters/console') : this.joe.ConsoleReporter));
+
   assert = typeof require !== "undefined" && require !== null ? require('assert') : this.assert;
 
   wait = function(delay, fn) {

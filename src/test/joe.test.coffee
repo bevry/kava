@@ -1,5 +1,6 @@
 # Require
 joe = if require? then require(__dirname+'/../lib/joe') else @joe
+joe.reporters.push new (if require? then require(__dirname+'/../lib/reporters/console') else @joe.ConsoleReporter)
 assert = if require? then require('assert') else @assert
 
 # Prepare
