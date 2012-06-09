@@ -2,7 +2,11 @@
 (function() {
   var ConsoleReporter, cliColor;
 
-  cliColor = typeof require === "function" ? require('cli-color') : void 0;
+  try {
+    cliColor = typeof require === "function" ? require('cli-color') : void 0;
+  } catch (err) {
+    cliColor = null;
+  }
 
   ConsoleReporter = (function() {
 
@@ -128,7 +132,7 @@
     };
 
     ConsoleReporter.prototype.exit = function() {
-      var err, error, index, suite, testName, _i, _len, _ref, _ref1;
+      var error, index, suite, testName, _i, _len, _ref, _ref1;
       if (this.errors.length === 0) {
         console.log("\n" + this.config.summaryPass, this.passed, this.total);
       } else {

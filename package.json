@@ -1,6 +1,6 @@
 {
 	"name": "joe",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "Node.js asynchronous testing framework, runner and reporter",
 	"homepage": "https://github.com/bevry/joe",
 	"keywords": [

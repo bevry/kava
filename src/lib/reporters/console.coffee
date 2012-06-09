@@ -1,5 +1,8 @@
-# Require
-cliColor = require?('cli-color')
+# Optional
+try
+	cliColor = require?('cli-color')
+catch err
+	cliColor = null
 
 # Reporter
 class ConsoleReporter

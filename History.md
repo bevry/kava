@@ -1,7 +1,10 @@
 ## History
 
+- v0.3.4 June 9, 2012
+	- No handles optional dependencies correctly
+
 - v0.3.3 June 9, 2012
-	- added cli-color as an optional and bundled dependency
+	- Added cli-color as an optional and bundled dependency
 
 - v0.3.2 June 9, 2012
 	- [bal-util](https://github.com/balupton/bal-util) is now a bundled dependency
