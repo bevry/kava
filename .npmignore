@@ -3,6 +3,6 @@
 .travis*
 *.md
 Makefile
-src/
+src/test/
 out/test/
 test-web/
