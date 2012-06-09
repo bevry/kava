@@ -1,47 +1,15 @@
-# Require
-assert = require?('assert') or @assert
-joe = require?(__dirname+'/../lib/joe') or @joe
+# Requires
+{exec} = require('child_process')
+assert = require('assert')
 
 # Prepare
-wait = (delay,fn) -> setTimeout(fn,delay)
+everythingTestPath = __dirname+'/../example/everything.test.js'
+expected = "9/10 tests ran successfully, with 1 errors"
 
-# Wait a while, then create our tests
-wait 1*1000, ->
-
-	joe.suite 'parent', (suite,test) ->
-
-		suite 'async-suite', (suite,test,done) ->
-			wait 1*1000, -> test '1/2', ->
-				assert.ok(true)
-			wait 2*1000, -> test '2/2', ->
-				assert.ok(true)
-			wait 3*1000, ->
-				done()
-
-		suite 'async-tests', (suite,test) ->
-			test '1/2', (done) -> wait 1*1000, ->
-				assert.ok(true)
-				done()
-			test '2/2', (done) -> wait 2*1000, ->
-				assert.ok(true)
-				done()
-
-		suite 'sync', (suite,test) ->
-			test '1/2', ->
-				assert.ok(true)
-			test '2/2', ->
-				assert.ok(true)
-
-		suite 'async-sync', (suite,test) ->
-			test '1/2', (done) -> wait 1*1000, ->
-				assert.ok(true)
-				done()
-			test '2/2', ->
-				assert.ok(true)
-
-		suite 'deliberate-failure', (suite,test) ->
-			test '1/2', (done) -> wait 1*1000, ->
-				assert.ok(true)
-				done()
-			test '2/2', ->
-				assert.ok(false)
+# Test
+exec "node #{everythingTestPath}", (error, stdout, stderr) ->
+	result = stdout.indexOf(expected) isnt -1
+	console.log(stdout)
+	message = 'the correct number of tests passed, ran, and failed'
+	assert.ok(result, message)
+	console.log(message)

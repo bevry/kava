@@ -6,4 +6,8 @@ dev:
 compile:
 	./node_modules/.bin/coffee -o out/ -c src/
 
+example:
+	node out/example/example1.test.js
+	node out/example/everything.test.js
+
 .PHONY: dev compile

@@ -10,9 +10,19 @@
   Block = balUtil.Block;
 
   joe = {
+    globalSuite: null,
+    getGlobalSuite: function() {
+      var _ref;
+      return (_ref = joe.globalSuite) != null ? _ref : joe.globalSuite = new joe.Suite('joe');
+    },
     reporters: [],
     errord: false,
+    exited: false,
     exit: function(err) {
+      if (joe.exited) {
+        return;
+      }
+      joe.exited = true;
       if (err) {
         joe.errord = true;
         if (!(err instanceof Error)) {
@@ -27,8 +37,22 @@
       event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       if (joe.reporters.length === 0) {
         joe.setDefaultReporter(function() {
-          var Reporter;
-          Reporter = require(__dirname + '/../lib/reporters/console');
+          var Reporter, arg, argResult, defaultReporter, _i, _len, _ref;
+          defaultReporter = 'console';
+          if ((typeof process !== "undefined" && process !== null ? process.argv : void 0) != null) {
+            _ref = process.argv;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              arg = _ref[_i];
+              argResult = arg.replace(/^--joe-reporter=/, '');
+              if (argResult !== arg) {
+                defaultReporter = argResult;
+                break;
+              }
+            }
+            Reporter = require(__dirname + ("/../lib/reporters/" + defaultReporter));
+          } else {
+            Reporter = joe.ConsoleReporter;
+          }
           return new Reporter();
         });
       }
@@ -113,14 +137,17 @@
 
   })(Block);
 
-  joe.globalSuite = new joe.Suite('joe');
-
   if (typeof process !== "undefined" && process !== null) {
     process.on('SIGINT', function() {
       return joe.exit();
     });
     process.on('exit', function() {
-      return joe.report('exit');
+      if (!joe.exited) {
+        joe.report('exit');
+        if (joe.errord) {
+          return joe.exit(1);
+        }
+      }
     });
     process.on('uncaughtException', function(err) {
       return joe.exit(err);
@@ -128,11 +155,11 @@
   }
 
   joe.describe = joe.suite = function(name, fn) {
-    return joe.globalSuite.suite(name, fn);
+    return joe.getGlobalSuite().suite(name, fn);
   };
 
   joe.it = joe.test = function(name, fn) {
-    return joe.globalSuite.test(name, fn);
+    return joe.getGlobalSuite().test(name, fn);
   };
 
   if (typeof require !== "undefined" && require !== null) {

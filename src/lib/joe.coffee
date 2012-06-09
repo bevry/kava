@@ -4,9 +4,16 @@ balUtil = if require? then require('bal-util') else @balUtilFlow
 
 # Interface
 joe =
+	globalSuite: null
+	getGlobalSuite: ->
+		joe.globalSuite ?= new joe.Suite('joe')
 	reporters: []
 	errord: false
+	exited: false
 	exit: (err) ->
+		# Check
+		return  if joe.exited
+		joe.exited = true
 		# Report
 		if err
 			joe.errord = true
@@ -18,7 +25,16 @@ joe =
 	report: (event, args...) ->
 		if joe.reporters.length is 0
 			joe.setDefaultReporter ->
-				Reporter = require(__dirname+'/../lib/reporters/console')
+				defaultReporter = 'console'
+				if process?.argv?
+					for arg in process.argv
+						argResult = arg.replace(/^--joe-reporter=/,'')
+						if argResult isnt arg
+							defaultReporter = argResult
+							break
+					Reporter = require(__dirname+"/../lib/reporters/#{defaultReporter}")
+				else
+					Reporter = joe.ConsoleReporter
 				new Reporter()
 		for reporter in joe.reporters
 			reporter[event]?.apply(reporter,args)
@@ -68,23 +84,22 @@ joe.Suite = class extends Block
 	it: (name,fn) ->
 		@task(name,fn)
 
-# Joe Suite
-joe.globalSuite = new joe.Suite('joe')
-
 # Events
 if process?
 	process.on 'SIGINT', ->
 		joe.exit()
 	process.on 'exit', ->
-		joe.report('exit')
+		unless joe.exited
+			joe.report('exit')
+			joe.exit(1)  if joe.errord
 	process.on 'uncaughtException', (err) ->
 		joe.exit(err)
 
 # Create our interface globals
 joe.describe = joe.suite = (name,fn) ->
-	joe.globalSuite.suite(name,fn)
+	joe.getGlobalSuite().suite(name,fn)
 joe.it = joe.test = (name,fn) ->
-	joe.globalSuite.test(name,fn)
+	joe.getGlobalSuite().test(name,fn)
 
 # Require helper
 if require?

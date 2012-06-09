@@ -23,12 +23,13 @@ class ConsoleReporter
 		@config.summaryPass ?= "%s/%s tests ran successfully, everything passed"
 		@config.summaryFail ?= "%s/%s tests ran successfully, with %s errors"
 		if cliColor?
-			@config.fail = cliColor.red(@config.fail)
-			@config.pass = cliColor.green(@config.pass)
-			@config.sub = cliColor.gray(@config.sub)
-			@config.failHeading = cliColor.red.underline(@config.failHeading)
-			@config.summaryPass = cliColor.green.underline(@config.summaryPass)
-			@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)
+			unless '--no-colors' in process?.argv
+				@config.fail = cliColor.red(@config.fail)
+				@config.pass = cliColor.green(@config.pass)
+				@config.sub = cliColor.gray(@config.sub)
+				@config.failHeading = cliColor.red.underline(@config.failHeading)
+				@config.summaryPass = cliColor.green.underline(@config.summaryPass)
+				@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)
 
 	getSuiteName: (suite) ->
 		suiteName = suite.getSuiteName()

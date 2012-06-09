@@ -1,4 +1,4 @@
-# Joe
+# Joe [![Build Status](https://secure.travis-ci.org/bevry/joe.png?branch=master)](http://travis-ci.org/bevry/joe)
 Node.js asynchronous testing framework, runner and reporter
 
 ## Using

@@ -1,5 +1,12 @@
 ## History
 
+- v0.4.0 June 9, 2012
+	- More cleaning
+
+- v0.3.5 June 9, 2012
+	- We include `cli-color` now in dependencies and optionalDependencies so it will install for node 0.4 users
+	- We now return the correct exit code
+
 - v0.3.4 June 9, 2012
 	- Now handles optional dependencies correctly
 
