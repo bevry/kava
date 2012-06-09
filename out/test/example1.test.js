@@ -2,17 +2,11 @@
 (function() {
   var assert, joe;
 
-  assert = require('assert');
+  assert = (typeof require === "function" ? require('assert') : void 0) || this.assert;
 
-  joe = require(__dirname + '/../lib/joe');
+  joe = (typeof require === "function" ? require(__dirname + '/../lib/joe') : void 0) || this.joe;
 
-  joe.setDefaultReporter(function() {
-    var Reporter;
-    Reporter = joe.require('reporters/console');
-    return new Reporter();
-  });
-
-  suite('our suite', function(suite, test) {
+  joe.suite('our suite', function(suite, test) {
     test('first test', function(complete) {
       return setTimeout(function() {
         console.log('this will be outputted second');

@@ -1,9 +1,6 @@
 # Require
 assert = require?('assert') or @assert
 joe = require?(__dirname+'/../lib/joe') or @joe
-joe.setDefaultReporter ->
-	Reporter = joe.require?('reporters/console') or @joe.ConsoleReporter
-	new Reporter()
 
 # Prepare
 wait = (delay,fn) -> setTimeout(fn,delay)
@@ -11,7 +8,7 @@ wait = (delay,fn) -> setTimeout(fn,delay)
 # Wait a while, then create our tests
 wait 1*1000, ->
 
-	suite 'parent', (suite,test) ->
+	joe.suite 'parent', (suite,test) ->
 
 		suite 'async-suite', (suite,test,done) ->
 			wait 1*1000, -> test '1/2', ->

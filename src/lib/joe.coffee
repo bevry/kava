@@ -1,5 +1,6 @@
 # Require
-balUtilFlow = if require? then require('bal-util/lib/flow') else @balUtilFlow
+balUtil = if require? then require('bal-util') else @balUtilFlow
+{Block} = balUtil
 
 # Interface
 joe =
@@ -26,7 +27,7 @@ joe =
 			joe.reporters.push createReporter()
 
 # Suite
-joe.Suite = class extends balUtilFlow.Block
+joe.Suite = class extends Block
 	# Create a sub block
 	createSubBlock: (name,fn,parentBlock) ->
 		new joe.Suite(name,fn,parentBlock)
@@ -67,10 +68,8 @@ joe.Suite = class extends balUtilFlow.Block
 	it: (name,fn) ->
 		@task(name,fn)
 
-
 # Joe Suite
-joe.createSuite = (name,fn) ->
-	new joe.Suite(name,fn)
+joe.globalSuite = new joe.Suite('joe')
 
 # Events
 if process?
@@ -82,11 +81,10 @@ if process?
 		joe.exit(err)
 
 # Create our interface globals
-joe.describe = joe.suite = joe.createSuite
-if global?
-	global.describe = global.suite = joe.createSuite
-else
-	@describe = @suite = joe.createSuite
+joe.describe = joe.suite = (name,fn) ->
+	joe.globalSuite.suite(name,fn)
+joe.it = joe.test = (name,fn) ->
+	joe.globalSuite.test(name,fn)
 
 # Require helper
 if require?

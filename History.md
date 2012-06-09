@@ -1,5 +1,9 @@
 ## History
 
+- v0.3.1 June 9, 2012
+	- Joe no longer exposes globals, use `joe.describe|suite`, and now `joe.test|it`
+	- Global suites now run under the suite `joe.globalSuite`, which allows us to auto-exit
+
 - v0.3.0 June 8, 2012
 	- Lots of cleaning
 	- Abstracted generic code to bal-util

@@ -1,12 +1,9 @@
 # Require
-assert = require('assert')
-joe = require(__dirname+'/../lib/joe')
-joe.setDefaultReporter ->
-	Reporter = joe.require('reporters/console')
-	new Reporter()
+assert = require?('assert') or @assert
+joe = require?(__dirname+'/../lib/joe') or @joe
 
 # Our test
-suite 'our suite', (suite,test) ->
+joe.suite 'our suite', (suite,test) ->
 	test 'first test', (complete) ->
 		setTimeout(
 			->

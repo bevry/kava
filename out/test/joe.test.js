@@ -6,18 +6,12 @@
 
   joe = (typeof require === "function" ? require(__dirname + '/../lib/joe') : void 0) || this.joe;
 
-  joe.setDefaultReporter(function() {
-    var Reporter;
-    Reporter = (typeof joe.require === "function" ? joe.require('reporters/console') : void 0) || this.joe.ConsoleReporter;
-    return new Reporter();
-  });
-
   wait = function(delay, fn) {
     return setTimeout(fn, delay);
   };
 
   wait(1 * 1000, function() {
-    return suite('parent', function(suite, test) {
+    return joe.suite('parent', function(suite, test) {
       suite('async-suite', function(suite, test, done) {
         wait(1 * 1000, function() {
           return test('1/2', function() {
