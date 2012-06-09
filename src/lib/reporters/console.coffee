@@ -16,9 +16,9 @@ class ConsoleReporter
 		@config.fail ?= ' ✘  '
 		@config.pass ?= ' ✔  '
 		@config.sub ?= ' ➞  '
-		@config.failHeading ?= 'Failure #%s:'
+		@config.failHeading ?= 'Error #%s:'
 		@config.summaryPass ?= "%s/%s tests ran successfully, everything passed"
-		@config.summaryFail ?= "%s/%s tests ran successfully, %s failed"
+		@config.summaryFail ?= "%s/%s tests ran successfully, with %s errors"
 		if cliColor?
 			@config.fail = cliColor.red(@config.fail)
 			@config.pass = cliColor.green(@config.pass)
@@ -28,33 +28,40 @@ class ConsoleReporter
 			@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)
 
 	getSuiteName: (suite) ->
-		suiteName = suite.name
-		if suite.parentSuite
-			parentSuiteName = @getSuiteName(suite.parentSuite)
+		suiteName = suite.getSuiteName()
+		parentSuite = suite.getParentSuite()
+		if parentSuite
+			parentSuiteName = @getSuiteName(parentSuite)
 			suiteName = "#{parentSuiteName}#{@config.sub}#{suiteName}"
 		return suiteName
 
 	getTestName: (suite,testName) ->
-		suiteName = @getSuiteName(suite)
-		testName = "#{suiteName}#{@config.sub}#{testName}"
+		if suite?
+			suiteName = @getSuiteName(suite)
+			testName = "#{suiteName}#{@config.sub}#{testName}"
 		return testName
 
 	startSuite: (suite) ->
 		suiteName = @getSuiteName(suite)
 		message = "#{suiteName}#{@config.start}"
 		console.log(message)
+		@
 
 	finishSuite: (suite,err) ->
+		if err and @errors.length is 0
+			@uncaughtException(err)
 		suiteName = @getSuiteName(suite)
 		check = (if err then @config.fail else @config.pass)
 		message = "#{suiteName}#{check}"
 		console.log(message)
+		@
 
 	startTest: (suite,testName) ->
 		++@total
 		testName = @getTestName(suite,testName)
 		message = "#{testName}#{@config.start}"
 		console.log(message)
+		@
 
 	finishTest: (suite,testName,err) ->
 		if err
@@ -66,6 +73,11 @@ class ConsoleReporter
 		check = (if err then @config.fail else @config.pass)
 		message = "#{testName}#{check}"
 		console.log(message, if process? is false and err then [err,err.stack] else '')
+		@
+
+	uncaughtException: (err) ->
+		@errors.push({testName:'uncaughtException',err})
+		@
 
 	exit: ->
 		if @errors.length is 0
@@ -76,8 +88,10 @@ class ConsoleReporter
 				{suite,testName,err} = error
 				testName = @getTestName(suite,testName)
 				console.log("\n"+@config.failHeading, index+1)
-				console.log("#{testName}\n#{err.stack.toString()}")
-		console.log('')
+				console.log(testName)
+				console.log(err.stack?.toString() or err)
+			console.log('')
+		@
 
 # Export for node.js and browsers
 if module? then (module.exports = ConsoleReporter) else (@joe.ConsoleReporter = ConsoleReporter)

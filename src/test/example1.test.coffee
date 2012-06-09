@@ -1,8 +1,9 @@
 # Require
 assert = require('assert')
 joe = require(__dirname+'/../lib/joe')
-Reporter = require(__dirname+'/../lib/reporters/console')
-joe.reporters.push(new Reporter())
+joe.setDefaultReporter ->
+	Reporter = joe.require('reporters/console')
+	new Reporter()
 
 # Our test
 suite 'our suite', (suite,test) ->

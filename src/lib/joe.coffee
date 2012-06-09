@@ -1,98 +1,97 @@
 # Require
 balUtilFlow = if require? then require('bal-util/lib/flow') else @balUtilFlow
-{Group} = balUtilFlow
+
+# Interface
+joe =
+	reporters: []
+	errord: false
+	exit: (err) ->
+		# Report
+		if err
+			joe.errord = true
+			unless err instanceof Error
+				err = new Error(err)
+			joe.report('uncaughtException',err)
+		# Exit
+		process.exit(if joe.errord then 1 else 0)
+	report: (event, args...) ->
+		if joe.reporters.length is 0
+			joe.setDefaultReporter ->
+				Reporter = require(__dirname+'/../lib/reporters/console')
+				new Reporter()
+		for reporter in joe.reporters
+			reporter[event]?.apply(reporter,args)
+	setDefaultReporter: (createReporter) ->
+		if joe.reporters.length is 0
+			joe.reporters.push createReporter()
 
 # Suite
-class Suite extends Group
+joe.Suite = class extends balUtilFlow.Block
+	# Create a sub block
+	createSubBlock: (name,fn,parentBlock) ->
+		new joe.Suite(name,fn,parentBlock)
 
-	# Create a new suite and run it
-	# fn(suite.suite, suite.test, suite.exit)
-	constructor: (name, fn, parentSuite) ->
-		# Prepare the suite
-		suite = @
-		super (err) ->
-			report('finishSuite',suite,err)
-			suite.parentSuite?.complete(err)
-		suite.name = name
-		suite.parentSuite = parentSuite
-		suite.mode = 'sync'
+	# Events
+	blockBefore: (block) ->
+		joe.report('startSuite',block)
+		super
+	blockAfter: (block,err) ->
+		joe.errord = true  if err
+		joe.report('finishSuite',block,err)
+		super
+	blockTaskBefore: (block,test) ->
+		joe.report('startTest',block,test)
+		super
+	blockTaskAfter: (block,test,err) ->
+		joe.errord = true  if err
+		joe.report('finishTest',block,test,err)
+		super
 
-		# Fire the suite
-		# If the suite has a compeletion callback,
-		# then set our total tasks to infinity so we wait for the completion callback instead of the queue finishing
-		report('startSuite',suite)
-		suite.total = Infinity  if fn.length is 3
-		fn(
-			(name,fn) -> suite.suite(name,fn)
-			(name,fn) -> suite.test(name,fn)
-			(err) -> suite.exit(err)
-		)
-		if fn.length isnt 3
-			suite.run()
+	# Get the parent
+	getSuiteName: ->
+		@blockName
+	getParentSuite: ->
+		@parentBlock
 
-	# Create a sub suite
+	# Testing aliases for new block
 	# fn(subSuite, subSuite.test, subSuite.exit)
 	suite: (name,fn) ->
-		# Push the creation of our subSuite to our suite's queue
-		suite = @
-		push = (complete) ->
-			if suite.total is Infinity
-				suite.pushAndRun(complete)
-			else
-				suite.push(complete)
-		push ->
-			subSuite = new Suite(name,fn,suite)
-		@
+		@block(name,fn)
+	describe: (name,fn) ->
+		@block(name,fn)
 
-	# Create a test for our current suite
+	# Testing aliases for new task
 	# fn(complete)
 	test: (name,fn) ->
-		# Push the firing of our test to our suite's queue
-		suite = @
-		push = (complete) ->
-			if suite.total is Infinity
-				suite.pushAndRun(complete)
-			else
-				suite.push(complete)
-		push (complete) ->
-			# Prepare
-			preComplete = (err) ->
-				report('finishTest',suite,name,err)
-				complete(err)
+		@task(name,fn)
+	it: (name,fn) ->
+		@task(name,fn)
 
-			# Log
-			report('startTest',suite,name)
 
-			# If a callback was not specified, fire the funciton, and complete right away
-			if fn.length < 1
-				try
-					fn()
-					preComplete()
-				catch err
-					preComplete(err)
-			# If a callback was specified, fire the function (user will call complete manually)
-			else
-				try
-					fn(preComplete)
-				catch err
-					preComplete(err)
-		@
+# Joe Suite
+joe.createSuite = (name,fn) ->
+	new joe.Suite(name,fn)
 
-# Prepare interface
-createSuite = (args...) -> new Suite(args...)
-report = (event, args...) ->
-	for reporter in joe.reporters
-		reporter[event]?.apply(reporter,args)
-reporters = []
-joe = {Suite,reporters,createSuite}
+# Events
 if process?
-	process.on 'exit', -> report('exit')
+	process.on 'SIGINT', ->
+		joe.exit()
+	process.on 'exit', ->
+		joe.report('exit')
+	process.on 'uncaughtException', (err) ->
+		joe.exit(err)
 
 # Create our interface globals
+joe.describe = joe.suite = joe.createSuite
 if global?
-	global.describe = global.suite = createSuite
+	global.describe = global.suite = joe.createSuite
 else
-	@describe = @suite = createSuite
+	@describe = @suite = joe.createSuite
+
+# Require helper
+if require?
+	joe.require = (path) ->
+		require(__dirname+'/'+path)
 
 # Export for node.js and browsers
 if module? then (module.exports = joe) else (@joe = joe)

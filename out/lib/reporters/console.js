@@ -33,13 +33,13 @@
         _base3.sub = ' ➞  ';
       }
       if ((_ref4 = (_base4 = this.config).failHeading) == null) {
-        _base4.failHeading = 'Failure #%s:';
+        _base4.failHeading = 'Error #%s:';
       }
       if ((_ref5 = (_base5 = this.config).summaryPass) == null) {
         _base5.summaryPass = "%s/%s tests ran successfully, everything passed";
       }
       if ((_ref6 = (_base6 = this.config).summaryFail) == null) {
-        _base6.summaryFail = "%s/%s tests ran successfully, %s failed";
+        _base6.summaryFail = "%s/%s tests ran successfully, with %s errors";
       }
       if (cliColor != null) {
         this.config.fail = cliColor.red(this.config.fail);
@@ -52,10 +52,11 @@
     }
 
     ConsoleReporter.prototype.getSuiteName = function(suite) {
-      var parentSuiteName, suiteName;
-      suiteName = suite.name;
-      if (suite.parentSuite) {
-        parentSuiteName = this.getSuiteName(suite.parentSuite);
+      var parentSuite, parentSuiteName, suiteName;
+      suiteName = suite.getSuiteName();
+      parentSuite = suite.getParentSuite();
+      if (parentSuite) {
+        parentSuiteName = this.getSuiteName(parentSuite);
         suiteName = "" + parentSuiteName + this.config.sub + suiteName;
       }
       return suiteName;
@@ -63,8 +64,10 @@
 
     ConsoleReporter.prototype.getTestName = function(suite, testName) {
       var suiteName;
-      suiteName = this.getSuiteName(suite);
-      testName = "" + suiteName + this.config.sub + testName;
+      if (suite != null) {
+        suiteName = this.getSuiteName(suite);
+        testName = "" + suiteName + this.config.sub + testName;
+      }
       return testName;
     };
 
@@ -72,15 +75,20 @@
       var message, suiteName;
       suiteName = this.getSuiteName(suite);
       message = "" + suiteName + this.config.start;
-      return console.log(message);
+      console.log(message);
+      return this;
     };
 
     ConsoleReporter.prototype.finishSuite = function(suite, err) {
       var check, message, suiteName;
+      if (err && this.errors.length === 0) {
+        this.uncaughtException(err);
+      }
       suiteName = this.getSuiteName(suite);
       check = (err ? this.config.fail : this.config.pass);
       message = "" + suiteName + check;
-      return console.log(message);
+      console.log(message);
+      return this;
     };
 
     ConsoleReporter.prototype.startTest = function(suite, testName) {
@@ -88,7 +96,8 @@
       ++this.total;
       testName = this.getTestName(suite, testName);
       message = "" + testName + this.config.start;
-      return console.log(message);
+      console.log(message);
+      return this;
     };
 
     ConsoleReporter.prototype.finishTest = function(suite, testName, err) {
@@ -106,11 +115,20 @@
       testName = this.getTestName(suite, testName);
       check = (err ? this.config.fail : this.config.pass);
       message = "" + testName + check;
-      return console.log(message, (typeof process !== "undefined" && process !== null) === false && err ? [err, err.stack] : '');
+      console.log(message, (typeof process !== "undefined" && process !== null) === false && err ? [err, err.stack] : '');
+      return this;
+    };
+
+    ConsoleReporter.prototype.uncaughtException = function(err) {
+      this.errors.push({
+        testName: 'uncaughtException',
+        err: err
+      });
+      return this;
     };
 
     ConsoleReporter.prototype.exit = function() {
-      var err, error, index, suite, testName, _i, _len, _ref;
+      var err, error, index, suite, testName, _i, _len, _ref, _ref1;
       if (this.errors.length === 0) {
         console.log("\n" + this.config.summaryPass, this.passed, this.total);
       } else {
@@ -121,10 +139,12 @@
           suite = error.suite, testName = error.testName, err = error.err;
           testName = this.getTestName(suite, testName);
           console.log("\n" + this.config.failHeading, index + 1);
-          console.log("" + testName + "\n" + (err.stack.toString()));
+          console.log(testName);
+          console.log(((_ref1 = err.stack) != null ? _ref1.toString() : void 0) || err);
         }
+        console.log('');
       }
-      return console.log('');
+      return this;
     };
 
     return ConsoleReporter;
