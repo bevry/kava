@@ -1,7 +1,7 @@
 ## History
 
 - v0.3.4 June 9, 2012
-	- No handles optional dependencies correctly
+	- Now handles optional dependencies correctly
 
 - v0.3.3 June 9, 2012
 	- Added cli-color as an optional and bundled dependency
