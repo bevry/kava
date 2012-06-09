@@ -1,5 +1,8 @@
 ## History
 
+- v0.3.2 June 9, 2012
+	- [bal-util](https://github.com/balupton/bal-util) is now a bundled dependency
+
 - v0.3.1 June 9, 2012
 	- Joe no longer exposes globals, use `joe.describe|suite`, and now `joe.test|it`
 	- Global suites now run under the suite `joe.globalSuite`, which allows us to auto-exit
