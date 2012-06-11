@@ -11,7 +11,15 @@
   };
 
   wait(1 * 1000, function() {
-    return joe.suite('top suite', function(suite, test) {
+    if ((typeof require !== "undefined" && require !== null) && (Object.freeze != null)) {
+      joe.test('api is readonly within node', function() {
+        var errorOccured;
+        errorOccured = false;
+        joe.blah = true;
+        return assert.ok((joe.blah != null) === false);
+      });
+    }
+    return joe.suite('tests', function(suite, test) {
       suite('async-suite', function(suite, test, done) {
         wait(1 * 1000, function() {
           return test('1/2', function() {

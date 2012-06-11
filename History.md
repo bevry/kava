@@ -1,5 +1,8 @@
 ## History
 
+- v1.0.0 June 11, 2012
+	- Finalised and cleaned the API
+
 - v0.4.0 June 9, 2012
 	- More cleaning
 

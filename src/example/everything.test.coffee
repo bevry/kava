@@ -8,7 +8,18 @@ wait = (delay,fn) -> setTimeout(fn,delay)
 # Wait a while, then create our tests
 wait 1*1000, ->
 
-	joe.suite 'top suite', (suite,test) ->
+	if require? and Object.freeze?
+		joe.test 'api is readonly within node', ->
+			# Prepare
+			errorOccured = false
+
+			# Attempt modification
+			joe.blah = true
+
+			# Test that the modifications were not successful
+			assert.ok(joe.blah? is false)
+
+	joe.suite 'tests', (suite,test) ->
 
 		suite 'async-suite', (suite,test,done) ->
 			wait 1*1000, -> test '1/2', ->

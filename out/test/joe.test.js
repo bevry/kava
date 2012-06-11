@@ -8,9 +8,9 @@
 
   everythingTestPath = __dirname + '/../example/everything.test.js';
 
-  expected = "9/10 tests ran successfully, with 1 errors";
+  expected = "10/11 tests ran successfully, with 1 errors";
 
-  exec("node " + everythingTestPath, function(error, stdout, stderr) {
+  exec("node " + everythingTestPath, function(err, stdout, stderr) {
     var message, result;
     result = stdout.indexOf(expected) !== -1;
     console.log(stdout);
