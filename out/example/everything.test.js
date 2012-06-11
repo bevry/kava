@@ -11,14 +11,12 @@
   };
 
   wait(1 * 1000, function() {
-    if ((typeof require !== "undefined" && require !== null) && (Object.freeze != null)) {
-      joe.test('api is readonly within node', function() {
-        var errorOccured;
-        errorOccured = false;
+    joe.test('api is readonly within node', function() {
+      if ((typeof require !== "undefined" && require !== null) && (Object.freeze != null) && process.version.slice(0, 4) !== 'v0.4') {
         joe.blah = true;
         return assert.ok((joe.blah != null) === false);
-      });
-    }
+      }
+    });
     return joe.suite('tests', function(suite, test) {
       suite('async-suite', function(suite, test, done) {
         wait(1 * 1000, function() {

@@ -8,11 +8,9 @@ wait = (delay,fn) -> setTimeout(fn,delay)
 # Wait a while, then create our tests
 wait 1*1000, ->
 
-	if require? and Object.freeze?
-		joe.test 'api is readonly within node', ->
-			# Prepare
-			errorOccured = false
-
+	joe.test 'api is readonly within node', ->
+		# Only run if our environment supports this
+		if require? and Object.freeze? and process.version.slice(0,4) isnt 'v0.4'
 			# Attempt modification
 			joe.blah = true
 
