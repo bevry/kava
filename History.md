@@ -1,5 +1,8 @@
 ## History
 
+- v1.0.1 June 11, 2012
+	- Joe will now throw errors if you have an incorrect amount of arguments for your `suite` and `test` callbacks
+
 - v1.0.0 June 11, 2012
 	- Finalised and cleaned the API
 

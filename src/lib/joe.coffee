@@ -2,6 +2,11 @@
 balUtilFlow = require?('bal-util') or @balUtilFlow
 {Block} = balUtilFlow
 
+# Prepare
+config =
+	# A url used to refer people when an error is thrown
+	troubleshootingURL: 'https://github.com/bevry/joe/wiki/Troubleshooting'
+
 # Creare out private interface for Joe
 joePrivate =
 
@@ -170,16 +175,22 @@ joe =
 		# Testing aliases for new block
 		# fn(subSuite, subSuite.test, subSuite.exit)
 		suite: (name,fn) ->
-			@block(name,fn)
+			unless fn.length in [0,2,3]
+				throw new Error("An invalid amount of arguments were specified for a Joe Suite, more info here: #{config.troubleshootingURL}")
+			else
+				@block(name,fn)
 		describe: (name,fn) ->
-			@block(name,fn)
+			@suite(name,fn)
 
 		# Testing aliases for new task
 		# fn(complete)
 		test: (name,fn) ->
-			@task(name,fn)
+			unless fn.length in [0,1]
+				throw new Error("An invalid amount of arguments were specified for a Joe Test, more info here: #{config.troubleshootingURL}")
+			else
+				@task(name,fn)
 		it: (name,fn) ->
-			@task(name,fn)
+			@test(name,fn)
 
 
 # Events
