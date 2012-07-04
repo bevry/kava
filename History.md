@@ -1,5 +1,12 @@
 ## History
 
+- v1.0.2 July 4, 2012
+	- We now error on incomplete tasks
+	- Joe now handles (instead of reporters):
+		- the counting of total, passed, failed and incomplete suites and tests
+		- the logging of errors with their suites sand tests
+		- the fetching of suite and test names (including their parents)
+
 - v1.0.1 June 11, 2012
 	- Joe will now throw errors if you have an incorrect amount of arguments for your `suite` and `test` callbacks
 

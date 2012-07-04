@@ -8,9 +8,6 @@ catch err
 class ConsoleReporter
 	errors: null
 	config: null
-	passed: 0
-	failed: 0
-	total: 0
 
 	constructor: (config) ->
 		@errors or= []
@@ -21,7 +18,7 @@ class ConsoleReporter
 		@config.sub ?= ' ➞  '
 		@config.failHeading ?= 'Error #%s:'
 		@config.summaryPass ?= "%s/%s tests ran successfully, everything passed"
-		@config.summaryFail ?= "%s/%s tests ran successfully, with %s errors"
+		@config.summaryFail ?= "FAILURE: %s/%s tests ran successfully; %s failed, %s incomplete, %s errors"
 		if cliColor?
 			unless '--no-colors' in process?.argv
 				@config.fail = cliColor.red(@config.fail)
@@ -32,69 +29,62 @@ class ConsoleReporter
 				@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)
 
 	getSuiteName: (suite) ->
-		suiteName = suite.getSuiteName()
-		parentSuite = suite.getParentSuite()
-		if parentSuite
-			parentSuiteName = @getSuiteName(parentSuite)
-			suiteName = "#{parentSuiteName}#{@config.sub}#{suiteName}"
-		return suiteName
+		return @joe.getSuiteName(suite,@config.sub)
 
 	getTestName: (suite,testName) ->
+		result = ''
 		if suite?
 			suiteName = @getSuiteName(suite)
-			testName = "#{suiteName}#{@config.sub}#{testName}"
-		return testName
+			result += "#{suiteName}"
+			result += "#{@config.sub}#{testName}"  if testName
+		else
+			result = testName
+		return result
 
 	startSuite: (suite) ->
 		suiteName = @getSuiteName(suite)
+		return @  unless suiteName
 		message = "#{suiteName}#{@config.start}"
 		console.log(message)
 		@
 
 	finishSuite: (suite,err) ->
-		if err and @errors.length is 0
-			@uncaughtException(err)
 		suiteName = @getSuiteName(suite)
+		return @  unless suiteName
 		check = (if err then @config.fail else @config.pass)
 		message = "#{suiteName}#{check}"
 		console.log(message)
 		@
 
 	startTest: (suite,testName) ->
-		++@total
 		testName = @getTestName(suite,testName)
+		return @  unless testName
 		message = "#{testName}#{@config.start}"
 		console.log(message)
 		@
 
 	finishTest: (suite,testName,err) ->
-		if err
-			@errors.push({suite,testName,err})
-			++@failed
-		else
-			++@passed
 		testName = @getTestName(suite,testName)
+		return @  unless testName
 		check = (if err then @config.fail else @config.pass)
 		message = "#{testName}#{check}"
 		console.log(message, if process? is false and err then [err,err.stack] else '')
 		@
 
-	uncaughtException: (err) ->
-		@errors.push({testName:'uncaughtException',err})
-		@
-
-	exit: ->
-		if @errors.length is 0
-			console.log("\n"+@config.summaryPass, @passed, @total)
-		else
-			console.log("\n"+@config.summaryFail, @passed, @total, @errors.length)
-			for error,index in @errors
-				{suite,testName,err} = error
+	exit: (exitCode) ->
+		{totalTests,totalPassedTests,totalFailedTests,totalIncompleteTests,totalErrors} = @joe.getTotals()
+		if exitCode
+			errorLogs = @joe.getErrorLogs()
+			console.log("\n"+@config.summaryFail, totalPassedTests, totalTests, totalFailedTests, totalIncompleteTests, totalErrors)
+			for errorLog,index in errorLogs
+				{suite,testName,err} = errorLog
 				testName = @getTestName(suite,testName)
 				console.log("\n"+@config.failHeading, index+1)
 				console.log(testName)
 				console.log(err.stack?.toString() or err)
 			console.log('')
+		else
+			console.log("\n"+@config.summaryPass, totalPassedTests, totalTests)
 		@
 
 # Export for node.js and browsers

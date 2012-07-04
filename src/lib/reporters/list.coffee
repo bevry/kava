@@ -5,8 +5,8 @@ ConsoleReporter = if require? then require(__dirname+'/console') else @joe.Conso
 class ListReporter extends ConsoleReporter
 
 	startSuite: ->
+	startTest: ->
 	finishSuite: ->
-	startTest: -> ++@total
 
 	constructor: (config) ->
 		@config or= config or {}
@@ -15,26 +15,25 @@ class ListReporter extends ConsoleReporter
 		super
 
 	finishTest: (suite,testName,err) ->
-		if err
-			@errors.push({suite,testName,err})
-			++@failed
-		else
-			++@passed
 		testName = @getTestName(suite,testName)
+		return @  unless testName
 		check = (if err then @config.fail else @config.pass)
 		message = "#{check}#{testName}"
 		console.log(message, if process? is false and err then [err,err.stack] else '')
+		@
 
-	exit: ->
-		if @errors.length is 0
-			console.log("\n"+@config.summaryPass, @passed, @total)
-		else
-			console.log("\n"+@config.summaryFail, @passed, @total, @errors.length)
-			for error,index in @errors
-				{suite,testName,err} = error
+	exit: (exitCode) ->
+		{totalTests,totalPassedTests,totalFailedTests,totalIncompleteTests,totalErrors} = @joe.getTotals()
+		if exitCode
+			errorLogs = @joe.getErrorLogs()
+			console.log("\n"+@config.summaryFail, totalPassedTests, totalTests, totalFailedTests, totalIncompleteTests, totalErrors)
+			for errorLog,index in errorLogs
+				{suite,testName,err} = errorLog
 				testName = @getTestName(suite,testName)
 				console.log("\n"+@config.failHeading, index+1)
 				console.log("#{testName}\n#{err.stack.toString()}")
+		else
+			console.log("\n"+@config.summaryPass, totalPassedTests, totalTests)
 		console.log('')
 
 # Export for node.js and browsers

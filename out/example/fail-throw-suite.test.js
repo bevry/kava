@@ -6,10 +6,8 @@
 
   joe = (typeof require === "function" ? require(__dirname + '/../lib/joe') : void 0) || this.joe;
 
-  joe.test('0 args', function() {});
-
-  joe.test('1 args', function(done) {});
-
-  joe.test('two args', function(suite, describe) {});
+  joe.suite('deliberate throw suite', function() {
+    throw new Error('I am the deliberate throw');
+  });
 
 }).call(this);

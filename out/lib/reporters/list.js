@@ -12,11 +12,9 @@
 
     ListReporter.prototype.startSuite = function() {};
 
-    ListReporter.prototype.finishSuite = function() {};
+    ListReporter.prototype.startTest = function() {};
 
-    ListReporter.prototype.startTest = function() {
-      return ++this.total;
-    };
+    ListReporter.prototype.finishSuite = function() {};
 
     function ListReporter(config) {
       var _base, _base1, _ref, _ref1;
@@ -32,36 +30,31 @@
 
     ListReporter.prototype.finishTest = function(suite, testName, err) {
       var check, message;
-      if (err) {
-        this.errors.push({
-          suite: suite,
-          testName: testName,
-          err: err
-        });
-        ++this.failed;
-      } else {
-        ++this.passed;
-      }
       testName = this.getTestName(suite, testName);
+      if (!testName) {
+        return this;
+      }
       check = (err ? this.config.fail : this.config.pass);
       message = "" + check + testName;
-      return console.log(message, (typeof process !== "undefined" && process !== null) === false && err ? [err, err.stack] : '');
+      console.log(message, (typeof process !== "undefined" && process !== null) === false && err ? [err, err.stack] : '');
+      return this;
     };
 
-    ListReporter.prototype.exit = function() {
-      var err, error, index, suite, testName, _i, _len, _ref;
-      if (this.errors.length === 0) {
-        console.log("\n" + this.config.summaryPass, this.passed, this.total);
-      } else {
-        console.log("\n" + this.config.summaryFail, this.passed, this.total, this.errors.length);
-        _ref = this.errors;
-        for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-          error = _ref[index];
-          suite = error.suite, testName = error.testName, err = error.err;
+    ListReporter.prototype.exit = function(exitCode) {
+      var err, errorLog, errorLogs, index, suite, testName, totalErrors, totalFailedTests, totalIncompleteTests, totalPassedTests, totalTests, _i, _len, _ref;
+      _ref = this.joe.getTotals(), totalTests = _ref.totalTests, totalPassedTests = _ref.totalPassedTests, totalFailedTests = _ref.totalFailedTests, totalIncompleteTests = _ref.totalIncompleteTests, totalErrors = _ref.totalErrors;
+      if (exitCode) {
+        errorLogs = this.joe.getErrorLogs();
+        console.log("\n" + this.config.summaryFail, totalPassedTests, totalTests, totalFailedTests, totalIncompleteTests, totalErrors);
+        for (index = _i = 0, _len = errorLogs.length; _i < _len; index = ++_i) {
+          errorLog = errorLogs[index];
+          suite = errorLog.suite, testName = errorLog.testName, err = errorLog.err;
           testName = this.getTestName(suite, testName);
           console.log("\n" + this.config.failHeading, index + 1);
           console.log("" + testName + "\n" + (err.stack.toString()));
         }
+      } else {
+        console.log("\n" + this.config.summaryPass, totalPassedTests, totalTests);
       }
       return console.log('');
     };

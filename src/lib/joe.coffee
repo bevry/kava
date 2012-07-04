@@ -2,35 +2,138 @@
 balUtilFlow = require?('bal-util') or @balUtilFlow
 {Block} = balUtilFlow
 
-# Prepare
+# Config
+# Some configuration specific to joe
 config =
-	# A url used to refer people when an error is thrown
+
+	# Teroubleshooting URL
+	# A url used to refer people when a joe specific error is thrown
 	troubleshootingURL: 'https://github.com/bevry/joe/wiki/Troubleshooting'
 
+
+# Suite
+# A suite is the heart of Joe, they extend the bal-util Block class
+# The Block class provides us with all the logic we need:
+# - a way to group sync/async tasks, and execute them in a parallel or serial fashion
+# - if a task fails, then we will exit the group of tasks and return the error in the completion callback for the group
+# With suites, we extend this functionality with:
+# - creating blocks through `suite` and `describe` functions
+# - creating tasks through `test` and `it` functions
+# - when tasks start and finish, we log their errors (if any) and the counts (how many started, how many finished, how many failed)
+Suite = class extends Block
+	# When we create a sub block, create it using our Suite class instead of the standard Block
+	createSubBlock: (opts) ->
+		opts.parentBlock = @
+		new Suite(opts)
+
+	# Override the Block events with our own handlers, so we can trigger our reporting events
+	blockBefore: (suite) ->
+		joePrivate.totalSuites++
+		joe.report('startSuite',suite)
+		super
+	blockAfter: (suite,err) ->
+		if err
+			joePrivate.addErrorLog({suite,err})
+			joePrivate.totalFailedSuites++
+		else
+			joePrivate.totalPassedSuites++
+		joe.report('finishSuite',suite,err)
+		super
+	blockTaskBefore: (suite,testName) ->
+		joePrivate.totalTests++
+		joe.report('startTest',suite,testName)
+		super
+	blockTaskAfter: (suite,testName,err) ->
+		if err
+			joePrivate.addErrorLog({suite,testName,err})
+			joePrivate.totalFailedTests++
+		else
+			joePrivate.totalPassedTests++
+		joe.report('finishTest',suite,testName,err)
+		super
+
+	# Provide an API that can be used by our reporters
+	getSuiteName: -> @blockName
+	getParentSuite: -> @parentBlock
+
+	# Aliases for new block
+	# fn(subSuite, subSuite.test, subSuite.exit)
+	suite: (name,fn) ->
+		unless fn.length in [0,2,3]
+			throw new Error("An invalid amount of arguments were specified for a Joe Suite, more info here: #{config.troubleshootingURL}")
+		else
+			@block(name,fn)
+	describe: (name,fn) ->
+		@suite(name,fn)
+
+	# Sliases for new task
+	# fn(complete)
+	test: (name,fn) ->
+		unless fn.length in [0,1]
+			throw new Error("An invalid amount of arguments were specified for a Joe Test, more info here: #{config.troubleshootingURL}")
+		else
+			@task(name,fn)
+	it: (name,fn) ->
+		@test(name,fn)
+
+
 # Creare out private interface for Joe
+# The reason we have a public and private interface for joe is that we do not want tests being able to modify the test results
+# As such, the private interface contains properties that must be mutable by the public interface, but not mutable by the bad tests
 joePrivate =
 
-	# Store our Global Suite that will run your own Suites
+	# Global Suite
+	# We use a global suite to contain all of the Suite suites and joe.test tests
 	globalSuite: null
 
-	# Define a getter for the Global Suite
+	# Get Global Suite
+	# We have a getter for the global suite to create it when it is actually needed
 	getGlobalSuite: ->
 		# If it doesn't exist, then create it and name it joe
 		unless joePrivate.globalSuite?
-			joePrivate.globalSuite = new joe.Suite('joe')
+			joePrivate.globalSuite = new Suite({name:'joe'})
+
 		# Return the global suite
-		joePrivate.globalSuite
+		return joePrivate.globalSuite
 
-	# Has joe ever encountered an error?
-	errord: false
+	# Error Logs
+	# We log all the errors that have occured with their suite and testName
+	# so the reporters can access them
+	errorLogs: [] # [{err,suite,testName}]
 
-	# Has joe already exited?
+	# Add Error Log
+	# Logs an error into the errors array, however only if we haven't already logged it
+	# log = {err,suite,testName}
+	addErrorLog: (errorLog) ->
+		if errorLog.err is joePrivate.errorLogs[joePrivate.errorLogs.length-1]?.err
+			# ignore
+		else
+			joePrivate.errorLogs.push(errorLog)
+		return joePrivate
+
+	# Exited?
+	# Whether or not joe has already exited, either via error or via finishing everything it is meant to be doing
+	# We store this flag, as we do not want to exit multiple times if we have multiple errors or exit signals
 	exited: false
 
-	# Store our reporters that we will use to output the success/failure of our tests
+	# Reports
+	# This is a listing of all the reporters we will be using
+	# Reporters are what output the results of our tests/suites to the user (Joe just runs them)
 	reporters: []
 
-	# Define a getter for our Reporters
+	# Totals
+	# Here are a bunch of totals we use to calculate our progress
+	# They are mostly used by reporters, however we do use them to figure out if joe was successful or not
+	totalSuites: 0
+	totalPassedSuites: 0
+	totalFailedSuites: 0
+	totalTests: 0
+	totalPassedTests: 0
+	totalFailedTests: 0
+
+	# Get Reporters
+	# Fetches our reporters when we need them, if none are set,
+	# then we fetch the reporter specified by the CLI arguments (if running in the CL), or the default reporter for the environment
 	getReporters: ->
 		# Check if have no reporters
 		if joePrivate.reporters.length is 0
@@ -48,7 +151,7 @@ joePrivate =
 						defaultReporter = argResult
 						break
 
-				# Load our defualt reporter
+				# Load our default reporter
 				try
 					Reporter = joe.require("reporters/#{defaultReporter}")
 					joe.addReporter(new Reporter())
@@ -66,34 +169,66 @@ joePrivate =
 					joe.exit(1)
 
 		# Return our reporters
-		joePrivate.reporters
+		return joePrivate.reporters
+
 
 # Create the interface for Joe
 joe =
-	# Has joe errord?
-	hasErrors: ->
-		joePrivate.errord is true
+	# Get Totals
+	# Fetches all the different types of totals we have collected
+	# and determines the incomplete suites and tasks
+	# as well as whether or not everything has succeeded correctly (no incomplete, no failures, no errors)
+	getTotals: ->
+		# Fetch
+		{totalSuites,totalPassedSuites,totalFailedSuites,totalTests,totalPassedTests,totalFailedTests,errorLogs} = joePrivate
 
-	# Has joe exited?
+		# Calculate
+		totalIncompleteSuites = totalSuites - totalPassedSuites - totalFailedSuites
+		totalIncompleteTests = totalTests - totalPassedTests - totalFailedTests
+		totalErrors = errorLogs.length
+		success = (totalIncompleteSuites is 0) and (totalFailedSuites is 0) and (totalIncompleteTests is 0) and (totalFailedTests is 0) and (totalErrors is 0)
+
+		# Return
+		result = {totalSuites,totalPassedSuites,totalFailedSuites,totalIncompleteSuites,totalTests,totalPassedTests,totalFailedTests,totalIncompleteTests,totalErrors,success}
+		return result
+
+	# Get Errors
+	# Returns a cloned array of all the error logs
+	getErrorLogs: ->
+		joePrivate.errorLogs.slice()
+
+	# Has Errors
+	# Returns false if there were no incomplete, no failures and no errors
+	hasErrors: ->
+		joe.getTotals().success is false
+
+	# Has Exited
+	# Returns true if we have exited already
+	# we do not want to exit multiple times
 	hasExited: ->
 		joePrivate.exited is true
 
-	# Has joe got reporters?
+	# Has Reportes
+	# Do we have any reporters yet?
 	hasReporters: ->
 		joePrivate.reporters isnt 0
 
-	# Add a reporter to our list of reporters
+	# Add Reporter
+	# Add a reporter to the list of reporters we will be using
 	addReporter: (reporterInstance) ->
+		reporterInstance.joe = joe
 		joePrivate.reporters.push(reporterInstance)
-		@
+		joe
 
-	# Clear our existing reporters and use only this one
+	# Set Reporter
+	# Clear all the other reporters we may be using, and just use this one
 	setReporter: (reporterInstance) ->
 		joePrivate.reporters = []
 		joe.addReporter(reporterInstance)  if reporterInstance?
-		@
+		joe
 
-	# Reporter a message to our
+	# Report
+	# Report and event to our reporters
 	report: (event, args...) ->
 		# Fetch the reporters
 		reporters = joePrivate.getReporters()
@@ -102,116 +237,111 @@ joe =
 		unless reporters.length
 			console.log("Joe has no reporters loaded, so cannot log anything...")
 			joe.exit(1)
-			return @
+			return joe
 
 		# Cycle through the reporters
 		for reporter in reporters
 			reporter[event]?.apply(reporter,args)
 
 		# Chain
-		@
+		joe
 
-	# Exit our process with the specifeid exit code
+	# Exit
+	# Exit our process with the specifeid exitCode
+	# If no exitCode is set, then we determine it through the hasErrors call
 	exit: (exitCode) ->
 		# Check
 		return  if joe.exited
 		joePrivate.exited = true
 
+		# Determine exit code
+		unless exitCode?
+			exitCode = if joe.hasErrors() then 1 else 0
+
 		# Report our exit
-		joe.report('exit')
+		joe.report('exit', exitCode)
 
 		# Kill our process with the correct exit code
 		if process?
-			exitCode ?= if joe.hasErrors() then 1 else 0
 			process.exit(exitCode)
 
 		# Chain
-		@
+		joe
 
+	# Uncaught Exception
 	# Log an uncaughtException and die
 	uncaughtException: (err) ->
 		# Check
 		return  if joe.hasExited()
 
 		# Report
-		joePrivate.errord = true
 		unless err instanceof Error
 			err = new Error(err)
+		joePrivate.addErrorLog({testName:'uncaughtException',err})
 		joe.report('uncaughtException',err)
 		joe.exit(1)
 
 		# Chain
-		@
+		joe
 
-	# Suite
-	# Extend the bal-util Block class with our testing stuff
-	Suite: class extends Block
-		# When we create a sub block, create it using our Suite instead of the standard Block
-		createSubBlock: (name,fn,parentBlock) ->
-			new joe.Suite(name,fn,parentBlock)
+	# Get Suite Name
+	# Get a suite's entire name, including the parent suites (if separator is specified)
+	getSuiteName: (suite,separator) ->
+		# Prepare
+		suiteName = suite.getSuiteName()
+		result = suiteName
 
-		# Override the Block events with our own handlers, so we can trigger our reporting events
-		blockBefore: (block) ->
-			joe.report('startSuite',block)
-			super
-		blockAfter: (block,err) ->
-			joePrivate.errord = true  if err
-			joe.report('finishSuite',block,err)
-			super
-		blockTaskBefore: (block,test) ->
-			joe.report('startTest',block,test)
-			super
-		blockTaskAfter: (block,test,err) ->
-			joePrivate.errord = true  if err
-			joe.report('finishTest',block,test,err)
-			super
+		# Should we get the parent suite names as well?
+		if separator
+			parentSuite = suite.getParentSuite()
+			if parentSuite
+				parentSuiteName = joe.getSuiteName(parentSuite,separator)
+				result = ''
+				result += "#{parentSuiteName}#{separator}"  if parentSuiteName
+				result += "#{suiteName}"
 
-		# Provide an API that can be used by our reporters and whatnot
-		getSuiteName: ->
-			@blockName
-		getParentSuite: ->
-			@parentBlock
+		# Return the result name
+		return result
 
-		# Testing aliases for new block
-		# fn(subSuite, subSuite.test, subSuite.exit)
-		suite: (name,fn) ->
-			unless fn.length in [0,2,3]
-				throw new Error("An invalid amount of arguments were specified for a Joe Suite, more info here: #{config.troubleshootingURL}")
-			else
-				@block(name,fn)
-		describe: (name,fn) ->
-			@suite(name,fn)
+	# Get Test Name
+	# Get a test's entire name, including the parent suites (if separator is specified)
+	getTestName: (suite,testName,separator) ->
+		# Prepare
+		result = testName
 
-		# Testing aliases for new task
-		# fn(complete)
-		test: (name,fn) ->
-			unless fn.length in [0,1]
-				throw new Error("An invalid amount of arguments were specified for a Joe Test, more info here: #{config.troubleshootingURL}")
-			else
-				@task(name,fn)
-		it: (name,fn) ->
-			@test(name,fn)
+		# Should we get the suite names as well?
+		if separator and suite?
+			suiteName = joe.getSuiteName(suite,separator)
+			result = ''
+			result += "#{suiteName}"
+			result += "#{separator}#{testName}"  if testName
 
+		# Return the result name
+		return result
 
 # Events
+# Hook into all the different ways a process can die
+# and handle appropriatly
 if process?
 	process.on 'SIGINT', ->
 		joe.exit()  unless joe.hasExited()
 	process.on 'exit', ->
+		joePrivate.getGlobalSuite().exit()
 		joe.exit()  unless joe.hasExited()
 	process.on 'uncaughtException', (err) ->
 		joe.uncaughtException(err)  unless joe.hasExited()
 
-# Create our interface globals to be used by others
+# Interface
+# Create our public interface for creating suites and tests
 joe.describe = joe.suite = (name,fn) ->
 	joePrivate.getGlobalSuite().suite(name,fn)
 joe.it = joe.test = (name,fn) ->
 	joePrivate.getGlobalSuite().test(name,fn)
 
 # Require helper
+# Helps node processes include their desired reporter
 if require?
-	joe.require = (path) ->
-		require(__dirname+'/'+path)
+	joe.require = (path) -> require(__dirname+'/'+path)
 
 # Freeze our public interface from changes
 # This should only work on node, as we use the joe interface to insert our reporters when inside browsers

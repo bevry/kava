@@ -4,7 +4,7 @@ assert = require('assert')
 
 # Prepare
 everythingTestPath = __dirname+'/../example/everything.test.js'
-expected = "10/11 tests ran successfully, with 1 errors"
+expected = "FAILURE: 10/11 tests ran successfully; 1 failed, 0 incomplete, 1 errors"
 
 # Test
 stdout = ''
@@ -15,7 +15,9 @@ runner.stdout.on 'data', (data) ->
 runner.stderr.on 'data', (data) ->
 	process.stderr.write(data)
 runner.on 'exit', (code) ->
-	result = stdout.indexOf(expected) isnt -1
-	message = 'THE ABOVE WAS EXACTLY WHAT WE EXPECTED. TESTS HAVE PASSED!'
-	assert.ok(result, message)
-	console.log(message)
+	pass = stdout.indexOf(expected) isnt -1
+	if pass
+		console.log 'THE ABOVE IS WHAT WE EXPECTED. TESTS HAVE PASSED'
+	else
+		console.log 'THE ABOVE IS NOT WHAT WE WE EXPECTED. TESTS HAVE FAILED'
+	assert.ok(pass)

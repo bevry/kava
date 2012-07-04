@@ -10,8 +10,12 @@
 
   joe.suite('2 args', function(suite, describe) {});
 
-  joe.suite('3 args', function(suite, describe, complete) {});
+  joe.suite('3 args', function(suite, describe, complete) {
+    return complete();
+  });
 
-  joe.suite('1 args', function(done) {});
+  joe.suite('1 args', function(done) {
+    return done();
+  });
 
 }).call(this);

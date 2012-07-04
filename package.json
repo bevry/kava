@@ -1,6 +1,6 @@
 {
 	"name": "joe",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Node.js asynchronous testing framework, runner and reporter",
 	"homepage": "https://github.com/bevry/joe",
 	"keywords": [
@@ -27,7 +27,7 @@
 		"node": ">=0.4.0"
 	},
 	"dependencies": {
-		"bal-util": "1.8.x",
+		"bal-util": "1.11.x",
 		"cli-color": "0.1.x"
 	},
 	"optionalDependencies": {

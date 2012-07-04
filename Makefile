@@ -4,10 +4,20 @@ compile:
 dev:
 	./node_modules/.bin/coffee -w -o out/ -c src/
 
-example:
-	node out/example/example1.test.js &
-	node out/example/everything.test.js &
-	node out/example/usage-warning-suite.test.js &
-	node out/example/usage-warning-test.test.js &
+test:
+	make compile
+	npm test
 
-.PHONY: compile dev example
+example-run:
+	make compile
+	node out/example/example1.test.js
+	node out/example/everything.test.js
+	node out/example/fail-throw-suite.test.js
+	node out/example/fail-usage-suite.test.js
+	node out/example/fail-usage-test.test.js
+	node out/example/fail-never-finish.test.js
+
+example:
+	make example-run -i
+
+.PHONY: compile dev test example example-run
