@@ -1,5 +1,9 @@
 ## History
 
+- v1.0.3 August 9, 2012
+	- Windows support
+	- Re-added markdown files to npm distribution as they are required for the npm website
+
 - v1.0.2 July 4, 2012
 	- We now error on incomplete tasks
 	- Joe now handles (instead of reporters):

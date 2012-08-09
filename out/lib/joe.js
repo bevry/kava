@@ -9,7 +9,7 @@
 
   Block = balUtilFlow.Block;
 
-  isWindows = process.platform.indexOf('win') === 0;
+  isWindows = (typeof process !== "undefined" && process !== null) && process.platform.indexOf('win') === 0;
 
   config = {
     troubleshootingURL: 'https://github.com/bevry/joe/wiki/Troubleshooting'

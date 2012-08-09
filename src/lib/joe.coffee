@@ -3,7 +3,7 @@ balUtilFlow = require?('bal-util') or @balUtilFlow
 {Block} = balUtilFlow
 
 # Prepare
-isWindows = process.platform.indexOf('win') is 0
+isWindows = process? and process.platform.indexOf('win') is 0
 
 # Config
 # Some configuration specific to joe
