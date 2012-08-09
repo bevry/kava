@@ -2,7 +2,7 @@
 ConsoleReporter = if require? then require(__dirname+'/console') else @joe.ConsoleReporter
 
 # Prepare
-isWindows = process?.platform.indexOf('win') isnt -1
+isWindows = process.platform.indexOf('win') is 0
 
 # Reporter
 class ListReporter extends ConsoleReporter

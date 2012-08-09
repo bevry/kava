@@ -9,7 +9,7 @@
     cliColor = null;
   }
 
-  isWindows = (typeof process !== "undefined" && process !== null ? process.platform.indexOf('win') : void 0) !== -1;
+  isWindows = process.platform.indexOf('win') === 0;
 
   ConsoleReporter = (function() {
 

@@ -6,7 +6,7 @@
 
   ConsoleReporter = typeof require !== "undefined" && require !== null ? require(__dirname + '/console') : this.joe.ConsoleReporter;
 
-  isWindows = (typeof process !== "undefined" && process !== null ? process.platform.indexOf('win') : void 0) !== -1;
+  isWindows = process.platform.indexOf('win') === 0;
 
   ListReporter = (function(_super) {
 
