@@ -1,8 +1,8 @@
 compile:
-	./node_modules/.bin/coffee -o out/ -c src/
+	node_modules/.bin/coffee -o out -c src
 
 dev:
-	./node_modules/.bin/coffee -w -o out/ -c src/
+	node_modules/.bin/coffee -w -o out -c src
 
 test:
 	make compile

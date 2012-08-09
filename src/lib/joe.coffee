@@ -2,6 +2,9 @@
 balUtilFlow = require?('bal-util') or @balUtilFlow
 {Block} = balUtilFlow
 
+# Prepare
+isWindows = process.platform.indexOf('win') isnt -1 
+
 # Config
 # Some configuration specific to joe
 config =
@@ -323,8 +326,9 @@ joe =
 # Hook into all the different ways a process can die
 # and handle appropriatly
 if process?
-	process.on 'SIGINT', ->
-		joe.exit()  unless joe.hasExited()
+	unless isWindows
+		process.on 'SIGINT', ->
+			joe.exit()  unless joe.hasExited()
 	process.on 'exit', ->
 		joePrivate.getGlobalSuite().exit()
 		joe.exit()  unless joe.hasExited()

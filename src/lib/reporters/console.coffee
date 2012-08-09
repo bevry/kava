@@ -4,6 +4,9 @@ try
 catch err
 	cliColor = null
 
+# Prepare
+isWindows = process?.platform.indexOf('win') isnt -1
+
 # Reporter
 class ConsoleReporter
 	errors: null
@@ -13,9 +16,9 @@ class ConsoleReporter
 		@errors or= []
 		@config or= config or {}
 		@config.start ?= ''
-		@config.fail ?= ' ✘  '
-		@config.pass ?= ' ✔  '
-		@config.sub ?= ' ➞  '
+		@config.fail ?= if isWindows then ' ERR!' else ' ✘  '
+		@config.pass ?= if isWindows then ' OK' else ' ✔  '
+		@config.sub ?= if isWindows then ' > ' else ' ➞  '
 		@config.failHeading ?= 'Error #%s:'
 		@config.summaryPass ?= "%s/%s tests ran successfully, everything passed"
 		@config.summaryFail ?= "FAILURE: %s/%s tests ran successfully; %s failed, %s incomplete, %s errors"

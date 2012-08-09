@@ -1,6 +1,9 @@
 # Require
 ConsoleReporter = if require? then require(__dirname+'/console') else @joe.ConsoleReporter
 
+# Prepare
+isWindows = process?.platform.indexOf('win') isnt -1
+
 # Reporter
 class ListReporter extends ConsoleReporter
 
@@ -10,8 +13,8 @@ class ListReporter extends ConsoleReporter
 
 	constructor: (config) ->
 		@config or= config or {}
-		@config.fail ?= '✘  '
-		@config.pass ?= '✔  '
+		@config.fail ?= if isWindows then 'ERR! ' else '✘  '
+		@config.pass ?= if isWindows then 'OK   ' else '✔  '
 		super
 
 	finishTest: (suite,testName,err) ->
