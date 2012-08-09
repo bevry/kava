@@ -5,7 +5,7 @@ catch err
 	cliColor = null
 
 # Prepare
-isWindows = process?.platform.indexOf('win') isnt -1
+isWindows = process.platform.indexOf('win') is 0
 
 # Reporter
 class ConsoleReporter
