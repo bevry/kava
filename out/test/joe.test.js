@@ -29,9 +29,27 @@
     if (pass) {
       console.log('THE ABOVE IS WHAT WE EXPECTED. TESTS HAVE PASSED');
     } else {
-      console.log('THE ABOVE IS NOT WHAT WE WE EXPECTED. TESTS HAVE FAILED');
+      console.log('THE ABOVE IS NOT WHAT WE EXPECTED. TESTS HAVE FAILED');
     }
-    return assert.ok(pass);
+    assert.ok(pass);
+    stdout = '';
+    runner = spawn('node', [everythingTestPath, '--joe-reporter=list']);
+    runner.stdout.on('data', function(data) {
+      stdout += data;
+      return process.stdout.write(data);
+    });
+    runner.stderr.on('data', function(data) {
+      return process.stderr.write(data);
+    });
+    return runner.on('exit', function(code) {
+      pass = stdout.indexOf(expected) !== -1;
+      if (pass) {
+        console.log('THE ABOVE IS WHAT WE EXPECTED. TESTS HAVE PASSED');
+      } else {
+        console.log('THE ABOVE IS NOT WHAT WE EXPECTED. TESTS HAVE FAILED');
+      }
+      return assert.ok(pass);
+    });
   });
 
 }).call(this);
