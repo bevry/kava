@@ -26,7 +26,7 @@ class ConsoleReporter
 			unless '--no-colors' in process?.argv
 				@config.fail = cliColor.red(@config.fail)
 				@config.pass = cliColor.green(@config.pass)
-				@config.sub = cliColor.gray(@config.sub)
+				@config.sub = cliColor.black(@config.sub)
 				@config.failHeading = cliColor.red.underline(@config.failHeading)
 				@config.summaryPass = cliColor.green.underline(@config.summaryPass)
 				@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)

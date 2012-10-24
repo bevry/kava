@@ -1,5 +1,9 @@
 ## History
 
+- v1.1.0 October 25, 2012
+	- Updated [cli-color](https://github.com/medikoo/cli-color) from v0.1 to v0.2
+	- Updated [bal-util](https://github.com/balupton/bal-util) from v1.11 to v1.13
+
 - v1.0.3 August 9, 2012
 	- Windows support
 	- Re-added markdown files to npm distribution as they are required for the npm website

@@ -46,7 +46,7 @@
         if (__indexOf.call(typeof process !== "undefined" && process !== null ? process.argv : void 0, '--no-colors') < 0) {
           this.config.fail = cliColor.red(this.config.fail);
           this.config.pass = cliColor.green(this.config.pass);
-          this.config.sub = cliColor.gray(this.config.sub);
+          this.config.sub = cliColor.black(this.config.sub);
           this.config.failHeading = cliColor.red.underline(this.config.failHeading);
           this.config.summaryPass = cliColor.green.underline(this.config.summaryPass);
           this.config.summaryFail = cliColor.red.bold.underline(this.config.summaryFail);
