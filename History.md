@@ -1,8 +1,14 @@
 ## History
 
+- v1.1.1 October 25, 2012
+	- Build improvements
+	- Updated [bal-util](https://github.com/balupton/bal-util) from v1.3 to v1.15
+	- Updated [coffee-script](https://github.com/jashkenas/coffee-script) devDependency from 1.3 to 1.4
+
 - v1.1.0 October 25, 2012
 	- Updated [cli-color](https://github.com/medikoo/cli-color) from v0.1 to v0.2
 	- Updated [bal-util](https://github.com/balupton/bal-util) from v1.11 to v1.13
+		- Update: turns out I actually specified v1.3 instead of v1.13 - it works, but not desirable, fixed in v1.1.1
 
 - v1.0.3 August 9, 2012
 	- Windows support

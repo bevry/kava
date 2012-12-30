@@ -1,12 +1,13 @@
 {
 	"name": "joe",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Node.js asynchronous testing framework, runner and reporter",
 	"homepage": "https://github.com/bevry/joe",
 	"keywords": [
-		"test",
-		"testing",
-		"framework",
+		"mocha",
+		"test", "testing",
+		"bdd",
+		"tdd",
 		"runner"
 	],
 	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
