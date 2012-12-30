@@ -1,13 +1,60 @@
-compile:
-	node_modules/.bin/coffee -o out -c src
+# If you change something here, be sure to reflect the changes in:
+# - the scripts section of the package.json file
+# - the .travis.yml file
 
+# -----------------
+# Variables
+
+BIN=node_modules/.bin/
+COFFEE=$(BIN)coffee
+OUT=out
+SRC=src
+
+
+# -----------------
+# Documentation
+
+# Usage: coffee [options] path/to/script.coffee -- [args]
+# -b, --bare         compile without a top-level function wrapper
+# -c, --compile      compile to JavaScript and save as .js files
+# -o, --output       set the output directory for compiled JavaScript
+# -w, --watch        watch scripts for changes and rerun commands
+
+
+# -----------------
+# Commands
+
+# Watch and recompile our files
 dev:
-	node_modules/.bin/coffee -w -o out -c src
+	$(COFFEE) -cbwo $(OUT) $(SRC)
 
-test:
+# Compile our files
+compile:
+	$(COFFEE) -cbo $(OUT) $(SRC)
+
+# Clean up
+clean:
+	rm -Rf $(OUT) node_modules *.log
+
+# Install dependencies
+install:
+	npm install
+
+# Reset
+reset:
+	make clean
+	make install
 	make compile
+
+# Ensure everything is ready for our tests (used by things like travis)
+test-prepare:
+	make reset
+
+# Run our tests
+test:
 	npm test
 
+# Example
 example-run:
 	make compile
 	node out/example/example1.test.js
@@ -16,8 +63,9 @@ example-run:
 	node out/example/fail-usage-suite.test.js
 	node out/example/fail-usage-test.test.js
 	node out/example/fail-never-finish.test.js
-
 example:
 	make example-run -i
 
-.PHONY: compile dev test example example-run
+
+# Ensure the listed commands always re-run and are never cached
+.PHONY: dev compile clean install reset test-prepare test example example-run
