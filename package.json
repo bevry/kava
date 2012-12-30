@@ -27,7 +27,7 @@
 		"node": ">=0.4.0"
 	},
 	"dependencies": {
-		"bal-util": "1.3.x"
+		"bal-util": "1.15.x"
 	},
 	"bundledDependencies": [
 		"bal-util"
@@ -36,7 +36,7 @@
 		"cli-color": "0.2.x"
 	},
 	"devDependencies": {
-		"coffee-script": "1.3.x"
+		"coffee-script": "1.4.x"
 	},
 	"directories": {
 		"lib": "./out/lib"
