@@ -1,5 +1,8 @@
 ## History
 
+- v1.1.2 March 23, 2013
+	- Dependency updates
+
 - v1.1.1 October 25, 2012
 	- Build improvements
 	- Updated [bal-util](https://github.com/balupton/bal-util) from v1.3 to v1.15

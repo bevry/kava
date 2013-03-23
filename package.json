@@ -1,6 +1,6 @@
 {
 	"name": "joe",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Node.js asynchronous testing framework, runner and reporter",
 	"homepage": "https://github.com/bevry/joe",
 	"keywords": [
@@ -25,19 +25,19 @@
 		"url": "http://github.com/bevry/joe.git"
 	},
 	"engines" : {
-		"node": ">=0.4.0"
+		"node": ">=0.4"
 	},
 	"dependencies": {
-		"bal-util": "1.15.x"
+		"bal-util": "~1.16.13"
 	},
 	"bundledDependencies": [
 		"bal-util"
 	],
 	"optionalDependencies": {
-		"cli-color": "0.2.x"
+		"cli-color": "~0.2.2"
 	},
 	"devDependencies": {
-		"coffee-script": "1.4.x"
+		"coffee-script": "~1.6.2"
 	},
 	"directories": {
 		"lib": "./out/lib"
@@ -45,5 +45,5 @@
 	"scripts": {
 		"test": "node out/test/joe.test.js"
 	},
-	"main": "./out/lib/joe"
+	"main": "./out/lib/joe.js"
 }
