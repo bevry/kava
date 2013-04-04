@@ -1,5 +1,5 @@
-# Require
-assert = require?('assert') or @assert
-joe = require?(__dirname+'/../lib/joe') or @joe
+# Import
+joe = require('../..')
 
+# Test
 joe.test 'never finish', (done) ->

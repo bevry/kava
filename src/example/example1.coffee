@@ -1,6 +1,6 @@
-# Require
-assert = require?('assert') or @assert
-joe = require?(__dirname+'/../lib/joe') or @joe
+# Import
+assert = require('assert')
+joe = require('../..')
 
 # Prepare
 wait = (delay,fn) -> setTimeout(fn,delay)

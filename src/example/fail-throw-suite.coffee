@@ -1,6 +1,6 @@
-# Require
-assert = require?('assert') or @assert
-joe = require?(__dirname+'/../lib/joe') or @joe
+# Import
+joe = require('../..')
 
+# Test
 joe.suite 'deliberate throw suite', ->
 	throw new Error('I am the deliberate throw')
