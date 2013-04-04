@@ -1,83 +1,59 @@
-# Require
-balUtilFlow = require?('bal-util') or @balUtilFlow
-{Block} = balUtilFlow
+# Import
+{TaskGroup} = require('taskgroup')
 
 # Prepare
-isWindows = process? and process.platform.indexOf('win') is 0
-
-# Config
-# Some configuration specific to joe
-config =
-
-	# Teroubleshooting URL
-	# A url used to refer people when a joe specific error is thrown
-	troubleshootingURL: 'https://github.com/bevry/joe/wiki/Troubleshooting'
-
+isBrowser = window?
+isWindows = process? and process.platform?.indexOf('win') is 0
 
 # Suite
-# A suite is the heart of Joe, they extend the bal-util Block class
-# The Block class provides us with all the logic we need:
-# - a way to group sync/async tasks, and execute them in a parallel or serial fashion
-# - if a task fails, then we will exit the group of tasks and return the error in the completion callback for the group
-# With suites, we extend this functionality with:
-# - creating blocks through `suite` and `describe` functions
-# - creating tasks through `test` and `it` functions
-# - when tasks start and finish, we log their errors (if any) and the counts (how many started, how many finished, how many failed)
-Suite = class extends Block
-	# When we create a sub block, create it using our Suite class instead of the standard Block
-	createSubBlock: (opts) ->
-		opts.parentBlock = @
-		new Suite(opts)
-
-	# Override the Block events with our own handlers, so we can trigger our reporting events
-	blockBefore: (suite) ->
-		joePrivate.totalSuites++
-		joe.report('startSuite',suite)
-		super
-	blockAfter: (suite,err) ->
-		if err
-			joePrivate.addErrorLog({suite,err})
-			joePrivate.totalFailedSuites++
-		else
-			joePrivate.totalPassedSuites++
-		joe.report('finishSuite',suite,err)
-		super
-	blockTaskBefore: (suite,testName) ->
-		joePrivate.totalTests++
-		joe.report('startTest',suite,testName)
-		super
-	blockTaskAfter: (suite,testName,err) ->
-		if err
-			joePrivate.addErrorLog({suite,testName,err})
-			joePrivate.totalFailedTests++
-		else
-			joePrivate.totalPassedTests++
-		joe.report('finishTest',suite,testName,err)
+Suite = class extends TaskGroup
+	constructor: ->
+		# Prepare
 		super
 
-	# Provide an API that can be used by our reporters
-	getSuiteName: -> @blockName
-	getParentSuite: -> @parentBlock
+		# Group Before
+		@on 'group.run', (suite) ->
+			return  unless suite.name
+			joePrivate.totalSuites++
+			joe.report('startSuite',suite)
 
-	# Aliases for new block
-	# fn(subSuite, subSuite.test, subSuite.exit)
-	suite: (name,fn) ->
-		unless fn.length in [0,2,3]
-			throw new Error("An invalid amount of arguments were specified for a Joe Suite, more info here: #{config.troubleshootingURL}")
-		else
-			@block(name,fn)
-	describe: (name,fn) ->
-		@suite(name,fn)
+		# Group After
+		@on 'group.complete', (suite,err) ->
+			if err
+				joePrivate.addErrorLog({suite,err})
+				return  unless suite.name
+				joePrivate.totalFailedSuites++
+			else
+				return  unless suite.name
+				joePrivate.totalPassedSuites++
+			joe.report('finishSuite',suite,err)
 
-	# Sliases for new task
-	# fn(complete)
-	test: (name,fn) ->
-		unless fn.length in [0,1]
-			throw new Error("An invalid amount of arguments were specified for a Joe Test, more info here: #{config.troubleshootingURL}")
-		else
-			@task(name,fn)
-	it: (name,fn) ->
-		@test(name,fn)
+		# Task Before
+		@on 'task.run', (test) ->
+			return  unless test.name
+			joePrivate.totalTests++
+			joe.report('startTest',test)
+
+		# Task After
+		@on 'task.complete', (test,err) ->
+			if err
+				joePrivate.addErrorLog({test,err})
+				return  unless test.name
+				joePrivate.totalFailedTests++
+			else
+				return  unless test.name
+				joePrivate.totalPassedTests++
+			joe.report('finishTest',test,err)
+
+	createGroup: (args...) =>
+		group = new Suite(args...)
+		return group
+
+	suite: (args...) => @addGroup(args...)
+	describe: (args...) => @addGroup(args...)
+
+	test: (args...) => @addTask(args...)
+	it: (args...) => @addTask(args...)
 
 
 # Creare out private interface for Joe
@@ -94,19 +70,19 @@ joePrivate =
 	getGlobalSuite: ->
 		# If it doesn't exist, then create it and name it joe
 		unless joePrivate.globalSuite?
-			joePrivate.globalSuite = new Suite({name:'joe'})
+			joePrivate.globalSuite = new Suite().run()
 
 		# Return the global suite
 		return joePrivate.globalSuite
 
 	# Error Logs
-	# We log all the errors that have occured with their suite and testName
+	# We log all the errors that have occured with their suite and test
 	# so the reporters can access them
-	errorLogs: [] # [{err,suite,testName}]
+	errorLogs: [] # [{err,suite,test,name}]
 
 	# Add Error Log
 	# Logs an error into the errors array, however only if we haven't already logged it
-	# log = {err,suite,testName}
+	# log = {err,suite,test,name}
 	addErrorLog: (errorLog) ->
 		if errorLog.err is joePrivate.errorLogs[joePrivate.errorLogs.length-1]?.err
 			# ignore
@@ -280,57 +256,37 @@ joe =
 		# Report
 		unless err instanceof Error
 			err = new Error(err)
-		joePrivate.addErrorLog({testName:'uncaughtException',err})
+		joePrivate.addErrorLog({name:'uncaughtException',err})
 		joe.report('uncaughtException',err)
 		joe.exit(1)
 
 		# Chain
 		joe
 
-	# Get Suite Name
-	# Get a suite's entire name, including the parent suites (if separator is specified)
-	getSuiteName: (suite,separator) ->
-		# Prepare
-		suiteName = suite.getSuiteName()
-		result = suiteName
-
-		# Should we get the parent suite names as well?
-		if separator
-			parentSuite = suite.getParentSuite()
-			if parentSuite
-				parentSuiteName = joe.getSuiteName(parentSuite,separator)
-				result = ''
-				result += "#{parentSuiteName}#{separator}"  if parentSuiteName
-				result += "#{suiteName}"
-
-		# Return the result name
+	# Get Item Names
+	getItemNames: (item) ->
+		result = []
+		result = result.concat(@getItemNames(item.parent))  if item.parent
+		result.push(item.name)  if item.name
 		return result
 
-	# Get Test Name
-	# Get a test's entire name, including the parent suites (if separator is specified)
-	getTestName: (suite,testName,separator) ->
-		# Prepare
-		result = testName
-
-		# Should we get the suite names as well?
-		if separator and suite?
-			suiteName = joe.getSuiteName(suite,separator)
-			result = ''
-			result += "#{suiteName}"
-			result += "#{separator}#{testName}"  if testName
-
-		# Return the result name
+	# Get Item Name
+	getItemName: (item,separator) ->
+		if separator
+			result = joe.getItemNames(item).join(separator)
+		else
+			result = item.name
 		return result
 
 # Events
 # Hook into all the different ways a process can die
 # and handle appropriatly
-if process?
+if process? and !isBrowser
 	unless isWindows
 		process.on 'SIGINT', ->
 			joe.exit()  unless joe.hasExited()
 	process.on 'exit', ->
-		joePrivate.getGlobalSuite().exit()
+		joePrivate.getGlobalSuite().stop()
 		joe.exit()  unless joe.hasExited()
 	process.on 'uncaughtException', (err) ->
 		joe.uncaughtException(err)  unless joe.hasExited()
@@ -352,5 +308,5 @@ if require?
 if require?
 	Object.freeze?(joe)
 
-# Export for node.js and browsers
-if module? then (module.exports = joe) else (@joe = joe)
+# Export
+module.exports = joe

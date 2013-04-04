@@ -5,6 +5,7 @@
 Makefile
 
 src/
-out/example/
 out/test/
+out/example/
+test/
 test-web/

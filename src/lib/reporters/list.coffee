@@ -1,5 +1,5 @@
-# Require
-ConsoleReporter = if require? then require(__dirname+'/console') else @joe.ConsoleReporter
+# Import
+ConsoleReporter = require('./console')
 
 # Prepare
 isWindows = process? and process.platform.indexOf('win') is 0
@@ -17,11 +17,11 @@ class ListReporter extends ConsoleReporter
 		@config.pass ?= if isWindows then 'OK   ' else '✔  '
 		super
 
-	finishTest: (suite,testName,err) ->
-		testName = @getTestName(suite,testName)
-		return @  unless testName
+	finishTest: (test,err) ->
+		name = @getItemName(test)
+		return @  unless name
 		check = (if err then @config.fail else @config.pass)
-		message = "#{check}#{testName}"
+		message = "#{check}#{name}"
 		console.log(message, if process? is false and err then [err,err.stack] else '')
 		@
 
@@ -31,13 +31,13 @@ class ListReporter extends ConsoleReporter
 			errorLogs = @joe.getErrorLogs()
 			console.log("\n"+@config.summaryFail, totalPassedTests, totalTests, totalFailedTests, totalIncompleteTests, totalErrors)
 			for errorLog,index in errorLogs
-				{suite,testName,err} = errorLog
-				testName = @getTestName(suite,testName)
+				{suite,test,err} = errorLog
+				name = @getTestName(test or suite)
 				console.log("\n"+@config.failHeading, index+1)
-				console.log("#{testName}\n#{err.stack.toString()}")
+				console.log("#{name}\n#{err.stack.toString()}")
 		else
 			console.log("\n"+@config.summaryPass, totalPassedTests, totalTests)
 		console.log('')
 
-# Export for node.js and browsers
-if module? then (module.exports = ListReporter) else (@joe.ListReporter = ListReporter)
+# Export
+module.exports = ListReporter

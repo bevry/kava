@@ -1,11 +1,12 @@
+# Prepare
+isBrowser = window?
+isWindows = process? and process.platform.indexOf('win') is 0
+
 # Optional
 try
-	cliColor = require?('cli-color')
+	cliColor = require('cli-color')  unless isBrowser
 catch err
 	cliColor = null
-
-# Prepare
-isWindows = process? and process.platform.indexOf('win') is 0
 
 # Reporter
 class ConsoleReporter
@@ -31,46 +32,37 @@ class ConsoleReporter
 				@config.summaryPass = cliColor.green.underline(@config.summaryPass)
 				@config.summaryFail = cliColor.red.bold.underline(@config.summaryFail)
 
-	getSuiteName: (suite) ->
-		return @joe.getSuiteName(suite,@config.sub)
-
-	getTestName: (suite,testName) ->
-		result = ''
-		if suite?
-			suiteName = @getSuiteName(suite)
-			result += "#{suiteName}"
-			result += "#{@config.sub}#{testName}"  if testName
-		else
-			result = testName
-		return result
+	getItemName: (item) ->
+		name = @joe.getItemName(item,@config.sub)
+		return name
 
 	startSuite: (suite) ->
-		suiteName = @getSuiteName(suite)
-		return @  unless suiteName
-		message = "#{suiteName}#{@config.start}"
+		name = @getItemName(suite)
+		return @  unless name
+		message = "#{name}#{@config.start}"
 		console.log(message)
 		@
 
 	finishSuite: (suite,err) ->
-		suiteName = @getSuiteName(suite)
-		return @  unless suiteName
+		name = @getItemName(suite)
+		return @  unless name
 		check = (if err then @config.fail else @config.pass)
-		message = "#{suiteName}#{check}"
+		message = "#{name}#{check}"
 		console.log(message)
 		@
 
-	startTest: (suite,testName) ->
-		testName = @getTestName(suite,testName)
-		return @  unless testName
-		message = "#{testName}#{@config.start}"
+	startTest: (test) ->
+		name = @getItemName(test)
+		return @  unless name
+		message = "#{name}#{@config.start}"
 		console.log(message)
 		@
 
-	finishTest: (suite,testName,err) ->
-		testName = @getTestName(suite,testName)
-		return @  unless testName
+	finishTest: (test,err) ->
+		name = @getItemName(test)
+		return @  unless name
 		check = (if err then @config.fail else @config.pass)
-		message = "#{testName}#{check}"
+		message = "#{name}#{check}"
 		console.log(message, if process? is false and err then [err,err.stack] else '')
 		@
 
@@ -80,15 +72,15 @@ class ConsoleReporter
 			errorLogs = @joe.getErrorLogs()
 			console.log("\n"+@config.summaryFail, totalPassedTests, totalTests, totalFailedTests, totalIncompleteTests, totalErrors)
 			for errorLog,index in errorLogs
-				{suite,testName,err} = errorLog
-				testName = @getTestName(suite,testName)
+				{suite,test,name,err} = errorLog
+				name or= @getItemName(test or suite)
 				console.log("\n"+@config.failHeading, index+1)
-				console.log(testName)
+				console.log(name)
 				console.log(err.stack?.toString() or err)
 			console.log('')
 		else
 			console.log("\n"+@config.summaryPass, totalPassedTests, totalTests)
 		@
 
-# Export for node.js and browsers
-if module? then (module.exports = ConsoleReporter) else (@joe.ConsoleReporter = ConsoleReporter)
+# Export
+module.exports = ConsoleReporter
