@@ -3,7 +3,7 @@
 
 # Prepare
 isBrowser = window?
-isWindows = process? and process.platform?.indexOf('win') is 0
+isWindows = process?.platform?.indexOf('win') is 0
 
 # Suite
 Suite = class extends TaskGroup
@@ -116,36 +116,31 @@ joePrivate =
 	getReporters: ->
 		# Check if have no reporters
 		if joePrivate.reporters.length is 0
-			# Load the default reporter in node
-			if process?.argv and require?
-				# Prepare
-				defaultReporter = 'console'
+			# Prepare
+			reporterName = 'console'
 
-				# Cycle through our CLI arguments
-				# to see if we can override our defaultReporter with one specified by the CLI
-				for arg in process.argv
-					# Do we have our --joe-reporter=REPORTER argument?
-					argResult = arg.replace(/^--joe-reporter=/,'')
-					if argResult isnt arg
-						defaultReporter = argResult
-						break
+			# Cycle through our CLI arguments
+			# to see if we can override our reporterName with one specified by the CLI
+			for arg in (process?.argv or [])
+				# Do we have our --joe-reporter=REPORTER argument?
+				argResult = arg.replace(/^--joe-reporter=/,'')
+				if argResult isnt arg
+					reporterName = argResult
+					break
 
-				# Load our default reporter
-				try
-					Reporter = joe.require("reporters/#{defaultReporter}")
-					joe.addReporter(new Reporter())
-				catch err
-					console.log("Joe could not load the reporter: #{defaultReporter}. The error is as follows:\n", err)
-					joe.exit(1)
-
-			# Load the default reporter in th browser
-			else
-				try
-					Reporter = joe.ConsoleReporter
-					joe.addReporter(new Reporter())
-				catch err
-					console.log("Joe could not load the reporter: #{defaultReporter}. The error is as follows:\n", err)
-					joe.exit(1)
+			# Load our default reporter
+			try
+				joe.addReporter(reporterName)
+			catch err
+				console.log("""
+					Joe could not load the reporter: #{reporterName}
+					Perhaps it's not installed? Try install it using:
+					    npm install --save-dev joe-reporter-#{reporterName}
+					The exact error was:
+					""", err
+				)
+				joe.exit(1)
+				return
 
 		# Return our reporters
 		return joePrivate.reporters
@@ -174,29 +169,39 @@ joe =
 	# Get Errors
 	# Returns a cloned array of all the error logs
 	getErrorLogs: ->
-		joePrivate.errorLogs.slice()
+		return joePrivate.errorLogs.slice()
 
 	# Has Errors
 	# Returns false if there were no incomplete, no failures and no errors
 	hasErrors: ->
-		joe.getTotals().success is false
+		return joe.getTotals().success is false
 
 	# Has Exited
 	# Returns true if we have exited already
 	# we do not want to exit multiple times
 	hasExited: ->
-		joePrivate.exited is true
+		return joePrivate.exited is true
 
 	# Has Reportes
 	# Do we have any reporters yet?
 	hasReporters: ->
-		joePrivate.reporters isnt 0
+		return joePrivate.reporters isnt 0
 
 	# Add Reporter
 	# Add a reporter to the list of reporters we will be using
 	addReporter: (reporterInstance) ->
+		# Load the reporter
+		if typeof reporterInstance is 'string'
+			Reporter = require("joe-reporter-#{reporterInstance}")
+			reporterInstance = new Reporter()
+
+		# Add joe to the reporter
 		reporterInstance.joe = joe
+
+		# Add the reporter to the list of reporters we have
 		joePrivate.reporters.push(reporterInstance)
+
+		# Chain
 		joe
 
 	# Set Reporter
@@ -230,8 +235,11 @@ joe =
 	# If no exitCode is set, then we determine it through the hasErrors call
 	exit: (exitCode) ->
 		# Check
-		return  if joe.exited
+		return  if joe.hasExited()
 		joePrivate.exited = true
+
+		# Stop
+		joePrivate.getGlobalSuite().stop()
 
 		# Determine exit code
 		unless exitCode?
@@ -241,8 +249,7 @@ joe =
 		joe.report('exit', exitCode)
 
 		# Kill our process with the correct exit code
-		if process?
-			process.exit(exitCode)
+		process?.exit?(exitCode)
 
 		# Chain
 		joe
@@ -281,15 +288,17 @@ joe =
 # Events
 # Hook into all the different ways a process can die
 # and handle appropriatly
-if process? and !isBrowser
+if isBrowser
+	joePrivate.getGlobalSuite().on 'item.complete', (item) ->
+		return  unless item.name
+		joePrivate.getGlobalSuite().on 'complete', ->
+			process.nextTick -> joe.exit()
+
+else if process?
 	unless isWindows
-		process.on 'SIGINT', ->
-			joe.exit()  unless joe.hasExited()
-	process.on 'exit', ->
-		joePrivate.getGlobalSuite().stop()
-		joe.exit()  unless joe.hasExited()
-	process.on 'uncaughtException', (err) ->
-		joe.uncaughtException(err)  unless joe.hasExited()
+		process.on 'SIGINT', -> joe.exit()
+	process.on 'exit', -> joe.exit()
+	process.on 'uncaughtException', (err) -> joe.uncaughtException(err)
 
 # Interface
 # Create our public interface for creating suites and tests
@@ -298,15 +307,8 @@ joe.describe = joe.suite = (name,fn) ->
 joe.it = joe.test = (name,fn) ->
 	joePrivate.getGlobalSuite().test(name,fn)
 
-# Require helper
-# Helps node processes include their desired reporter
-if require?
-	joe.require = (path) -> require(__dirname+'/'+path)
-
 # Freeze our public interface from changes
-# This should only work on node, as we use the joe interface to insert our reporters when inside browsers
-if require?
-	Object.freeze?(joe)
+Object.freeze?(joe)  if !isBrowser
 
 # Export
 module.exports = joe

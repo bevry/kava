@@ -6,18 +6,18 @@ joe = require('../..')
 wait = (delay,fn) -> setTimeout(fn,delay)
 
 # Wait a while, then create our tests
-wait 1*1000, ->
+joe.suite 'example1', (suite,test) ->
 
-	joe.test 'api is readonly within node', ->
+	test 'api is readonly within node', ->
 		# Only run if our environment supports this
-		if require? and Object.freeze? and process.version.slice(0,4) isnt 'v0.4'
+		if window? is false
 			# Attempt modification
 			joe.blah = true
 
 			# Test that the modifications were not successful
 			assert.ok(joe.blah? is false)
 
-	joe.suite 'tests', (suite,test) ->
+	suite 'tests', (suite,test) ->
 
 		suite 'async-suite', (suite,test,done) ->
 			wait 1*1000, -> test '1/2', ->

@@ -2,7 +2,7 @@
 joe = require('../..')
 
 # Our test
-joe.suite 'our suite', (suite,test) ->
+joe.suite 'example2', (suite,test) ->
 	test 'first test', (complete) ->
 		setTimeout(
 			->

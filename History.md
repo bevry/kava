@@ -1,5 +1,11 @@
 ## History
 
+- v1.2.0 April 5, 2013
+	- Updated to use [TaskGroup](https://npmjs.org/package/taskgroup)
+	- Reporters now exist in their own packages. [More info.](https://github.com/bevry/joe/wiki/Using-Custom-Reporters)
+	- No longer output "joe" as the main suite name
+	- Browser tests now auto exit after the last test has run
+
 - v1.1.2 March 23, 2013
 	- Dependency updates
 

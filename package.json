@@ -1,7 +1,7 @@
 {
 	"name": "joe",
 	"version": "1.2.0",
-	"description": "Node.js asynchronous testing framework, runner and reporter",
+	"description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
 	"homepage": "https://github.com/bevry/joe",
 	"keywords": [
 		"mocha",
@@ -25,16 +25,16 @@
 		"url": "http://github.com/bevry/joe.git"
 	},
 	"engines" : {
-		"node": ">=0.4"
+		"node": ">=0.6"
 	},
 	"dependencies": {
 		"taskgroup": "~3.1.0"
 	},
-	"optionalDependencies": {
-		"cli-color": "~0.2.2"
-	},
 	"devDependencies": {
-		"coffee-script": "~1.6.2"
+		"joe-reporter-console": "~1.2.1",
+		"joe-reporter-list": "~1.2.0",
+		"coffee-script": "~1.6.2",
+		"browserify": "~2.11.0"
 	},
 	"directories": {
 		"lib": "./out/lib"

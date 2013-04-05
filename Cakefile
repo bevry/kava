@@ -16,6 +16,7 @@ NPM     = if WINDOWS then process.execPath.replace('node.exe','npm.cmd') else 'n
 EXT     = (if WINDOWS then '.cmd' else '')
 APP     = process.cwd()
 BIN     = "#{APP}/node_modules/.bin"
+BROWSERIFY = "#{BIN}/browserify#{EXT}"
 CAKE    = "#{BIN}/cake#{EXT}"
 COFFEE  = "#{BIN}/coffee#{EXT}"
 OUT     = "#{APP}/out"
@@ -70,6 +71,10 @@ setup = (opts,next) ->
 	install opts, safe next, ->
 		compile opts, next
 
+web = (opts,next) ->
+	(next = opts; opts = {})  unless next?
+	exec("#{BROWSERIFY} -r joe-reporter-console -e out/example/example1.js > test-web/test-web-bundled.js", {stdio:'inherit',cwd:APP}).on('exit',next)
+
 test = (opts,next) ->
 	(next = opts; opts = {})  unless next?
 	spawn(NPM, ['test'], {stdio:'inherit',cwd:APP}).on('exit',next)
@@ -107,6 +112,10 @@ task 'reset', 'reset instance', ->
 # setup
 task 'setup', 'setup for development', ->
 	setup finish
+
+# web
+task 'web', 'run our web tests', ->
+	web finish
 
 # test
 task 'test', 'run our tests', ->

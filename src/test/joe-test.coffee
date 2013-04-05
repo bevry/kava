@@ -1,12 +1,12 @@
 # Requires
 {spawn} = require('child_process')
-{assert} = require('chai')
+assert = require('assert')
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
 expected = "FAILURE: 10/11 tests ran successfully; 1 failed, 0 incomplete, 1 errors"
 
-# Test Console Reporter
+# Test Default Reporter
 stdout = ''
 runner = spawn('node', [everythingTestPath])
 runner.stdout.on 'data', (data) ->
