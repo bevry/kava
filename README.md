@@ -2,6 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/bevry/joe.png?branch=master)](http://travis-ci.org/bevry/joe)
 [![NPM version](https://badge.fury.io/js/joe.png)](https://npmjs.org/package/joe)
+[![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
 
 Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes. 
 
