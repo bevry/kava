@@ -1,49 +1,85 @@
 # Import
-{TaskGroup} = require('taskgroup')
+{Task,TaskGroup} = require('taskgroup')
 
 # Prepare
 isBrowser = window?
 isWindows = process?.platform?.indexOf('win') is 0
 
+# Test
+Test = class extends Task
+	# Variables
+	testDomain: null
+
+	# Fire the method wrapped in a domain
+	fire: =>
+		debugger
+		@testDomain ?= require('domain').create()
+		@testDomain.on('error', @uncaughtExceptionCallback)
+		@testDomain.run(Task::fire.bind(@))
+		@
+
+	# Complete and dispose of the domain
+	complete: =>
+		if @testDomain?
+			@testDomain.dispose()
+			@testDomain = null
+		super
+
 # Suite
 Suite = class extends TaskGroup
+	# Callbacks
+	groupRunCallback: (suite) ->
+		return  unless suite.name
+		joePrivate.totalSuites++
+		joe.report('startSuite', suite)
+	groupCompleteCallback: (suite, err) ->
+		if err
+			joePrivate.addErrorLog({suite, err})
+			return  unless suite.name
+			joePrivate.totalFailedSuites++
+		else
+			return  unless suite.name
+			joePrivate.totalPassedSuites++
+		joe.report('finishSuite', suite, err)
+	taskRunCallback: (test) ->
+		return  unless test.name
+		joePrivate.totalTests++
+		joe.report('startTest', test)
+	taskCompleteCallback: (test, err) ->
+		if err
+			joePrivate.addErrorLog({test, err})
+			return  unless test.name
+			joePrivate.totalFailedTests++
+		else
+			return  unless test.name
+			joePrivate.totalPassedTests++
+		joe.report('finishTest', test, err)
+
 	constructor: ->
 		# Prepare
 		super
 
 		# Group Before
-		@on 'group.run', (suite) ->
-			return  unless suite.name
-			joePrivate.totalSuites++
-			joe.report('startSuite',suite)
+		@on('group.run', @groupRunCallback)
 
 		# Group After
-		@on 'group.complete', (suite,err) ->
-			if err
-				joePrivate.addErrorLog({suite,err})
-				return  unless suite.name
-				joePrivate.totalFailedSuites++
-			else
-				return  unless suite.name
-				joePrivate.totalPassedSuites++
-			joe.report('finishSuite',suite,err)
+		@on('group.complete', @groupCompleteCallback)
+
+		# Group After
+		@on('group.error', @groupCompleteCallback)
 
 		# Task Before
-		@on 'task.run', (test) ->
-			return  unless test.name
-			joePrivate.totalTests++
-			joe.report('startTest',test)
+		@on('task.run', @taskRunCallback)
 
 		# Task After
-		@on 'task.complete', (test,err) ->
-			if err
-				joePrivate.addErrorLog({test,err})
-				return  unless test.name
-				joePrivate.totalFailedTests++
-			else
-				return  unless test.name
-				joePrivate.totalPassedTests++
-			joe.report('finishTest',test,err)
+		@on('task.complete', @taskCompleteCallback)
+
+		# Task After
+		@on('task.error', @taskCompleteCallback)
+
+	createTask: (args...) =>
+		task = new Test(args...)
+		return task
 
 	createGroup: (args...) =>
 		group = new Suite(args...)
@@ -163,7 +199,18 @@ joe =
 		success = (totalIncompleteSuites is 0) and (totalFailedSuites is 0) and (totalIncompleteTests is 0) and (totalFailedTests is 0) and (totalErrors is 0)
 
 		# Return
-		result = {totalSuites,totalPassedSuites,totalFailedSuites,totalIncompleteSuites,totalTests,totalPassedTests,totalFailedTests,totalIncompleteTests,totalErrors,success}
+		result = {
+			totalSuites,
+			totalPassedSuites,
+			totalFailedSuites,
+			totalIncompleteSuites,
+			totalTests,
+			totalPassedTests,
+			totalFailedTests,
+			totalIncompleteTests,
+			totalErrors,
+			success
+		}
 		return result
 
 	# Get Errors
@@ -225,7 +272,7 @@ joe =
 
 		# Cycle through the reporters
 		for reporter in reporters
-			reporter[event]?.apply(reporter,args)
+			reporter[event]?.apply(reporter, args)
 
 		# Chain
 		joe
@@ -263,8 +310,8 @@ joe =
 		# Report
 		unless err instanceof Error
 			err = new Error(err)
-		joePrivate.addErrorLog({name:'uncaughtException',err})
-		joe.report('uncaughtException',err)
+		joePrivate.addErrorLog({name:'uncaughtException', err})
+		joe.report('uncaughtException', err)
 		joe.exit(1)
 
 		# Chain
@@ -300,12 +347,17 @@ else if process?
 	process.on 'exit', -> joe.exit()
 	process.on 'uncaughtException', (err) -> joe.uncaughtException(err)
 
+# Bubbled uncaught exceptions
+joePrivate.getGlobalSuite().on 'error', (err) -> joe.uncaughtException(err)
+
 # Interface
 # Create our public interface for creating suites and tests
-joe.describe = joe.suite = (name,fn) ->
-	joePrivate.getGlobalSuite().suite(name,fn)
-joe.it = joe.test = (name,fn) ->
-	joePrivate.getGlobalSuite().test(name,fn)
+joe.describe = joe.suite = (args...) ->
+	globalSuite = joePrivate.getGlobalSuite()
+	globalSuite.suite.apply(globalSuite, args)
+joe.it = joe.test = (args...) ->
+	globalSuite = joePrivate.getGlobalSuite()
+	globalSuite.test.apply(globalSuite, args)
 
 # Freeze our public interface from changes
 Object.freeze?(joe)  if !isBrowser
