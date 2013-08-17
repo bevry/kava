@@ -7,23 +7,6 @@ isWindows = process?.platform?.indexOf('win') is 0
 
 # Test
 Test = class extends Task
-	# Variables
-	testDomain: null
-
-	# Fire the method wrapped in a domain
-	fire: =>
-		debugger
-		@testDomain ?= require('domain').create()
-		@testDomain.on('error', @uncaughtExceptionCallback)
-		@testDomain.run(Task::fire.bind(@))
-		@
-
-	# Complete and dispose of the domain
-	complete: =>
-		if @testDomain?
-			@testDomain.dispose()
-			@testDomain = null
-		super
 
 # Suite
 Suite = class extends TaskGroup
@@ -60,36 +43,36 @@ Suite = class extends TaskGroup
 		super
 
 		# Group Before
-		@on('group.run', @groupRunCallback)
+		@on('group.run', @groupRunCallback.bind(@))
 
 		# Group After
-		@on('group.complete', @groupCompleteCallback)
+		@on('group.complete', @groupCompleteCallback.bind(@))
 
 		# Group After
-		@on('group.error', @groupCompleteCallback)
+		@on('group.error', @groupCompleteCallback.bind(@))
 
 		# Task Before
-		@on('task.run', @taskRunCallback)
+		@on('task.run', @taskRunCallback.bind(@))
 
 		# Task After
-		@on('task.complete', @taskCompleteCallback)
+		@on('task.complete', @taskCompleteCallback.bind(@))
 
 		# Task After
-		@on('task.error', @taskCompleteCallback)
+		@on('task.error', @taskCompleteCallback.bind(@))
 
-	createTask: (args...) =>
+	createTask: (args...) ->
 		task = new Test(args...)
 		return task
 
-	createGroup: (args...) =>
+	createGroup: (args...) ->
 		group = new Suite(args...)
 		return group
 
-	suite: (args...) => @addGroup(args...)
-	describe: (args...) => @addGroup(args...)
+	suite: (args...) -> @addGroup(args...)
+	describe: (args...) -> @addGroup(args...)
 
-	test: (args...) => @addTask(args...)
-	it: (args...) => @addTask(args...)
+	test: (args...) -> @addTask(args...)
+	it: (args...) -> @addTask(args...)
 
 
 # Creare out private interface for Joe
