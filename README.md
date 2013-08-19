@@ -1,8 +1,10 @@
 # Joe
 
-[![Build Status](https://secure.travis-ci.org/bevry/joe.png?branch=master)](http://travis-ci.org/bevry/joe)
-[![NPM version](https://badge.fury.io/js/joe.png)](https://npmjs.org/package/joe)
-[![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
+[![Build Status](https://secure.travis-ci.org/bevry/joe.png?branch=master)](http://travis-ci.org/bevry/joe "Check this project's build status on TravisCI")
+[![NPM version](https://badge.fury.io/js/joe.png)](https://npmjs.org/package/joe "View this project on NPM")
+[![Gittip donate button](http://badgr.co/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
+[![Flattr donate button](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
+[![PayPayl donate button](https://www.paypalobjects.com/en_AU/i/btn/btn_donate_SM.gif)](https://www.paypal.com/au/cgi-bin/webscr?cmd=_flow&SESSION=IHj3DG3oy_N9A9ZDIUnPksOi59v0i-EWDTunfmDrmU38Tuohg_xQTx0xcjq&dispatch=5885d80a13c0db1f8e263663d3faee8d14f86393d55a810282b64afed84968ec "Donate once-off to this project using Paypal")
 
 Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes. 
 
