@@ -1,5 +1,8 @@
 ## History
 
+- v1.3.0 August 19, 2013
+	- We now catch uncaught errors within tests and suites
+
 - v1.2.0 April 5, 2013
 	- Updated to use [TaskGroup](https://npmjs.org/package/taskgroup)
 	- Reporters now exist in their own packages. [More info.](https://github.com/bevry/joe/wiki/Using-Custom-Reporters)
