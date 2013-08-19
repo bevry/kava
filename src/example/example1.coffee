@@ -50,7 +50,7 @@ joe.suite 'example1', (suite,test) ->
 
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->
-				assert.ok(true)
+				assert.ok(false)
 				done()
-			test '2/2', ->
+			test '2/2', ->  # never reached
 				assert.ok(false)

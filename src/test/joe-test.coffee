@@ -4,7 +4,7 @@ assert = require('assert')
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
-expected = "FAILURE: 10/11 tests ran successfully; 1 failed, 0 incomplete, 1 errors"
+expected = "9/10 tests ran successfully"
 
 # Test Default Reporter
 stdout = ''
