@@ -1,5 +1,8 @@
 ## History
 
+- v1.3.1 November 1, 2013
+	- Updated dependencies
+
 - v1.3.0 August 19, 2013
 	- We now catch uncaught errors within tests and suites
 
@@ -10,7 +13,7 @@
 	- Browser tests now auto exit after the last test has run
 
 - v1.1.2 March 23, 2013
-	- Dependency updates
+	- Updated dependencies
 
 - v1.1.1 October 25, 2012
 	- Build improvements

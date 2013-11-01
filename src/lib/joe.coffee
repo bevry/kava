@@ -12,29 +12,29 @@ Test = class extends Task
 Suite = class extends TaskGroup
 	# Callbacks
 	groupRunCallback: (suite) ->
-		return  unless suite.name
+		return  unless suite.getConfig().name
 		joePrivate.totalSuites++
 		joe.report('startSuite', suite)
 	groupCompleteCallback: (suite, err) ->
 		if err
 			joePrivate.addErrorLog({suite, err})
-			return  unless suite.name
+			return  unless suite.getConfig().name
 			joePrivate.totalFailedSuites++
 		else
-			return  unless suite.name
+			return  unless suite.getConfig().name
 			joePrivate.totalPassedSuites++
 		joe.report('finishSuite', suite, err)
 	taskRunCallback: (test) ->
-		return  unless test.name
+		return  unless test.getConfig().name
 		joePrivate.totalTests++
 		joe.report('startTest', test)
 	taskCompleteCallback: (test, err) ->
 		if err
 			joePrivate.addErrorLog({test, err})
-			return  unless test.name
+			return  unless test.getConfig().name
 			joePrivate.totalFailedTests++
 		else
-			return  unless test.name
+			return  unless test.getConfig().name
 			joePrivate.totalPassedTests++
 		joe.report('finishTest', test, err)
 
@@ -303,8 +303,9 @@ joe =
 	# Get Item Names
 	getItemNames: (item) ->
 		result = []
-		result = result.concat(@getItemNames(item.parent))  if item.parent
-		result.push(item.name)  if item.name
+		config = item.getConfig()
+		result = result.concat(@getItemNames(config.parent))  if config.parent
+		result.push(config.name)  if config.name
 		return result
 
 	# Get Item Name
@@ -312,7 +313,7 @@ joe =
 		if separator
 			result = joe.getItemNames(item).join(separator)
 		else
-			result = item.name
+			result = item.getConfig().name
 		return result
 
 # Events
@@ -320,7 +321,7 @@ joe =
 # and handle appropriatly
 if isBrowser
 	joePrivate.getGlobalSuite().on 'item.complete', (item) ->
-		return  unless item.name
+		return  unless item.getConfig().name
 		joePrivate.getGlobalSuite().on 'complete', ->
 			process.nextTick -> joe.exit()
 

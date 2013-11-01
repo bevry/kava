@@ -1,46 +1,59 @@
 {
-	"name": "joe",
-	"version": "1.3.0",
-	"description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
-	"homepage": "https://github.com/bevry/joe",
-	"keywords": [
-		"mocha",
-		"test", "testing",
-		"bdd",
-		"tdd",
-		"runner"
-	],
-	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
-	"maintainers": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-	],
-	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-	],
-	"bugs": {
-		"url": "https://github.com/bevry/joe/issues"
-	},
-	"repository" : {
-		"type": "git",
-		"url": "http://github.com/bevry/joe.git"
-	},
-	"engines" : {
-		"node": ">=0.6"
-	},
-	"dependencies": {
-		"taskgroup": "~3.2.0"
-	},
-	"devDependencies": {
-		"joe-reporter-console": "~1.2.1",
-		"joe-reporter-list": "~1.2.0",
-		"coffee-script": "~1.6.2",
-		"browserify": "~2.11.0"
-	},
-	"directories": {
-		"lib": "./out/lib"
-	},
-	"scripts": {
-		"test": "node out/test/joe-test.js"
-	},
-	"main": "./out/lib/joe.js"
+  "title": "Joe",
+  "name": "joe",
+  "version": "1.3.1",
+  "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
+  "homepage": "https://github.com/bevry/joe",
+  "license": {
+    "type": "MIT"
+  },
+  "badges": {
+    "travis": true,
+    "npm": true,
+    "gittip": "bevry",
+    "flattr": "344188/balupton-on-Flattr",
+    "paypal": "QB8GQPZAH84N6"
+  },
+  "keywords": [
+    "mocha",
+    "test",
+    "testing",
+    "bdd",
+    "tdd",
+    "runner"
+  ],
+  "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+  "maintainers": [
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+  ],
+  "contributors": [
+    "balupton (https://github.com/balupton)"
+  ],
+  "bugs": {
+    "url": "https://github.com/bevry/joe/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/bevry/joe.git"
+  },
+  "engines": {
+    "node": ">=0.6"
+  },
+  "dependencies": {
+    "taskgroup": "~3.3.0"
+  },
+  "devDependencies": {
+    "joe-reporter-console": "~1.2.1",
+    "joe-reporter-list": "~1.2.0",
+    "coffee-script": "~1.6.2",
+    "browserify": "~2.35.0"
+  },
+  "directories": {
+    "lib": "./out/lib"
+  },
+  "scripts": {
+  	"web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test-web/test-web-bundled.js",
+    "test": "node out/test/joe-test.js"
+  },
+  "main": "./out/lib/joe.js"
 }
