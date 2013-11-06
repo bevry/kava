@@ -7,6 +7,13 @@ isWindows = process?.platform?.indexOf('win') is 0
 
 # Test
 Test = class extends Task
+	constructor: ->
+		# Ensure no name is added by default
+		@config ?= {}
+		@config.name ?= false
+
+		# Pepare
+		super
 
 # Suite
 Suite = class extends TaskGroup
@@ -39,6 +46,10 @@ Suite = class extends TaskGroup
 		joe.report('finishTest', test, err)
 
 	constructor: ->
+		# Ensure no name is added by default
+		@config ?= {}
+		@config.name ?= false
+
 		# Prepare
 		super
 
