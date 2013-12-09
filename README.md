@@ -1,4 +1,3 @@
-
 <!-- TITLE/ -->
 
 # Joe
@@ -90,14 +89,14 @@ suite name ✔
 ```
 
 
-### Complete API
+### Complete Documentation
 
-[Complete API guide here.](https://github.com/bevry/joe/wiki/Using)
+[View the Complete Joe Documentation on the Bevry Website](http://bevry.me/joe/guide)
 
 
 ### Custom Reporters
 
-[Instructions and listing here.](https://github.com/bevry/joe/wiki/Using-Custom-Reporters)
+[Discover the available Custom Reporters for Joe using the `joe-reporter` keyword on the NPM Registry](https://npmjs.org/browse/keyword/joe-reporter)
 
 
 <!-- HISTORY/ -->
