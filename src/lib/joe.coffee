@@ -32,17 +32,30 @@ Suite = class extends TaskGroup
 			joePrivate.totalPassedSuites++
 		joe.report('finishSuite', suite, err)
 	taskRunCallback: (test) ->
-		return  unless test.getConfig().name
+		config = test.getConfig()
+		return  unless config.name
+
+		# run the before fn if present
+		if config.before and typeof config.before == 'function'
+			config.before(test)
+
 		joePrivate.totalTests++
 		joe.report('startTest', test)
 	taskCompleteCallback: (test, err) ->
+		config = test.getConfig()
+
+		# run the after fn if present
+		if config.after and typeof config.after == 'function'
+			config.after(test, err)
+
 		if err
 			joePrivate.addErrorLog({test, err})
-			return  unless test.getConfig().name
+			return  unless config.name
 			joePrivate.totalFailedTests++
 		else
-			return  unless test.getConfig().name
+			return  unless config.name
 			joePrivate.totalPassedTests++
+
 		joe.report('finishTest', test, err)
 
 	constructor: ->

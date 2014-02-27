@@ -57,6 +57,16 @@ require('joe').describe('suite name', function(describe,it){
 				complete();
 			},500);
 		});
+		// run a methods before and\or after the test
+		function beforeEach(test) {
+			// do some pre test stuff
+		}
+		function afterEach(test, err) {
+			// do some post test stuff
+		}
+		it('before and after options test', {before: beforeEach, after: afterEach}, function(){
+			// do your stuff
+		});
 	});
 	// you can also define tests dynamically when using the completion callback on the group
 	describe('lets create dynamic tests', function(describe,it,done){
