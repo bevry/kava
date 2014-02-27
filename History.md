@@ -1,5 +1,8 @@
 # History
 
+- v1.4.0 February 27, 2014
+	- adds before and after fn options for tests
+
 - v1.3.2 November 6, 2013
 	- Updated dependencies
 	- Repackaged

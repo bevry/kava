@@ -48,6 +48,28 @@ joe.suite 'example1', (suite,test) ->
 			test '2/2', ->
 				assert.ok(true)
 
+		suite 'before-each', (suite,test) ->
+			testValue = 0
+
+			beforeEach = (test) ->
+				testValue++
+
+			test '1/2', before: beforeEach, ->
+				assert.equal(testValue, 1)
+			test '2/2', before: beforeEach, ->
+				assert.equal(testValue, 2)
+
+		suite 'after-each', (suite,test) ->
+			testValue = 0
+
+			afterEach = (test, err) ->
+				testValue++
+
+			test '1/2', after: afterEach, ->
+				assert.equal(testValue, 0)
+			test '2/2', after: afterEach, ->
+				assert.equal(testValue, 1)
+
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->
 				assert.ok(false)
