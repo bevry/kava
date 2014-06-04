@@ -10,9 +10,13 @@
   "badges": {
     "travis": true,
     "npm": true,
+    "david": true,
+    "daviddev": true,
     "gittip": "bevry",
     "flattr": "344188/balupton-on-Flattr",
-    "paypal": "QB8GQPZAH84N6"
+    "paypal": "QB8GQPZAH84N6",
+    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
+    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
   },
   "keywords": [
     "mocha",
@@ -27,7 +31,8 @@
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
   ],
   "contributors": [
-    "balupton (https://github.com/balupton)"
+    "balupton (https://github.com/balupton)",
+    "pflannery (https://github.com/pflannery)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/joe/issues"
@@ -43,17 +48,21 @@
     "taskgroup": "~3.3.1"
   },
   "devDependencies": {
+    "browserify": "~2.35.0",
+    "coffee-script": "~1.6.2",
     "joe-reporter-console": "~1.2.1",
     "joe-reporter-list": "~1.2.0",
-    "coffee-script": "~1.6.2",
-    "browserify": "~2.35.0"
+    "projectz": "^0.3.14"
   },
   "directories": {
     "lib": "./out/lib"
   },
   "scripts": {
-  	"web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test-web/test-web-bundled.js",
+    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test-web/test-web-bundled.js",
     "test": "node out/test/joe-test.js"
   },
-  "main": "./out/lib/joe.js"
+  "main": "./out/lib/joe.js",
+  "cakeConfiguration": {
+    "COFFEE_SRC_PATH": "src"
+  }
 }
