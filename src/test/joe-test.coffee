@@ -17,9 +17,9 @@ runner.stderr.on 'data', (data) ->
 runner.on 'exit', (code) ->
 	pass = stdout.indexOf(expected) isnt -1
 	if pass
-		console.log 'THE ABOVE IS WHAT WE EXPECTED. TESTS HAVE PASSED'
+		console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 	else
-		console.log 'THE ABOVE IS NOT WHAT WE EXPECTED. TESTS HAVE FAILED'
+		console.error 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'
 	assert.ok(pass)
 
 	# Test List Reporter
@@ -33,7 +33,7 @@ runner.on 'exit', (code) ->
 	runner.on 'exit', (code) ->
 		pass = stdout.indexOf(expected) isnt -1
 		if pass
-			console.log 'THE ABOVE IS WHAT WE EXPECTED. TESTS HAVE PASSED'
+			console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 		else
-			console.log 'THE ABOVE IS NOT WHAT WE EXPECTED. TESTS HAVE FAILED'
+			console.log 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'
 		assert.ok(pass)

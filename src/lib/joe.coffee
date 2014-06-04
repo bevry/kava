@@ -5,8 +5,12 @@
 isBrowser = window?
 isWindows = process?.platform?.indexOf('win') is 0
 
+# =================================
 # Test
+
 Test = class extends Task
+	@create: (args...) -> new @(args...)
+	
 	constructor: ->
 		# Ensure no name is added by default
 		@config ?= {}
@@ -15,13 +19,20 @@ Test = class extends Task
 		# Pepare
 		super
 
+# =================================
 # Suite
+
 Suite = class extends TaskGroup
+	@create: (args...) -> new @(args...)
+
+	# =================================
 	# Callbacks
+
 	groupRunCallback: (suite) ->
 		return  unless suite.getConfig().name
 		joePrivate.totalSuites++
 		joe.report('startSuite', suite)
+	
 	groupCompleteCallback: (suite, err) ->
 		if err
 			joePrivate.addErrorLog({suite, err})
@@ -31,6 +42,7 @@ Suite = class extends TaskGroup
 			return  unless suite.getConfig().name
 			joePrivate.totalPassedSuites++
 		joe.report('finishSuite', suite, err)
+	
 	taskRunCallback: (test) ->
 		config = test.getConfig()
 		return  unless config.name
@@ -41,6 +53,7 @@ Suite = class extends TaskGroup
 
 		joePrivate.totalTests++
 		joe.report('startTest', test)
+	
 	taskCompleteCallback: (test, err) ->
 		config = test.getConfig()
 
@@ -57,6 +70,9 @@ Suite = class extends TaskGroup
 			joePrivate.totalPassedTests++
 
 		joe.report('finishTest', test, err)
+
+	# =================================
+	# Methods
 
 	constructor: ->
 		# Ensure no name is added by default
@@ -98,6 +114,9 @@ Suite = class extends TaskGroup
 	test: (args...) -> @addTask(args...)
 	it: (args...) -> @addTask(args...)
 
+
+# =================================
+# Private Interface
 
 # Creare out private interface for Joe
 # The reason we have a public and private interface for joe is that we do not want tests being able to modify the test results
@@ -175,19 +194,22 @@ joePrivate =
 			try
 				joe.addReporter(reporterName)
 			catch err
-				console.log("""
+				console.error("""
 					Joe could not load the reporter: #{reporterName}
 					Perhaps it's not installed? Try install it using:
 					    npm install --save-dev joe-reporter-#{reporterName}
 					The exact error was:
-					""", err
-				)
+					""")
+				console.error(err.stack or err.message)
 				joe.exit(1)
 				return
 
 		# Return our reporters
 		return joePrivate.reporters
 
+
+# =================================
+# Public Interface
 
 # Create the interface for Joe
 joe =
@@ -273,7 +295,7 @@ joe =
 
 		# Check we have reporters
 		unless reporters.length
-			console.log("Joe has no reporters loaded, so cannot log anything...")
+			console.error("Joe has no reporters loaded, so cannot log anything...")
 			joe.exit(1)
 			return joe
 
@@ -292,12 +314,12 @@ joe =
 		return  if joe.hasExited()
 		joePrivate.exited = true
 
-		# Stop
-		joePrivate.getGlobalSuite().stop()
-
 		# Determine exit code
 		unless exitCode?
 			exitCode = if joe.hasErrors() then 1 else 0
+
+		# Stop running more tests
+		joePrivate.getGlobalSuite().exit()
 
 		# Report our exit
 		joe.report('exit', exitCode)
@@ -340,23 +362,18 @@ joe =
 			result = item.getConfig().name
 		return result
 
-# Events
-# Hook into all the different ways a process can die
-# and handle appropriatly
-if isBrowser
-	joePrivate.getGlobalSuite().on 'item.complete', (item) ->
-		return  unless item.getConfig().name
-		joePrivate.getGlobalSuite().on 'complete', ->
-			process.nextTick -> joe.exit()
 
-else if process?
+# =================================
+# Setup
+
+if process?
 	unless isWindows
 		process.on 'SIGINT', -> joe.exit()
 	process.on 'exit', -> joe.exit()
 	process.on 'uncaughtException', (err) -> joe.uncaughtException(err)
 
 # Bubbled uncaught exceptions
-joePrivate.getGlobalSuite().on 'error', (err) -> joe.uncaughtException(err)
+joePrivate.getGlobalSuite().done (err) -> joe.uncaughtException(err)
 
 # Interface
 # Create our public interface for creating suites and tests
