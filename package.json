@@ -45,7 +45,7 @@
     "node": ">=0.6"
   },
   "dependencies": {
-    "taskgroup": "~3.3.1"
+    "taskgroup": "~4.0.0"
   },
   "devDependencies": {
     "browserify": "~2.35.0",

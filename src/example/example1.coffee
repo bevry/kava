@@ -51,27 +51,28 @@ joe.suite 'example1', (suite,test) ->
 		suite 'before-each', (suite,test) ->
 			testValue = 0
 
-			beforeEach = (test) ->
+			@on 'test.before', (test) ->
 				testValue++
 
-			test '1/2', before: beforeEach, ->
+			test '1/2', ->
 				assert.equal(testValue, 1)
-			test '2/2', before: beforeEach, ->
+			test '2/2', ->
 				assert.equal(testValue, 2)
 
 		suite 'after-each', (suite,test) ->
 			testValue = 0
 
-			afterEach = (test, err) ->
+			@on 'test.after', ->
 				testValue++
 
-			test '1/2', after: afterEach, ->
+			test '1/2', ->
 				assert.equal(testValue, 0)
-			test '2/2', after: afterEach, ->
+			test '2/2', ->
 				assert.equal(testValue, 1)
 
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->
 				assert.ok(false)
+				done() # never reached
 			test '2/2', ->  # never reached
 				assert.ok(false)

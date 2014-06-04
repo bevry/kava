@@ -10,14 +10,6 @@ isWindows = process?.platform?.indexOf('win') is 0
 
 Test = class extends Task
 	@create: (args...) -> new @(args...)
-	
-	constructor: ->
-		# Ensure no name is added by default
-		@config ?= {}
-		@config.name ?= false
-
-		# Pepare
-		super
 
 # =================================
 # Suite
@@ -25,62 +17,78 @@ Test = class extends Task
 Suite = class extends TaskGroup
 	@create: (args...) -> new @(args...)
 
+	addMethod: (method, config={}) ->
+		config.reporting ?= false
+		config.name ?= false
+		return super(method, config)
+
+
 	# =================================
 	# Callbacks
 
 	groupRunCallback: (suite) ->
-		return  unless suite.getConfig().name
-		joePrivate.totalSuites++
-		joe.report('startSuite', suite)
-	
+		config = suite.getConfig()
+
+		@emit('suite.before', suite)  if suite instanceof Suite
+
+		if config.reporting isnt false
+			joePrivate.totalSuites++
+
+		if config.name isnt false
+			joe.report('startSuite', suite)
+
 	groupCompleteCallback: (suite, err) ->
+		config = suite.getConfig()
+
+		@emit('suite.after', suite)  if suite instanceof Suite
+
 		if err
 			joePrivate.addErrorLog({suite, err})
-			return  unless suite.getConfig().name
-			joePrivate.totalFailedSuites++
+			if config.reporting isnt false
+				joePrivate.totalFailedSuites++
 		else
-			return  unless suite.getConfig().name
-			joePrivate.totalPassedSuites++
-		joe.report('finishSuite', suite, err)
-	
+			if config.reporting isnt false
+				joePrivate.totalPassedSuites++
+
+		if config.name isnt false
+			joe.report('finishSuite', suite, err)
+
 	taskRunCallback: (test) ->
 		config = test.getConfig()
-		return  unless config.name
 
-		# run the before fn if present
-		if config.before and typeof config.before == 'function'
-			config.before(test)
+		@emit('test.before', test)  if test instanceof Test
 
-		joePrivate.totalTests++
-		joe.report('startTest', test)
-	
+		if config.reporting isnt false
+			joePrivate.totalTests++
+
+		if config.name isnt false
+			joe.report('startTest', test)
+
 	taskCompleteCallback: (test, err) ->
 		config = test.getConfig()
 
-		# run the after fn if present
-		if config.after and typeof config.after == 'function'
-			config.after(test, err)
+		@emit('test.after', test)  if test instanceof Test
 
 		if err
 			joePrivate.addErrorLog({test, err})
-			return  unless config.name
-			joePrivate.totalFailedTests++
+			if config.reporting isnt false
+				joePrivate.totalFailedTests++
 		else
-			return  unless config.name
-			joePrivate.totalPassedTests++
+			if config.reporting isnt false
+				joePrivate.totalPassedTests++
 
-		joe.report('finishTest', test, err)
+		if config.name isnt false
+			joe.report('finishTest', test, err)
 
 	# =================================
 	# Methods
 
 	constructor: ->
-		# Ensure no name is added by default
-		@config ?= {}
-		@config.name ?= false
-
 		# Prepare
 		super
+
+		# Bubble
+		@bubbleEvents.push('before', 'after')
 
 		# Group Before
 		@on('group.run', @groupRunCallback.bind(@))
@@ -101,7 +109,10 @@ Suite = class extends TaskGroup
 		@on('task.error', @taskCompleteCallback.bind(@))
 
 	createTask: (args...) ->
-		task = new Test(args...)
+		if args[0]?.isTaskGroupMethod is true
+			task = new Task(args...)
+		else
+			task = new Test(args...)
 		return task
 
 	createGroup: (args...) ->
@@ -132,7 +143,10 @@ joePrivate =
 	getGlobalSuite: ->
 		# If it doesn't exist, then create it and name it joe
 		unless joePrivate.globalSuite?
-			joePrivate.globalSuite = new Suite().run()
+			joePrivate.globalSuite = new Suite(
+				reporting: false
+				name: false
+			).run()
 
 		# Return the global suite
 		return joePrivate.globalSuite
@@ -319,8 +333,7 @@ joe =
 			exitCode = if joe.hasErrors() then 1 else 0
 
 		# Stop running more tests
-		joePrivate.getGlobalSuite().exit()
-		# ^ should this be destroy?
+		joePrivate.getGlobalSuite().destroy()
 
 		# Report our exit
 		joe.report('exit', exitCode)
@@ -347,18 +360,10 @@ joe =
 		# Chain
 		joe
 
-	# Get Item Names
-	getItemNames: (item) ->
-		result = []
-		config = item.getConfig()
-		result = result.concat(@getItemNames(config.parent))  if config.parent
-		result.push(config.name)  if config.name
-		return result
-
 	# Get Item Name
 	getItemName: (item,separator) ->
 		if separator
-			result = joe.getItemNames(item).join(separator)
+			result = item.getNames({separator})
 		else
 			result = item.getConfig().name
 		return result
