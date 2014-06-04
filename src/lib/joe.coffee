@@ -320,6 +320,7 @@ joe =
 
 		# Stop running more tests
 		joePrivate.getGlobalSuite().exit()
+		# ^ should this be destroy?
 
 		# Report our exit
 		joe.report('exit', exitCode)
