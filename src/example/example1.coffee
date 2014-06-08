@@ -50,6 +50,13 @@ joe.suite 'example1', (suite,test) ->
 				checks.push(2)
 				expect(checks).to.deep.equal([1, 2])
 
+		###
+		@TODO
+		This test is failing because in the latest version of TaskGroup
+		A taskgroup must be resumed manually, rather than always being in run mode
+		This needs to change. It should only need to be resumed manully if an an error occurs
+		Or at least this is my suspiscion.
+		###
 		suite 'async-suite', (suite,test,done) ->
 			checks = []
 			wait 1*1000, -> test '1/2', ->
