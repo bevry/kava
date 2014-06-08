@@ -1,6 +1,5 @@
 # Requires
 {spawn} = require('child_process')
-assert = require('assert')
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
@@ -20,7 +19,7 @@ runner.on 'exit', (code) ->
 		console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 	else
 		console.error 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'
-	assert.ok(pass)
+		process.exit(1)
 
 	# Test List Reporter
 	stdout = ''
@@ -36,4 +35,4 @@ runner.on 'exit', (code) ->
 			console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 		else
 			console.log 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'
-		assert.ok(pass)
+			process.exit(1)

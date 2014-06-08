@@ -1,9 +1,11 @@
 # Import
-{Task,TaskGroup} = require('taskgroup')
+{EventEmitterGrouped} = require('event-emitter-grouped')
+{Task, TaskGroup} = require('taskgroup')
 
 # Prepare
 isBrowser = window?
 isWindows = process?.platform?.indexOf('win') is 0
+
 
 # =================================
 # Test
@@ -11,11 +13,82 @@ isWindows = process?.platform?.indexOf('win') is 0
 Test = class extends Task
 	@create: (args...) -> new @(args...)
 
+	constructor: ->
+		super
+
+	run: ->
+		if @hasStarted() is false
+			@emitSerial 'before', (err) =>
+				@emit('error', err)  if err
+				super
+		else
+			super
+		@
+
+	complete: ->
+		if @isComplete()
+			@emitSerial 'after', (err) =>
+				@emit('error', err)  if err
+				super
+		else
+			super
+		@
+
 # =================================
 # Suite
 
 Suite = class extends TaskGroup
 	@create: (args...) -> new @(args...)
+
+	constructor: ->
+		super
+		me = @
+
+		# Task Before
+		@on('task.started', @taskRunCallback.bind(@))
+
+		# Group Before
+		@on('group.started', @groupRunCallback.bind(@))
+
+		# Item Add
+		@on 'item.add', (item) ->
+			if item instanceof Test
+				item.done (err) ->
+					me.taskCompleteCallback(item, err)
+				item.on 'before', (complete) ->
+					me.emitSerial('test.before', item, complete)
+				item.on 'after', (complete) ->
+					me.emitSerial('test.after', item, complete)
+
+			else if item instanceof Suite
+				item.done (err) ->
+					me.groupCompleteCallback(item, err)
+				item.on 'before', (complete) ->
+					me.emitSerial('suite.before', item, complete)
+				item.on 'after', (complete) ->
+					me.emitSerial('suite.after', item, complete)
+
+		# Chain
+		@
+
+
+	run: ->
+		if @hasStarted() is false
+			@emitSerial 'before', (err) =>
+				@emit('error', err)  if err
+				super
+		else
+			super
+		@
+
+	complete: ->
+		if @isComplete()
+			@emitSerial 'after', (err) =>
+				@emit('error', err)  if err
+				super
+		else
+			super
+		@
 
 	addMethod: (method, config={}) ->
 		config.reporting ?= false
@@ -26,48 +99,39 @@ Suite = class extends TaskGroup
 	# =================================
 	# Callbacks
 
+
+
 	groupRunCallback: (suite) ->
 		config = suite.getConfig()
 
-		@emit('suite.before', suite)  if suite instanceof Suite
-
 		if config.reporting isnt false
 			joePrivate.totalSuites++
-
-		if config.name isnt false
 			joe.report('startSuite', suite)
 
 	groupCompleteCallback: (suite, err) ->
 		config = suite.getConfig()
 
-		@emit('suite.after', suite)  if suite instanceof Suite
-
 		if err
 			joePrivate.addErrorLog({suite, err})
 			if config.reporting isnt false
 				joePrivate.totalFailedSuites++
+
 		else
 			if config.reporting isnt false
 				joePrivate.totalPassedSuites++
 
-		if config.name isnt false
+		if config.reporting isnt false
 			joe.report('finishSuite', suite, err)
 
 	taskRunCallback: (test) ->
 		config = test.getConfig()
 
-		@emit('test.before', test)  if test instanceof Test
-
 		if config.reporting isnt false
 			joePrivate.totalTests++
-
-		if config.name isnt false
 			joe.report('startTest', test)
 
 	taskCompleteCallback: (test, err) ->
 		config = test.getConfig()
-
-		@emit('test.after', test)  if test instanceof Test
 
 		if err
 			joePrivate.addErrorLog({test, err})
@@ -77,36 +141,11 @@ Suite = class extends TaskGroup
 			if config.reporting isnt false
 				joePrivate.totalPassedTests++
 
-		if config.name isnt false
+		if config.reporting isnt false
 			joe.report('finishTest', test, err)
 
 	# =================================
 	# Methods
-
-	constructor: ->
-		# Prepare
-		super
-
-		# Bubble
-		@bubbleEvents.push('before', 'after')
-
-		# Group Before
-		@on('group.run', @groupRunCallback.bind(@))
-
-		# Group After
-		@on('group.complete', @groupCompleteCallback.bind(@))
-
-		# Group After
-		@on('group.error', @groupCompleteCallback.bind(@))
-
-		# Task Before
-		@on('task.run', @taskRunCallback.bind(@))
-
-		# Task After
-		@on('task.complete', @taskCompleteCallback.bind(@))
-
-		# Task After
-		@on('task.error', @taskCompleteCallback.bind(@))
 
 	createTask: (args...) ->
 		if args[0]?.isTaskGroupMethod is true
@@ -124,6 +163,11 @@ Suite = class extends TaskGroup
 
 	test: (args...) -> @addTask(args...)
 	it: (args...) -> @addTask(args...)
+
+
+# Add event emtiter grouped to our classes
+for key,value of EventEmitterGrouped::
+	Test::[key] = Suite::[key] = value
 
 
 # =================================

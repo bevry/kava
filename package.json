@@ -45,6 +45,7 @@
     "node": ">=0.6"
   },
   "dependencies": {
+    "chai": "^1.9.1",
     "taskgroup": "~4.0.0"
   },
   "devDependencies": {
