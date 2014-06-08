@@ -34,6 +34,7 @@ Test = class extends Task
 			super
 		@
 
+
 # =================================
 # Suite
 
@@ -44,15 +45,11 @@ Suite = class extends TaskGroup
 		super
 		me = @
 
-		# Task Before
-		@on('task.started', @taskRunCallback.bind(@))
-
-		# Group Before
-		@on('group.started', @groupRunCallback.bind(@))
-
 		# Item Add
 		@on 'item.add', (item) ->
 			if item instanceof Test
+				item.on 'started', ->
+					me.taskRunCallback(item)
 				item.done (err) ->
 					me.taskCompleteCallback(item, err)
 				item.on 'before', (complete) ->
@@ -61,6 +58,8 @@ Suite = class extends TaskGroup
 					me.emitSerial('test.after', item, complete)
 
 			else if item instanceof Suite
+				item.on 'started', ->
+					me.groupRunCallback(item)
 				item.done (err) ->
 					me.groupCompleteCallback(item, err)
 				item.on 'before', (complete) ->
@@ -93,12 +92,12 @@ Suite = class extends TaskGroup
 	addMethod: (method, config={}) ->
 		config.reporting ?= false
 		config.name ?= false
+		config.args ?= [@suite.bind(@), @test.bind(@)]
 		return super(method, config)
 
 
 	# =================================
 	# Callbacks
-
 
 
 	groupRunCallback: (suite) ->
@@ -144,26 +143,21 @@ Suite = class extends TaskGroup
 		if config.reporting isnt false
 			joe.report('finishTest', test, err)
 
-	# =================================
-	# Methods
 
-	createTask: (args...) ->
-		if args[0]?.isTaskGroupMethod is true
-			task = new Task(args...)
-		else
-			task = new Test(args...)
-		return task
+# =================================
+# Methods
 
-	createGroup: (args...) ->
-		group = new Suite(args...)
-		return group
+Suite::suite = Suite::describe = (args...) ->
+	suite = new Suite(args...)
+	@addGroup(suite)
 
-	suite: (args...) -> @addGroup(args...)
-	describe: (args...) -> @addGroup(args...)
+Suite::test = Suite::it = (args...) ->
+	test = new Test(args...)
+	@addTask(test)
 
-	test: (args...) -> @addTask(args...)
-	it: (args...) -> @addTask(args...)
 
+# =================================
+# Event Emitter Grouped
 
 # Add event emtiter grouped to our classes
 for key,value of EventEmitterGrouped::
