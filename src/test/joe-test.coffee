@@ -3,7 +3,7 @@
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
-expected = "13/14 tests ran successfully"
+expected = "11/12 tests ran successfully"
 
 # Test Default Reporter
 stdout = ''

@@ -61,13 +61,14 @@ joe.suite 'example1', (suite,test) ->
 			checks = []
 			wait 1*1000, -> test '1/2', ->
 				checks.push(1)
-				expect(checks).to.deep.equal([1])
 			wait 2*1000, -> test '2/2', ->
 				checks.push(2)
-				expect(checks).to.deep.equal([1, 2])
 			wait 3*1000, ->
-				expect(checks).to.deep.equal([1, 2])
+				checks.push(3)
 				done()
+			wait 4*1000, ->
+				checks.push(4)
+				expect(checks).to.deep.equal([3, 1, 2, 4])
 
 		suite 'before and after', (suite,test) ->
 			checks = []
