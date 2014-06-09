@@ -16,6 +16,22 @@ Test = class extends Task
 	constructor: ->
 		super
 
+	setConfig: ->
+		super
+		me = @
+
+		if before = @config.before
+			delete @config.before
+			@on 'before', (complete) ->
+				before.call(this, me, complete)
+		
+		if after = @config.after
+			delete @config.after
+			@on 'after', (complete) ->
+				after.call(this, me, complete)
+
+		@
+
 	run: ->
 		if @hasStarted() is false
 			@emitSerial 'before', (err) =>
@@ -70,6 +86,21 @@ Suite = class extends TaskGroup
 		# Chain
 		@
 
+	setConfig: ->
+		super
+		me = @
+
+		if before = @config.before
+			delete @config.before
+			@on 'before', (complete) ->
+				before.call(this, me, complete)
+		
+		if after = @config.after
+			delete @config.after
+			@on 'after', (complete) ->
+				after.call(this, me, complete)
+
+		@
 
 	run: ->
 		if @hasStarted() is false

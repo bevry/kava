@@ -78,25 +78,84 @@ joe.suite 'example1', (suite,test) ->
 					checks.push("after - #{test.config.name} - part 2")
 					complete()
 
-			test 'test 1/2', ->
-				checks.push('test 1/2')
+			test 'test 1', ->
+				checks.push('test 1')
 				expect(checks).to.deep.equal([
-					'before - test 1/2 - part 1',
-					'before - test 1/2 - part 2',
-					'test 1/2'
+					'before - test 1 - part 1',
+					'before - test 1 - part 2',
+					'test 1'
 				])
 
-			test 'test 2/2', ->
-				checks.push('test 2/2')
+			test 'test 2', ->
+				checks.push('test 2')
 				expect(checks).to.deep.equal([
-					'before - test 1/2 - part 1',
-					'before - test 1/2 - part 2',
-					'test 1/2'
-					'after - test 1/2 - part 1'
-					'after - test 1/2 - part 2'
-					'before - test 2/2 - part 1'
-					'before - test 2/2 - part 2'
-					'test 2/2'
+					'before - test 1 - part 1',
+					'before - test 1 - part 2',
+					'test 1'
+					'after - test 1 - part 1'
+					'after - test 1 - part 2'
+					'before - test 2 - part 1'
+					'before - test 2 - part 2'
+					'test 2'
+				])
+
+			before = (test, complete) ->
+				checks.push("only before - #{test.config.name} - part 1")
+				wait 100, ->
+					checks.push("only before - #{test.config.name} - part 2")
+					complete()
+
+			after = (test, complete) ->
+				checks.push("only after - #{test.config.name} - part 1")
+				wait 100, ->
+					checks.push("only after - #{test.config.name} - part 2")
+					complete()
+
+			test 'test 3', {before,after}, ->
+				checks.push('test 3')
+				expect(checks, 'test 3 checks').to.deep.equal([
+					'before - test 1 - part 1',
+					'before - test 1 - part 2',
+					'test 1'
+					'after - test 1 - part 1'
+					'after - test 1 - part 2'
+					'before - test 2 - part 1'
+					'before - test 2 - part 2'
+					'test 2'
+					'after - test 2 - part 1'
+					'after - test 2 - part 2'
+					'only before - test 3 - part 1'
+					'only before - test 3 - part 2'
+					'before - test 3 - part 1'
+					'before - test 3 - part 2'
+					'test 3'
+				])
+
+			test 'test 4', ->
+				checks.push('test 4')
+				expect(checks, 'test 4 checks').to.deep.equal([
+					'before - test 1 - part 1',
+					'before - test 1 - part 2',
+					'test 1'
+					'after - test 1 - part 1'
+					'after - test 1 - part 2'
+					'before - test 2 - part 1'
+					'before - test 2 - part 2'
+					'test 2'
+					'after - test 2 - part 1'
+					'after - test 2 - part 2'
+					'only before - test 3 - part 1'
+					'only before - test 3 - part 2'
+					'before - test 3 - part 1'
+					'before - test 3 - part 2'
+					'test 3'
+					'only after - test 3 - part 1'
+					'only after - test 3 - part 2'
+					'after - test 3 - part 1'
+					'after - test 3 - part 2'
+					'before - test 4 - part 1'
+					'before - test 4 - part 2'
+					'test 4'
 				])
 
 		suite 'deliberate-failure', (suite,test) ->

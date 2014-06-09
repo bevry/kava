@@ -3,35 +3,38 @@
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
-expected = "11/12 tests ran successfully"
+expectedCount = "13/14 tests ran successfully"
+expectedError = 'deliberate error'
 
 # Test Default Reporter
-stdout = ''
+output = ''
 runner = spawn('node', [everythingTestPath])
 runner.stdout.on 'data', (data) ->
-	stdout += data
+	output += data
 	process.stdout.write(data)
 runner.stderr.on 'data', (data) ->
+	output += data
 	process.stderr.write(data)
 runner.on 'exit', (code) ->
-	pass = stdout.indexOf(expected) isnt -1
-	if pass
+	fail = output.indexOf(expectedCount) is -1 or output.indexOf(expectedError) is -1
+	if fail is false
 		console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 	else
 		console.error 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'
 		process.exit(1)
 
 	# Test List Reporter
-	stdout = ''
+	output = ''
 	runner = spawn('node', [everythingTestPath, '--joe-reporter=list'])
 	runner.stdout.on 'data', (data) ->
-		stdout += data
+		output += data
 		process.stdout.write(data)
 	runner.stderr.on 'data', (data) ->
+		output += data
 		process.stderr.write(data)
 	runner.on 'exit', (code) ->
-		pass = stdout.indexOf(expected) isnt -1
-		if pass
+		fail = output.indexOf(expectedCount) is -1 or output.indexOf(expectedError) is -1
+		if fail is false
 			console.log 'THE ABOVE -->IS<-- WHAT WE EXPECTED. TESTS HAVE PASSED'
 		else
 			console.log 'THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED'

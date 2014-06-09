@@ -1,7 +1,7 @@
 {
   "title": "Joe",
   "name": "joe",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
   "homepage": "https://github.com/bevry/joe",
   "license": {
