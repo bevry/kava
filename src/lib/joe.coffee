@@ -1,4 +1,5 @@
 # Import
+util = require('util')
 {EventEmitterGrouped} = require('event-emitter-grouped')
 {Task, TaskGroup} = require('taskgroup')
 
@@ -12,6 +13,7 @@ isWindows = process?.platform?.indexOf('win') is 0
 
 Test = class extends Task
 	@create: (args...) -> new @(args...)
+	@isTest: (test) -> return test instanceof Test
 
 	constructor: ->
 		super
@@ -56,6 +58,7 @@ Test = class extends Task
 
 Suite = class extends TaskGroup
 	@create: (args...) -> new @(args...)
+	@isSuite: (suite) -> return suite instanceof Suite
 
 	constructor: ->
 		super
@@ -63,7 +66,7 @@ Suite = class extends TaskGroup
 
 		# Shallow Listeners
 		@on 'item.add', (item) ->
-			if item instanceof Test
+			if Test.isTest(item)
 				item.on 'started', ->
 					me.testRunCallback(item)
 				item.done (err) ->
@@ -73,7 +76,7 @@ Suite = class extends TaskGroup
 				item.on 'after', (complete) ->
 					me.emitSerial('test.after', item, complete)
 
-			else if item instanceof Suite
+			else if Suite.isSuite(item)
 				item.on 'started', ->
 					me.suiteRunCallback(item)
 				item.done (err) ->
@@ -85,13 +88,13 @@ Suite = class extends TaskGroup
 
 		# Nested Listeners
 		@on 'item.add', nestedListener = (item) ->
-			if item instanceof Test
+			if Test.isTest(item)
 				item.on 'before', (complete) ->
 					me.emitSerial('nested.test.before', item, complete)
 				item.on 'after', (complete) ->
 					me.emitSerial('nested.test.after', item, complete)
 
-			else if item instanceof Suite
+			else if Suite.isSuite(item)
 				item.on('item.add', nestedListener)
 				item.on 'before', (complete) ->
 					me.emitSerial('nested.suite.before', item, complete)
@@ -435,7 +438,7 @@ joe =
 		return  if joe.hasExited()
 
 		# Report
-		unless err instanceof Error
+		unless util.isError(err)
 			err = new Error(err)
 		joePrivate.addErrorLog({name:'uncaughtException', err})
 		joe.report('uncaughtException', err)
