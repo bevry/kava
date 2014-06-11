@@ -165,6 +165,18 @@ joe.suite 'example1', (suite,test) ->
 					'test 4'
 				])
 
+		suite 'deliberate-failure ignored', (suite,test) ->
+			err1 = new Error('deliberate error 1')
+			err2 = new Error('deliberate error 2')
+			@setConfig(onError: 'ignore')
+			test '1/2', ->
+				throw err1
+			test '2/2', (done) ->
+				return done(err2)
+			@done (err, results) ->
+				expect(err).to.equal(null)
+				expect(results).to.equal([[err1], [err2]])
+
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->
 				throw new Error('deliberate error')
