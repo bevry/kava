@@ -61,13 +61,13 @@ Suite = class extends TaskGroup
 		super
 		me = @
 
-		# Item Add
+		# Shallow Listeners
 		@on 'item.add', (item) ->
 			if item instanceof Test
 				item.on 'started', ->
-					me.taskRunCallback(item)
+					me.testRunCallback(item)
 				item.done (err) ->
-					me.taskCompleteCallback(item, err)
+					me.testCompleteCallback(item, err)
 				item.on 'before', (complete) ->
 					me.emitSerial('test.before', item, complete)
 				item.on 'after', (complete) ->
@@ -75,13 +75,28 @@ Suite = class extends TaskGroup
 
 			else if item instanceof Suite
 				item.on 'started', ->
-					me.groupRunCallback(item)
+					me.suiteRunCallback(item)
 				item.done (err) ->
-					me.groupCompleteCallback(item, err)
+					me.suiteCompleteCallback(item, err)
 				item.on 'before', (complete) ->
 					me.emitSerial('suite.before', item, complete)
 				item.on 'after', (complete) ->
 					me.emitSerial('suite.after', item, complete)
+
+		# Nested Listeners
+		@on 'item.add', nestedListener = (item) ->
+			if item instanceof Test
+				item.on 'before', (complete) ->
+					me.emitSerial('nested.test.before', item, complete)
+				item.on 'after', (complete) ->
+					me.emitSerial('nested.test.after', item, complete)
+
+			else if item instanceof Suite
+				item.on('item.add', nestedListener)
+				item.on 'before', (complete) ->
+					me.emitSerial('nested.suite.before', item, complete)
+				item.on 'after', (complete) ->
+					me.emitSerial('nested.suite.after', item, complete)
 
 		# Chain
 		@
@@ -131,14 +146,14 @@ Suite = class extends TaskGroup
 	# Callbacks
 
 
-	groupRunCallback: (suite) ->
+	suiteRunCallback: (suite) ->
 		config = suite.getConfig()
 
 		if config.reporting isnt false
 			joePrivate.totalSuites++
 			joe.report('startSuite', suite)
 
-	groupCompleteCallback: (suite, err) ->
+	suiteCompleteCallback: (suite, err) ->
 		config = suite.getConfig()
 
 		if err
@@ -153,14 +168,14 @@ Suite = class extends TaskGroup
 		if config.reporting isnt false
 			joe.report('finishSuite', suite, err)
 
-	taskRunCallback: (test) ->
+	testRunCallback: (test) ->
 		config = test.getConfig()
 
 		if config.reporting isnt false
 			joePrivate.totalTests++
 			joe.report('startTest', test)
 
-	taskCompleteCallback: (test, err) ->
+	testCompleteCallback: (test, err) ->
 		config = test.getConfig()
 
 		if err

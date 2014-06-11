@@ -1,3 +1,10 @@
+###
+@TODO
+
+- add suite.before, and suite.after examples
+- add nested.task.before, nested.task.after, nested.suite.before, nested.suite.after examples
+###
+
 # Import
 assert = require('assert')
 joe = require('../..')
