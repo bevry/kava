@@ -24,7 +24,7 @@ Test = class extends Task
 			delete @config.before
 			@on 'before', (complete) ->
 				before.call(this, me, complete)
-		
+
 		if after = @config.after
 			delete @config.after
 			@on 'after', (complete) ->
@@ -94,7 +94,7 @@ Suite = class extends TaskGroup
 			delete @config.before
 			@on 'before', (complete) ->
 				before.call(this, me, complete)
-		
+
 		if after = @config.after
 			delete @config.after
 			@on 'after', (complete) ->
@@ -443,12 +443,16 @@ joe =
 
 if process?
 	unless isWindows
-		process.on 'SIGINT', -> joe.exit()
-	process.on 'exit', -> joe.exit()
-	process.on 'uncaughtException', (err) -> joe.uncaughtException(err)
+		process.on 'SIGINT', ->
+			joe.exit()
+	process.on 'exit', ->
+		joe.exit()
+	process.on 'uncaughtException', (err) ->
+		joe.uncaughtException(err)
 
 # Bubbled uncaught exceptions
-joePrivate.getGlobalSuite().done (err) -> joe.uncaughtException(err)
+joePrivate.getGlobalSuite().done (err) ->
+	joe.uncaughtException(err)  if err
 
 # Interface
 # Create our public interface for creating suites and tests
