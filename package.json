@@ -42,7 +42,7 @@
     "url": "http://github.com/bevry/joe.git"
   },
   "engines": {
-    "node": ">=0.6"
+    "node": ">=0.8"
   },
   "dependencies": {
     "chai": "^1.9.1",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "browserify": "~2.35.0",
-    "coffee-script": "~1.6.2",
+    "coffee-script": "~1.7.1",
     "joe-reporter-console": "~1.2.1",
     "joe-reporter-list": "~1.2.0",
     "projectz": "^0.3.14"

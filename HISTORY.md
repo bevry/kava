@@ -1,5 +1,14 @@
 # History
 
+## v1.5.0 June X, 2014
+- Updated for TaskGroup v4.0
+- Added the ability to set before and after listeners for all child tests and suites via
+	- `@on('test.before', listener)`
+	- `@on('test.after', listener)`
+	- `@on('suite.before', listener)`
+	- `@on('suite.after', listener)`
+- Before and after listeners now in addition to accepting the item, can also now optionally accept completion callback, making the signature for listeners `(test|suite, completionCallback?)`
+
 ## v1.4.0 February 27, 2014
 - adds before and after fn options for tests
 
