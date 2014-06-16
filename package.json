@@ -45,11 +45,12 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "chai": "^1.9.1",
+    "event-emitter-grouped": "^2.4.1",
     "taskgroup": "~4.0.0"
   },
   "devDependencies": {
-    "browserify": "~2.35.0",
+    "browserify": "~4.1.10",
+    "chai": "^1.9.1",
     "coffee-script": "~1.7.1",
     "joe-reporter-console": "~1.2.1",
     "joe-reporter-list": "~1.2.0",
