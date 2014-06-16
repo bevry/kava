@@ -175,7 +175,7 @@ joe.suite 'example1', (suite,test) ->
 				return done(err2)
 			@done (err, results) ->
 				expect(err).to.equal(null)
-				expect(results).to.equal([[err1], [err2]])
+				expect(results).to.deep.equal([[err1], [err2]])
 
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->

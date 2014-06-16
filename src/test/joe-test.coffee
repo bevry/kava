@@ -3,7 +3,7 @@
 
 # Prepare
 everythingTestPath = __dirname+'/../example/example1.js'
-expectedCount = "13/16 tests ran successfully; 3 failed, 0 incomplete, 3 errors"
+expectedCount = "13/16 tests ran successfully"
 expectedError = 'deliberate error'
 
 # Test Default Reporter
