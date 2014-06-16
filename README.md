@@ -35,6 +35,15 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 - Use: `require('joe')`
 - Install: `npm install --save joe`
 
+### [Browserify](http://browserify.org/)
+- Use: `require('joe')`
+- Install: `npm install --save joe`
+- CDN URL: `//wzrd.in/bundle/joe@1.5.0`
+
+### [Ender](http://ender.jit.su/)
+- Use: `require('joe')`
+- Install: `ender add joe`
+
 <!-- /INSTALL -->
 
 
