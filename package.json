@@ -46,8 +46,8 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "event-emitter-grouped": "^2.4.1",
-    "taskgroup": "~4.0.0"
+    "event-emitter-grouped": "^2.4.3",
+    "taskgroup": "~4.0.2"
   },
   "devDependencies": {
     "browserify": "~4.1.10",
@@ -61,7 +61,7 @@
     "lib": "./out/lib"
   },
   "scripts": {
-    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test-web/test-web-bundled.js",
+    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test/web/example1.bundled.js",
     "test": "node out/test/joe-test.js"
   },
   "main": "./out/lib/joe.js",
