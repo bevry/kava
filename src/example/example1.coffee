@@ -179,7 +179,7 @@ joe.suite 'example1', (suite,test) ->
 
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->
-				throw new Error('deliberate error')
+				throw new Error('deliberate error')  # this will nuke the browser as it can't catch async errors
 				done() # never reached
 			test '2/2', ->  # never reached
 				throw new Error('unexpected error')

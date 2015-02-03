@@ -1,7 +1,7 @@
 {
   "title": "Joe",
   "name": "joe",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
   "homepage": "https://github.com/bevry/joe",
   "license": {
@@ -10,9 +10,10 @@
   "badges": {
     "travis": true,
     "npm": true,
+    "npmdownloads": true,
     "david": true,
     "daviddev": true,
-    "gittip": "bevry",
+    "gratipay": "bevry",
     "flattr": "344188/balupton-on-Flattr",
     "paypal": "QB8GQPZAH84N6",
     "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
@@ -43,16 +44,16 @@
     "url": "http://github.com/bevry/joe.git"
   },
   "engines": {
-    "node": ">=0.8"
+    "node": ">=0.10"
   },
   "dependencies": {
     "event-emitter-grouped": "^2.4.3",
-    "taskgroup": "~4.0.2"
+    "taskgroup": "~4.2.0"
   },
   "devDependencies": {
-    "browserify": "~4.1.10",
+    "browserify": "~8.1.3",
     "chai": "^1.9.1",
-    "coffee-script": "~1.7.1",
+    "coffee-script": "~1.9.0",
     "joe-reporter-console": "~1.2.1",
     "joe-reporter-list": "~1.2.0",
     "projectz": "^0.3.14"

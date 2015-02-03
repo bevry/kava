@@ -12,7 +12,13 @@ bower_components/
 node_modules/
 out/
 
+# Private Files
+.env
+.idea
+.cake_task_cache
+
+
 # =====================================
 # CUSTOM MODIFICATIONS
 
-# None
+test/web/example1.bundled.js

@@ -7,15 +7,16 @@
 
 <!-- BADGES/ -->
 
-[![Build Status](http://img.shields.io/travis-ci/bevry/joe.png?branch=master)](http://travis-ci.org/bevry/joe "Check this project's build status on TravisCI")
-[![NPM version](http://badge.fury.io/js/joe.png)](https://npmjs.org/package/joe "View this project on NPM")
-[![Dependency Status](https://david-dm.org/bevry/joe.png?theme=shields.io)](https://david-dm.org/bevry/joe)
-[![Development Dependency Status](https://david-dm.org/bevry/joe/dev-status.png?theme=shields.io)](https://david-dm.org/bevry/joe#info=devDependencies)<br/>
-[![Gittip donate button](http://img.shields.io/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
-[![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
-[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
-[![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
-[![Wishlist browse button](http://img.shields.io/wishlist/browse.png?color=yellow)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
+[![Build Status](https://img.shields.io/travis/bevry/joe/master.svg)](http://travis-ci.org/bevry/joe "Check this project's build status on TravisCI")
+[![NPM version](https://img.shields.io/npm/v/joe.svg)](https://npmjs.org/package/joe "View this project on NPM")
+[![NPM downloads](https://img.shields.io/npm/dm/joe.svg)](https://npmjs.org/package/joe "View this project on NPM")
+[![Dependency Status](https://img.shields.io/david/bevry/joe.svg)](https://david-dm.org/bevry/joe)
+[![Dev Dependency Status](https://img.shields.io/david/dev/bevry/joe.svg)](https://david-dm.org/bevry/joe#info=devDependencies)<br/>
+[![Gratipay donate button](https://img.shields.io/gratipay/bevry.svg)](https://www.gratipay.com/bevry/ "Donate weekly to this project using Gratipay")
+[![Flattr donate button](https://img.shields.io/badge/flattr-donate-yellow.svg)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
+[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+[![BitCoin donate button](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
+[![Wishlist browse button](https://img.shields.io/badge/wishlist-donate-yellow.svg)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
 
 <!-- /BADGES -->
 
@@ -38,7 +39,7 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 ### [Browserify](http://browserify.org/)
 - Use: `require('joe')`
 - Install: `npm install --save joe`
-- CDN URL: `//wzrd.in/bundle/joe@1.5.0`
+- CDN URL: `//wzrd.in/bundle/joe@1.6.0`
 
 ### [Ender](http://ender.jit.su/)
 - Use: `require('joe')`
@@ -149,11 +150,11 @@ These amazing people are maintaining this project:
 
 No sponsors yet! Will you be the first?
 
-[![Gittip donate button](http://img.shields.io/gittip/bevry.png)](https://www.gittip.com/bevry/ "Donate weekly to this project using Gittip")
-[![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
-[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
-[![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
-[![Wishlist browse button](http://img.shields.io/wishlist/browse.png?color=yellow)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
+[![Gratipay donate button](https://img.shields.io/gratipay/bevry.svg)](https://www.gratipay.com/bevry/ "Donate weekly to this project using Gratipay")
+[![Flattr donate button](https://img.shields.io/badge/flattr-donate-yellow.svg)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
+[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+[![BitCoin donate button](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
+[![Wishlist browse button](https://img.shields.io/badge/wishlist-donate-yellow.svg)](http://amzn.com/w/2F8TXKSNAFG4V "Buy an item on our wishlist for us")
 
 ### Contributors
 

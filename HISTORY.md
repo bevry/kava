@@ -1,5 +1,9 @@
 # History
 
+## v1.6.0 February 2, 2015
+- Updated for TaskGroup v4.2
+	- TaskGroup v4.2 should now let us catch more errors in Node v0.10 and above
+
 ## v1.5.0 June 16, 2014
 - Updated for TaskGroup v4.0
 	- Closes [issue #9](https://github.com/bevry/joe/issues/9), and [issue #6](https://github.com/bevry/joe/issues/6)
