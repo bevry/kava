@@ -6,9 +6,8 @@
 ###
 
 # Import
-assert = require('assert')
+{equal, deepEqual, errorEqual} = require('assert-helpers')
 joe = require('../..')
-{expect} = require('chai')
 
 # Prepare
 wait = (delay,fn) -> setTimeout(fn,delay)
@@ -23,7 +22,7 @@ joe.suite 'example1', (suite,test) ->
 			joe.blah = true
 
 			# Test that the modifications were not successful
-			expect(joe.blah?, 'modification test').to.equal(false)
+			equal(joe.blah?, false, 'modification test')
 
 	suite 'tests', (suite,test) ->
 
@@ -31,31 +30,31 @@ joe.suite 'example1', (suite,test) ->
 			checks = []
 			test '1/2', (done) -> wait 1*1000, ->
 				checks.push(1)
-				expect(checks).to.deep.equal([1])
+				deepEqual(checks, [1])
 				done()
 			test '2/2', (done) -> wait 2*1000, ->
 				checks.push(2)
-				expect(checks).to.deep.equal([1, 2])
+				deepEqual(checks, [1, 2])
 				done()
 
 		suite 'sync', (suite,test) ->
 			checks = []
 			test '1/2', ->
 				checks.push(1)
-				expect(checks).to.deep.equal([1])
+				deepEqual(checks, [1])
 			test '2/2', ->
 				checks.push(2)
-				expect(checks).to.deep.equal([1, 2])
+				deepEqual(checks, [1, 2])
 
 		suite 'async-sync', (suite,test) ->
 			checks = []
 			test '1/2', (done) -> wait 1*1000, ->
 				checks.push(1)
-				expect(checks).to.deep.equal([1])
+				deepEqual(checks, [1])
 				done()
 			test '2/2', ->
 				checks.push(2)
-				expect(checks).to.deep.equal([1, 2])
+				deepEqual(checks, [1, 2])
 
 		suite 'async-suite', (suite,test,done) ->
 			checks = []
@@ -68,7 +67,7 @@ joe.suite 'example1', (suite,test) ->
 				done()
 			wait 4*1000, ->
 				checks.push(4)
-				expect(checks).to.deep.equal([3, 1, 2, 4])
+				deepEqual(checks, [3, 1, 2, 4])
 
 		suite 'before and after', (suite,test) ->
 			checks = []
@@ -87,7 +86,7 @@ joe.suite 'example1', (suite,test) ->
 
 			test 'test 1', ->
 				checks.push('test 1')
-				expect(checks).to.deep.equal([
+				deepEqual(checks, [
 					'before - test 1 - part 1',
 					'before - test 1 - part 2',
 					'test 1'
@@ -95,7 +94,7 @@ joe.suite 'example1', (suite,test) ->
 
 			test 'test 2', ->
 				checks.push('test 2')
-				expect(checks).to.deep.equal([
+				deepEqual(checks, [
 					'before - test 1 - part 1',
 					'before - test 1 - part 2',
 					'test 1'
@@ -120,7 +119,7 @@ joe.suite 'example1', (suite,test) ->
 
 			test 'test 3', {before,after}, ->
 				checks.push('test 3')
-				expect(checks, 'test 3 checks').to.deep.equal([
+				deepEqual(checks, [
 					'before - test 1 - part 1',
 					'before - test 1 - part 2',
 					'test 1'
@@ -136,11 +135,11 @@ joe.suite 'example1', (suite,test) ->
 					'before - test 3 - part 1'
 					'before - test 3 - part 2'
 					'test 3'
-				])
+				], 'test 3 checks')
 
 			test 'test 4', ->
 				checks.push('test 4')
-				expect(checks, 'test 4 checks').to.deep.equal([
+				deepEqual(checks, [
 					'before - test 1 - part 1',
 					'before - test 1 - part 2',
 					'test 1'
@@ -163,7 +162,7 @@ joe.suite 'example1', (suite,test) ->
 					'before - test 4 - part 1'
 					'before - test 4 - part 2'
 					'test 4'
-				])
+				], 'test 4 checks')
 
 		suite 'deliberate-failure ignored', (suite,test) ->
 			err1 = new Error('deliberate error 1')
@@ -174,8 +173,8 @@ joe.suite 'example1', (suite,test) ->
 			test '2/2', (done) ->
 				return done(err2)
 			@done (err, results) ->
-				expect(err).to.equal(null)
-				expect(results).to.deep.equal([[err1], [err2]])
+				errorEqual(err, null)
+				deepEqual(results, [[err1], [err2]])
 
 		suite 'deliberate-failure', (suite,test) ->
 			test '1/2', (done) -> wait 1*1000, ->

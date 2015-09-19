@@ -4,20 +4,32 @@
   "version": "1.6.0",
   "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
   "homepage": "https://github.com/bevry/joe",
-  "license": {
-    "type": "MIT"
-  },
+  "license": "MIT",
   "badges": {
-    "travis": true,
-    "npm": true,
-    "npmdownloads": true,
-    "david": true,
-    "daviddev": true,
-    "gratipay": "bevry",
-    "flattr": "344188/balupton-on-Flattr",
-    "paypal": "QB8GQPZAH84N6",
-    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
-    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
+    "list": [
+      "travisci",
+      "npmversion",
+      "npmdownloads",
+      "daviddm",
+      "daviddmdev",
+      "---",
+      "slackin",
+      "patreon",
+      "gratipay",
+      "flattr",
+      "paypal",
+      "bitcoin",
+      "wishlist"
+    ],
+    "config": {
+      "patreonUsername": "bevry",
+      "gratipayUsername": "bevry",
+      "flattrCode": "344188/balupton-on-Flattr",
+      "paypalButtonID": "QB8GQPZAH84N6",
+      "bitcoinURL": "https://bevry.me/bitcoin",
+      "wishlistURL": "https://bevry.me/wishlist",
+      "slackinURL": "https://slack.bevry.me"
+    }
   },
   "keywords": [
     "mocha",
@@ -33,8 +45,8 @@
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
   ],
   "contributors": [
-    "balupton (https://github.com/balupton)",
-    "pflannery (https://github.com/pflannery)"
+    "Benjamin Lupton (http://balupton.com)",
+    "Peter Flannery (https://github.com/pflannery)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/joe/issues"
@@ -48,25 +60,30 @@
   },
   "dependencies": {
     "event-emitter-grouped": "^2.4.3",
-    "taskgroup": "~4.2.0"
+    "taskgroup": "^4.3.0"
   },
   "devDependencies": {
-    "browserify": "~8.1.3",
-    "chai": "^1.9.1",
-    "coffee-script": "~1.9.0",
-    "joe-reporter-console": "~1.2.1",
-    "joe-reporter-list": "~1.2.0",
-    "projectz": "^0.3.14"
-  },
-  "directories": {
-    "lib": "./out/lib"
-  },
-  "scripts": {
-    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test/web/example1.bundled.js",
-    "test": "node out/test/joe-test.js"
+    "assert-helpers": "^3.0.0",
+    "browserify": "^11.1.0",
+    "coffee-script": "^1.10.0",
+    "joe-reporter-console": "^1.2.1",
+    "joe-reporter-list": "^1.2.1",
+    "projectz": "^1.0.2"
   },
   "main": "./out/lib/joe.js",
-  "cakeConfiguration": {
+  "scripts": {
+    "clean": "node --harmony nakefile.js clean",
+    "setup": "node --harmony nakefile.js setup",
+    "compile": "node --harmony nakefile.js compile",
+    "watch": "node --harmony nakefile.js watch",
+    "verify": "node --harmony nakefile.js verify",
+    "meta": "node --harmony nakefile.js meta",
+    "prepare": "node --harmony nakefile.js prepare",
+    "release": "node --harmony nakefile.js release",
+    "test": "node --harmony ./out/test/joe-test.js",
+    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test/web/example1.bundled.js"
+  },
+  "nakeConfiguration": {
     "COFFEE_SRC_PATH": "src"
   }
 }
