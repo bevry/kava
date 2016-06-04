@@ -1,5 +1,5 @@
 # Import
-joe = require('../..')
+joe = require('../../')
 
 # Test
 joe.suite 'deliberate throw suite', (suite,test) ->

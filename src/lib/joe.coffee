@@ -1,7 +1,7 @@
 # Import
 util = require('util')
 {EventEmitterGrouped} = require('event-emitter-grouped')
-{Task, TaskGroup} = require('taskgroup')
+{Task, TaskGroup} = require('taskgroup/es2015')
 
 # Prepare
 isBrowser = window?
@@ -11,12 +11,9 @@ isWindows = process?.platform?.indexOf('win') is 0
 # =================================
 # Test
 
-Test = class extends Task
+class Test extends Task
 	@create: (args...) -> new @(args...)
 	@isTest: (test) -> return test instanceof Test
-
-	constructor: ->
-		super
 
 	setConfig: ->
 		super
@@ -35,7 +32,7 @@ Test = class extends Task
 		@
 
 	run: ->
-		if @hasStarted() is false
+		unless @started
 			@emitSerial 'before', (err) =>
 				@emit('error', err)  if err
 				super
@@ -43,8 +40,22 @@ Test = class extends Task
 			super
 		@
 
-	complete: ->
-		if @isComplete()
+	###
+	fire: ->
+		// Setup timeout if appropriate
+		const timeoutDuration = this.config.timeout
+		if ( timeoutDuration ) {
+			this.state.timeout = setTimeout(() => {
+				if ( !this.completed ) {
+					const error = new Error(`The task [${this.names}] has timed out.`)
+					exitMethod(error)
+				}
+			}, timeoutDuration)
+		}
+	###
+
+	finish: ->
+		unless @exited
 			@emitSerial 'after', (err) =>
 				@emit('error', err)  if err
 				super
@@ -56,7 +67,7 @@ Test = class extends Task
 # =================================
 # Suite
 
-Suite = class extends TaskGroup
+class Suite extends TaskGroup
 	@create: (args...) -> new @(args...)
 	@isSuite: (suite) -> return suite instanceof Suite
 
@@ -67,7 +78,7 @@ Suite = class extends TaskGroup
 		# Shallow Listeners
 		@on 'item.add', (item) ->
 			if Test.isTest(item)
-				item.on 'started', ->
+				item.on 'running', ->
 					me.testRunCallback(item)
 				item.done (err) ->
 					me.testCompleteCallback(item, err)
@@ -77,7 +88,7 @@ Suite = class extends TaskGroup
 					me.emitSerial('test.after', item, complete)
 
 			else if Suite.isSuite(item)
-				item.on 'started', ->
+				item.on 'running', ->
 					me.suiteRunCallback(item)
 				item.done (err) ->
 					me.suiteCompleteCallback(item, err)
@@ -121,7 +132,7 @@ Suite = class extends TaskGroup
 		@
 
 	run: ->
-		if @hasStarted() is false
+		unless @started
 			@emitSerial 'before', (err) =>
 				@emit('error', err)  if err
 				super
@@ -129,8 +140,8 @@ Suite = class extends TaskGroup
 			super
 		@
 
-	complete: ->
-		if @isComplete()
+	finish: ->
+		unless @exited
 			@emitSerial 'after', (err) =>
 				@emit('error', err)  if err
 				super
@@ -150,14 +161,14 @@ Suite = class extends TaskGroup
 
 
 	suiteRunCallback: (suite) ->
-		config = suite.getConfig()
+		config = suite.config
 
 		if config.reporting isnt false
 			joePrivate.totalSuites++
 			joe.report('startSuite', suite)
 
 	suiteCompleteCallback: (suite, err) ->
-		config = suite.getConfig()
+		config = suite.config
 
 		if err
 			joePrivate.addErrorLog({suite, err})
@@ -172,14 +183,14 @@ Suite = class extends TaskGroup
 			joe.report('finishSuite', suite, err)
 
 	testRunCallback: (test) ->
-		config = test.getConfig()
+		config = test.config
 
 		if config.reporting isnt false
 			joePrivate.totalTests++
 			joe.report('startTest', test)
 
 	testCompleteCallback: (test, err) ->
-		config = test.getConfig()
+		config = test.config
 
 		if err
 			joePrivate.addErrorLog({test, err})
@@ -205,12 +216,13 @@ Suite::test = Suite::it = (args...) ->
 	@addTask(test)
 
 
+
 # =================================
 # Event Emitter Grouped
 
 # Add event emtiter grouped to our classes
-for key,value of EventEmitterGrouped::
-	Test::[key] = Suite::[key] = value
+Object.getOwnPropertyNames(EventEmitterGrouped::).forEach (key) ->
+	Test::[key] = Suite::[key] = EventEmitterGrouped::[key]
 
 
 # =================================
@@ -449,11 +461,7 @@ joe =
 
 	# Get Item Name
 	getItemName: (item,separator) ->
-		if separator
-			result = item.getNames({separator})
-		else
-			result = item.getConfig().name
-		return result
+		return item.names.join(separator)
 
 
 # =================================

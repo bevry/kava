@@ -1,5 +1,5 @@
 # Import
-joe = require('../..')
+joe = require('../../')
 
 # Our test
 joe.suite 'example2', (suite,test) ->

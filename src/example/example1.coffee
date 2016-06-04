@@ -7,7 +7,7 @@
 
 # Import
 {equal, deepEqual, errorEqual} = require('assert-helpers')
-joe = require('../..')
+joe = require('../../')
 
 # Prepare
 wait = (delay,fn) -> setTimeout(fn,delay)
@@ -167,7 +167,7 @@ joe.suite 'example1', (suite,test) ->
 		suite 'deliberate-failure ignored', (suite,test) ->
 			err1 = new Error('deliberate error 1')
 			err2 = new Error('deliberate error 2')
-			@setConfig(onError: 'ignore')
+			@setConfig(abortOnError: false)
 			test '1/2', ->
 				throw err1
 			test '2/2', (done) ->

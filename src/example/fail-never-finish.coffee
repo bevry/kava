@@ -1,5 +1,5 @@
 # Import
-joe = require('../..')
+joe = require('../../')
 
 # Test
 joe.test 'never finish', (done) ->
