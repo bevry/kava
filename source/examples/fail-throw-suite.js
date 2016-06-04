@@ -1,6 +1,7 @@
-# Import
-joe = require('../../')
+// Import
+const joe = require('../')
 
-# Test
-joe.suite 'deliberate throw suite', ->
+// Test
+joe.suite('deliberate throw suite', function () {
 	throw new Error('I am the deliberate throw')
+})

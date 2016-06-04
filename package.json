@@ -1,7 +1,7 @@
 {
   "title": "Joe",
   "name": "joe",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
   "homepage": "https://github.com/bevry/joe",
   "license": "MIT",
@@ -59,33 +59,44 @@
   },
   "editions": [
     {
-      "description": "Source + CoffeeScript + Require",
-      "entry": "src/lib/joe.coffee",
-      "directory": "src",
+      "description": "Source + ESNext + Require",
+      "entry": "source/index.js",
+      "directory": "source",
       "syntaxes": [
-        "coffeescript",
-        "require"
+        "javascript",
+        "esnext",
+        "require",
+        "const",
+        "let",
+        "spread",
+        "rest",
+        "destructuring",
+        "classes",
+        "arrows",
+        "template strings",
+        "shorthand",
+        "forof"
       ]
     },
     {
-      "description": "CoffeeScript Compiled JavaScript + ES5 + Require",
-      "entry": "es5/lib/joe.js",
-      "directory": "es5",
+      "description": "Babel Compiled + ES2015 + Require",
+      "entry": "es2015/index.js",
+      "directory": "es2015",
       "syntaxes": [
         "javascript",
-        "es5",
+        "es2015",
         "require"
       ]
     }
   ],
-  "main": "es5/lib/joe.js",
-  "browser": "es5/lib/joe.js",
+  "main": "index.js",
+  "browser": "es2015/index.js",
   "scripts": {
     "setup": "npm install",
-    "clean": "rm -Rf ./docs ./es5",
-    "compile": "npm run compile:coffeescript",
-    "compile:coffeescript": "coffee -bco ./es5 ./src",
-    "compile:web": "browserify -r joe-reporter-console -e out/example/example1.js > test/web/example1.bundled.js",
+    "clean": "rm -Rf ./docs ./es2015",
+    "compile": "npm run compile:es2015",
+    "compile:es2015": "babel ./source --out-dir ./es2015 --presets es2015",
+    "compile:web": "browserify ./es2015/examples/example1.js -r joe-reporter-console --outfile ./web/out.js",
     "meta": "npm run meta:projectz",
     "meta:projectz": "projectz compile",
     "prepare": "npm run compile && npm run test && npm run meta",
@@ -93,19 +104,22 @@
     "release:publish": "npm publish",
     "release:tag": "git tag v$npm_package_version -a",
     "release:push": "git push origin master && git push origin --tags",
-    "pretest": "npm run test:coffeelint",
-    "test:coffeelint": "coffeelint ./src",
-    "test": "node --harmony ./es5/test/joe-test.js"
+    "pretest": "npm run test:eslint",
+    "test:eslint": "eslint ./source",
+    "test": "node --harmony -e \"require('editions').requirePackage(process.cwd(), require, 'test.js')\""
   },
   "dependencies": {
+    "editions": "^1.1.1",
     "event-emitter-grouped": "^2.5.0",
     "taskgroup": "^5.0.0"
   },
   "devDependencies": {
     "assert-helpers": "^4.4.0",
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
     "browserify": "^13.0.1",
-    "coffeelint": "^1.15.7",
-    "coffee-script": "^1.10.0",
+    "eslint": "^2.11.1",
+    "eslint-plugin-babel": "^3.2.0",
     "joe-reporter-console": "^1.2.1",
     "joe-reporter-list": "^1.2.1",
     "projectz": "^1.1.5"

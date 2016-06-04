@@ -1,5 +1,8 @@
 # History
 
+## v1.8.0 2016 June 4
+- Converted from CoffeeScript to ESNext
+
 ## v1.7.0 2016 June 4
 - Updated for TaskGroup v5 and EventEmitterGrouped v2.5.0
 - Updated internal conventions

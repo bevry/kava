@@ -1,5 +1,7 @@
-# Import
-joe = require('../../')
+/* eslint no-unused-vars:0 */
 
-# Test
-joe.test 'never finish', (done) ->
+// Import
+const joe = require('../')
+
+// Test
+joe.test('never finish', function (done) {})
