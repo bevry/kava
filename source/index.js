@@ -489,7 +489,8 @@ const joe = {
 			return joe
 		}
 
-		// Cycle through the reporters
+		// For each reporter that we have
+		// Trigger the event handler if it exists for it
 		for ( const reporter of reporters ) {
 			if ( reporter[event] ) {
 				reporter[event](...args)
