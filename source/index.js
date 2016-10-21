@@ -205,56 +205,55 @@ class Suite extends TaskGroup {
 	// Callbacks
 
 	suiteRunCallback (suite) {
-		const config = suite.config
-		if ( config.reporting !== false ) {
+		const report = suite.config.reporting !== false
+
+		if ( report ) {
 			++joePrivate.totalSuites
 			joe.report('startSuite', suite)
 		}
 	}
 
 	suiteCompleteCallback (suite, err) {
-		const config = suite.config
+		const report = suite.config.reporting !== false
 
 		if ( err ) {
 			joePrivate.addErrorLog({suite, err})
-			if ( config.reporting !== false ) {
+			if ( report ) {
 				++joePrivate.totalFailedSuites
 			}
 		}
-
-		else if ( config.reporting !== false ) {
+		else if ( report ) {
 			++joePrivate.totalPassedSuites
 		}
 
-		if ( config.reporting !== false ) {
+		if ( report ) {
 			joe.report('finishSuite', suite, err)
 		}
 	}
 
 	testRunCallback (test) {
-		const config = test.config
+		const report = test.config.reporting !== false
 
-		if ( config.reporting !== false ) {
+		if ( report ) {
 			++joePrivate.totalTests
 			joe.report('startTest', test)
 		}
 	}
 
 	testCompleteCallback (test, err) {
-		const config = test.config
+		const report = test.config.reporting !== false
 
 		if ( err ) {
 			joePrivate.addErrorLog({test, err})
-			if ( config.reporting !== false ) {
+			if ( report ) {
 				++joePrivate.totalFailedTests
 			}
 		}
-
-		else if ( config.reporting !== false ) {
+		else if ( report ) {
 			++joePrivate.totalPassedTests
 		}
 
-		if ( config.reporting !== false ) {
+		if ( report ) {
 			joe.report('finishTest', test, err)
 		}
 	}
@@ -546,7 +545,7 @@ const joe = {
 		if ( !util.isError(err) ) {
 			err = new Error(err)
 		}
-		joePrivate.addErrorLog({name: 'uncaughtException', err})
+		joePrivate.addErrorLog({err, name: 'uncaughtException'})
 		joe.report('uncaughtException', err)
 		joe.exit(1)
 
