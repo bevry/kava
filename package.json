@@ -1,7 +1,6 @@
 {
-  "title": "Joe",
   "name": "joe",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Joe is an accurate and powerful testing framework that can run on node and in the browser",
   "homepage": "https://github.com/bevry/joe",
   "license": "MIT",

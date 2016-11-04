@@ -1,5 +1,9 @@
 # History
 
+## v2.0.2 2016 November 4
+- Fixed `--joe-reporter=console` not working (regression since v2.0.0)
+- Fixed early node compatibility properly (initial attempt was in v2.0.0)
+
 ## v2.0.1 2016 November 4
 - Fixed tests not being published to npm for use in the testing ecosystem
 
