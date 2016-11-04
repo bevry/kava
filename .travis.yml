@@ -1,4 +1,4 @@
-# 2016 October 27
+# 2016 November 4
 # https://github.com/bevry/base
 
 # Use the latest travis infrastructure
@@ -17,29 +17,42 @@ cache:
   directories:
     - node_modules
 
-# Ensure dependencies are installed using an LTS node version
+# Ensure npm is up to date and that dependencies are installed using an LTS node version
 install: >
-  if nvm ls-remote --lts | grep "$(nvm current)"; then
+  export CURRENT_NPM_VERSION="$(npm --version)"
+  export LATEST_NPM_VERSION="$(npm view npm version)"
+  if "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
+    npm instal npm --global --cache-min=Infinity
+  fi
+
+  export LTS_NODE_VERSIONS="$(nvm ls-remote --lts)"
+  if echo "$LTS_NODE_VERSIONS" | grep "$TRAVIS_NODE_VERSION"; then
+    echo "running on a LTS node version, completing setup"
     npm run our:setup
   else
+    echo "running on a non-LTS node version, completing setup on a LTS node version"
     nvm install --lts
-    export LTS_NODE_VERSION="$(nvm current)"
+    export LTS_NODE_VERSION="$(node --version)"
     npm run our:setup
     nvm use "$TRAVIS_NODE_VERSION"
   fi
 
 # Ensure compilation and linting occur on an LTS node version
 before_script: >
-  if nvm ls-remote --lts | grep "$(nvm current)"; then
-    echo "running on a LTS node version, compiling and linting"
-    npm run our:compile && npm run our:verify
-  else
-    echo "running on a non-LTS node version, compiling with lts, skipping linting"
+  if test "$LTS_NODE_VERSION"; then
+    echo "running on a non-LTS node version, compiling with LTS, skipping linting"
     nvm use "$LTS_NODE_VERSION"
     npm run our:compile
     nvm use "$TRAVIS_NODE_VERSION"
+  else
+    echo "running on a LTS node version, compiling and linting"
+    npm run our:compile && npm run our:verify
   fi
 
 # Custom notifications
-# travis encrypt --org "$SLACK_SUBDOMAIN:$SLACK_TRAVIS_TOKEN#updates" --add notifications.slack
-# travis encrypt --org "$TRAVIS_NOTIFICATION_EMAIL" --add notifications.email.recipients
+notifications:
+  slack:
+    secure: lC4QRYOkn3wbuaKhn/IbW8gMP8E+bQrAopLII/37N88TGTjAKKNCL2Rte/Z5BXiSwNEZCWG8dGkUYAGrbSqCNA4Nr7VVeH5OMZs7x67fweUx+S+sP8u+iknvCVkmiDvjsswTBLixwOLVVv/4DyI06DFQtbX4pgT7IwA54M+Pjmw=
+  email:
+    recipients:
+      secure: Nmek4QEFC+T5o1VP129nZZFiI6JKMrwYy/d6Ct/oFhPtGSZZ730M0q8anJc9lC1SKR0j7mKJWNwYPLDjx4eFSKs22ErmEC+R5F8qU+jzR9wSk8Dr6aQbHnVFpW3QJu6J8lqeNSPRTj2Fnq4mYohch5o5nJL/RoqEMNuYm8H/pSc=
