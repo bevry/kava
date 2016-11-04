@@ -26,11 +26,10 @@
 
 <!-- DESCRIPTION/ -->
 
-Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.
+Joe is an accurate and powerful testing framework that can run on node and in the browser
 
 <!-- /DESCRIPTION -->
 
-[Documentation.](https://github.com/bevry/joe/wiki)
 
 <!-- INSTALL/ -->
 
@@ -43,7 +42,7 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 <a href="http://browserify.org" title="Browserify lets you require('modules') in the browser by bundling up all of your dependencies"><h3>Browserify</h3></a><ul>
 <li>Install: <code>npm install --save joe</code></li>
 <li>Module: <code>require('joe')</code></li>
-<li>CDN URL: <code>//wzrd.in/bundle/joe@2.0.0</code></li></ul>
+<li>CDN URL: <code>//wzrd.in/bundle/joe@2.0.1</code></li></ul>
 
 <a href="http://enderjs.com" title="Ender is a full featured package manager for your browser"><h3>Ender</h3></a><ul>
 <li>Install: <code>ender add joe</code></li>
@@ -60,6 +59,11 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 <p>Older environments may need <a href="https://babeljs.io/docs/usage/polyfill/" title="A polyfill that emulates missing ECMAScript environment features">Babel's Polyfill</a> or something similar.</p>
 
 <!-- /INSTALL -->
+
+
+## Usage
+
+[Get Started.](https://github.com/bevry/joe/wiki)
 
 
 <!-- HISTORY/ -->

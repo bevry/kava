@@ -28,7 +28,6 @@ HISTORY.md
 # Development Files
 web/
 **/example*
-**/test*
 .editorconfig
 .eslintrc*
 .jshintrc
@@ -47,4 +46,4 @@ bower.json
 # =====================================
 # CUSTOM MODIFICATIONS
 
-# None
+# Testing rule has been removed as we want to publish test files for use of the testing ecosystem

@@ -1,5 +1,8 @@
 # History
 
+## v2.0.1 2016 November 4
+- Fixed tests not being published to npm for use in the testing ecosystem
+
 ## v2.0.0 2016 November 4
 This release contains several major improvements to internals and undocumented functionality, which potentially impact backwards compatibility with before and after hooks, and reporter functionality. For the average end-user these should be non-functional changes and should just improve the quality of the reports that joe generates.
 
