@@ -18,7 +18,7 @@ cache:
     - node_modules
 
 # Ensure npm is up to date and that dependencies are installed using an LTS node version
-install: >
+install: |
   export CURRENT_NPM_VERSION="$(npm --version)"
   export LATEST_NPM_VERSION="$(npm view npm version)"
   if test "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
@@ -39,7 +39,7 @@ install: >
   fi
 
 # Ensure compilation and linting occur on an LTS node version
-before_script: >
+before_script: |
   if test "$LTS_NODE_VERSION"; then
     echo "running on a non-LTS node version, compiling with LTS, skipping linting"
     nvm use "$LTS_NODE_VERSION"
