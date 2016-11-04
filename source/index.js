@@ -332,25 +332,29 @@ const joePrivate = {
 			}
 
 			// Attempt to load each reporter
-			reporters.forEach(function (reporter) {
+			reporters.forEach(function (nameOrPath) {
 				// Prepare
 				let Reporter = null
 
-				// Attempt
+				// Attempt joe-reporter-nameOrPath first
+				// as require('console') will return the console
 				try {
-					Reporter = require(reporter)
+					Reporter = require(`joe-reporter-${nameOrPath}`)
 				}
-				catch ( pathError ) {
+				catch ( nameError ) {
 					try {
-						Reporter = require(`joe-reporter-${reporter}`)
+						Reporter = require(nameOrPath)
 					}
-					catch ( nameError ) {
+					catch ( pathError ) {
 						throw new Error(`joe could not find the reporter: ${reporter}`)
 					}
 				}
 
+				// Instantiate the reporter
+				const reporter = new Reporter()
+
 				// Add the reporter
-				joe.addReporter(new Reporter())
+				joe.addReporter(reporter)
 			})
 		}
 
