@@ -466,10 +466,9 @@ const joe = {
 
 		// For each reporter that we have
 		// Trigger the event handler if it exists for it
-		for ( const reporter of reporters ) {
-			if ( reporter[event] ) {
-				reporter[event](...args)
-			}
+		for ( let i = 0; i < reporters.length; ++i ) {
+			const reporter = reporters[i]
+			if ( reporter[event] )  reporter[event](...args)
 		}
 
 		// Chain
