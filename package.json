@@ -91,6 +91,7 @@
   "main": "index.js",
   "browser": "es2015/index.js",
   "scripts": {
+    "our:setup": "npm install && npm run custom:setup:link",
     "our:clean": "rm -Rf ./docs ./es2015",
     "our:compile": "npm run our:compile:es2015",
     "our:compile:es2015": "babel ./source --out-dir ./es2015 --presets es2015",
@@ -104,7 +105,8 @@
     "our:release:publish": "npm publish",
     "our:release:tag": "git tag v$npm_package_version -a",
     "our:release:push": "git push origin master && git push origin --tags",
-    "test": "node --harmony ./test.js"
+    "test": "node --harmony ./test.js",
+    "custom:setup:link": "npm link && npm link joe"
   },
   "dependencies": {
     "editions": "^1.3.1",
@@ -118,6 +120,7 @@
     "eslint": "^3.9.0",
     "joe-reporter-console": "^2.0.1",
     "joe-reporter-list": "^2.0.1",
+    "joe-examples": "^2.0.0",
     "projectz": "^1.3.2"
   }
 }

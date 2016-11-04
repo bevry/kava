@@ -3,6 +3,7 @@
 // Import
 const {spawn} = require('child_process')
 const {equal} = require('assert-helpers')
+const {Task, TaskGroup} = require('taskgroup')
 
 // Create a seperator
 function sep (length, sep) {
@@ -16,7 +17,7 @@ function sep (length, sep) {
 // Run a single test
 function test (opts) {
 	const {expected, script, reporter} = opts
-	return new Promise(function (resolve, reject) {
+	return new Task(function (complete) {
 		// Prepare
 		const expectedCleaned = expected.trim()
 
@@ -40,25 +41,27 @@ function test (opts) {
 				equal(output.trim(), expectedCleaned.trim())
 			}
 			catch ( err ) {
-				return reject(err)
+				return complete(err)
 			}
 			process.stdout.write('\n^^ the above was as expected ^^\n')
-			return resolve()
+			return complete()
 		})
 	})
 }
 
 // Run multiple tests
 function tests (opts, list) {
-	return list.reduce(function (lastPromise, item) {
-		return lastPromise.then(function () {
+	return new TaskGroup({
+		tasks: list.map(function (item) {
 			return test(Object.assign({}, opts, item))
 		})
-	}, Promise.resolve()).catch(function (err) {
-		/* eslint no-console:0 */
-		console.error(err.stack || err.message || err)
-		process.exit(1)
-	})
+	}).done(function (err) {
+		if ( err ) {
+			/* eslint no-console:0 */
+			console.error(err.stack || err.message || err)
+			process.exit(1)
+		}
+	}).run()
 }
 
 // Export

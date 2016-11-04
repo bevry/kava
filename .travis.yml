@@ -20,11 +20,11 @@ cache:
 # Ensure dependencies are installed using an LTS node version
 install: >
   if nvm ls-remote --lts | grep "$(nvm current)"; then
-    npm install
+    npm run our:setup
   else
     nvm install --lts
     export LTS_NODE_VERSION="$(nvm current)"
-    npm install
+    npm run our:setup
     nvm use "$TRAVIS_NODE_VERSION"
   fi
 
