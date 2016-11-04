@@ -53,7 +53,10 @@ function test (opts) {
 function tests (opts, list) {
 	return new TaskGroup({
 		tasks: list.map(function (item) {
-			return test(Object.assign({}, opts, item))
+			Object.keys(opts).forEach(function (key) {
+				item[key] = opts[key]
+			})
+			return test(item)
 		})
 	}).done(function (err) {
 		if ( err ) {
