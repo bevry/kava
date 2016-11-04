@@ -30,6 +30,7 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 
 <!-- /DESCRIPTION -->
 
+[Documentation.](https://github.com/bevry/joe/wiki)
 
 <!-- INSTALL/ -->
 
@@ -42,7 +43,7 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 <a href="http://browserify.org" title="Browserify lets you require('modules') in the browser by bundling up all of your dependencies"><h3>Browserify</h3></a><ul>
 <li>Install: <code>npm install --save joe</code></li>
 <li>Module: <code>require('joe')</code></li>
-<li>CDN URL: <code>//wzrd.in/bundle/joe@1.8.0</code></li></ul>
+<li>CDN URL: <code>//wzrd.in/bundle/joe@2.0.0</code></li></ul>
 
 <a href="http://enderjs.com" title="Ender is a full featured package manager for your browser"><h3>Ender</h3></a><ul>
 <li>Install: <code>ender add joe</code></li>
@@ -59,81 +60,6 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 <p>Older environments may need <a href="https://babeljs.io/docs/usage/polyfill/" title="A polyfill that emulates missing ECMAScript environment features">Babel's Polyfill</a> or something similar.</p>
 
 <!-- /INSTALL -->
-
-
-## Usage
-
-### Example
-
-``` javascript
-// define your test suite
-require('joe').suite('suite name', function (suite, test) {
-	// group together items into sub suites if you desire
-	suite('sub suite name', function (suite, test) {
-		// create both synchronous and asynchronous tests
-		test('synchronous test', function () {
-			console.log('do your sync stuff')
-		})
-
-		test('asynchronous test name', function (complete) {
-			console.log('do your async stuff')
-			setTimeout(function () {
-				complete()
-			}, 500)
-		})
-
-		// run a methods before and\or after the test
-		function beforeEach(test) {
-			console.log('do some pre test stuff')
-		}
-		function afterEach(test, err) {
-			console.log('do some post test stuff')
-		}
-
-		test('before and after options test', {before: beforeEach, after: afterEach}, function () {
-			console.log('do your before and after stuff')
-		})
-	})
-
-	// you can also define tests dynamically when using the completion callback on the group
-	suite('lets create dynamic tests', function (suite, it, done) {
-		setTimeout(function () {
-			test('a synchronous dynamic test', function () {
-				console.log('do your sync stuff')
-			})
-			done()
-		}, 500)
-	})
-})
-```
-
-```
-$ node example.js
-suite name
-suite name ➞  sub suite name
-suite name ➞  sub suite name ➞  synchronous test
-suite name ➞  sub suite name ➞  synchronous test ✔   
-suite name ➞  sub suite name ➞  asynchronous test name
-suite name ➞  sub suite name ➞  asynchronous test name ✔   
-suite name ➞  sub suite name ✔  
-suite name ➞  lets create dynamic tests
-suite name ➞  lets create dynamic tests ➞  a synchronous dynamic test
-suite name ➞  lets create dynamic tests ➞  a synchronous dynamic test ✔   
-suite name ➞  lets create dynamic tests ✔  
-suite name ✔  
-
-3/3 tests ran successfully, everything passed
-```
-
-
-### Complete Documentation
-
-[View the Complete Joe Documentation on the Bevry Learning Centre](https://learn.bevry.me/joe/guide)
-
-
-### Custom Reporters
-
-[Discover the available Custom Reporters for Joe using the `joe-reporter` keyword on the NPM Registry](https://npmjs.org/browse/keyword/joe-reporter)
 
 
 <!-- HISTORY/ -->
@@ -162,7 +88,7 @@ suite name ✔
 
 These amazing people are maintaining this project:
 
-<ul><li><a href="https://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/joe/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/joe">view contributions</a></li></ul>
+<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/joe/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/joe">view contributions</a></li></ul>
 
 <h3>Sponsors</h3>
 
@@ -179,7 +105,7 @@ No sponsors yet! Will you be the first?
 
 These amazing people have contributed code to this project:
 
-<ul><li><a href="https://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/joe/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/joe">view contributions</a></li>
+<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/joe/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/joe">view contributions</a></li>
 <li><a href="https://github.com/pflannery">Peter Flannery</a> — <a href="https://github.com/bevry/joe/commits?author=pflannery" title="View the GitHub contributions of Peter Flannery on repository bevry/joe">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/joe/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
@@ -193,7 +119,7 @@ These amazing people have contributed code to this project:
 
 Unless stated otherwise all works are:
 
-<ul><li>Copyright &copy; 2012+ <a href="https://bevry.me">Bevry Pty Ltd</a></li></ul>
+<ul><li>Copyright &copy; 2012+ <a href="http://bevry.me">Bevry Pty Ltd</a></li></ul>
 
 and licensed under:
 

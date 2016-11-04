@@ -1,36 +1,27 @@
-/* eslint no-use-before-define:1 */
+/* eslint no-use-before-define:0, no-console:0, class-methods-use-this:0 */
+'use strict'
 
 // Import
-const util = require('util')
 const EventEmitterGrouped = require('event-emitter-grouped')
 const {Task, TaskGroup} = require('taskgroup')
-
-// Prepare
-const isBrowser = typeof window !== 'undefined'
-const isWindows = process && process.platform && process.platform.indexOf('win') === 0
 
 // =================================
 // Generic
 
 function setConfig () {
-	const me = this
 	const {before, after} = this.config
 	if ( before ) {
 		delete this.config.before
-		this.on('before', function (complete) {
-			before.call(this, me, complete)
-		})
+		this.on('before', before)
 	}
 	if ( after ) {
 		delete this.config.after
-		this.on('after', function (complete) {
-			after.call(this, me, complete)
-		})
+		this.on('after', after)
 	}
 	return this
 }
 
-function run (next, args) {
+function run (next, ...args) {
 	if ( !this.started ) {
 		this.emitSerial('before', (err) => {
 			if ( err )  this.emit('error', err)
@@ -43,7 +34,7 @@ function run (next, args) {
 	return this
 }
 
-function finish (next, args) {
+function finish (next, ...args) {
 	if ( !this.exited ) {
 		this.emitSerial('after', (err) => {
 			if ( err )  this.emit('error', err)
@@ -101,11 +92,11 @@ class Suite extends TaskGroup {
 	}
 
 	run (...args) {
-		return run.call(this, super.run, args)
+		return run.call(this, super.run, ...args)
 	}
 
 	finish (...args) {
-		return finish.call(this, super.finish, args)
+		return finish.call(this, super.finish, ...args)
 	}
 
 	suite (...args) {
@@ -130,29 +121,6 @@ class Suite extends TaskGroup {
 		super(...args)
 		const me = this
 
-		/*
-		// Nested Listeners
-		function nestedListener (item) {
-			if ( Test.isTest(item) ) {
-				item.on('before', function (complete) {
-					me.emitSerial('nested.test.before', item, complete)
-				})
-				item.on('after', function (complete) {
-					me.emitSerial('nested.test.after', item, complete)
-				})
-			}
-			else if ( Suite.isSuite(item) ) {
-				item.on('item.add', nestedListener)
-				item.on('before', function (complete) {
-					me.emitSerial('nested.suite.before', item, complete)
-				})
-				item.on('after', function (complete) {
-					me.emitSerial('nested.suite.after', item, complete)
-				})
-			}
-		}
-		*/
-
 		// Shallow Listeners
 		this.on('item.add', function (item) {
 			if ( Test.isTest(item) ) {
@@ -163,10 +131,10 @@ class Suite extends TaskGroup {
 					me.testCompleteCallback(item, err)
 				})
 				item.on('before', function (complete) {
-					me.emitSerial('test.before', item, complete)
+					me.emitSerial('test.before', this, complete)
 				})
 				item.on('after', function (complete) {
-					me.emitSerial('test.after', item, complete)
+					me.emitSerial('test.after', this, complete)
 				})
 			}
 
@@ -178,10 +146,10 @@ class Suite extends TaskGroup {
 					me.suiteCompleteCallback(item, err)
 				})
 				item.on('before', function (complete) {
-					me.emitSerial('suite.before', item, complete)
+					me.emitSerial('suite.before', this, complete)
 				})
 				item.on('after', function (complete) {
-					me.emitSerial('suite.after', item, complete)
+					me.emitSerial('suite.after', this, complete)
 				})
 			}
 
@@ -195,7 +163,7 @@ class Suite extends TaskGroup {
 
 	addMethod (method, config = {}) {
 		if ( config.reporting == null )  config.reporting = false
-		if ( config.name == null )  config.name = false
+		if ( config.name == null )  config.name = `suite initializer for ${this.name}`
 		if ( config.args == null )  config.args = [this.suite.bind(this), this.test.bind(this)]
 		return super.addMethod(method, config)
 	}
@@ -226,7 +194,7 @@ class Suite extends TaskGroup {
 			++joePrivate.totalPassedSuites
 		}
 
-		if ( report ) {
+		if ( err || report ) {
 			joe.report('finishSuite', suite, err)
 		}
 	}
@@ -253,7 +221,7 @@ class Suite extends TaskGroup {
 			++joePrivate.totalPassedTests
 		}
 
-		if ( report ) {
+		if ( err || report ) {
 			joe.report('finishTest', test, err)
 		}
 	}
@@ -287,7 +255,7 @@ const joePrivate = {
 		if ( joePrivate.globalSuite == null ) {
 			joePrivate.globalSuite = new Suite({
 				reporting: false,
-				name: false
+				name: 'global joe suite'
 			}).run()
 		}
 
@@ -335,41 +303,55 @@ const joePrivate = {
 	totalFailedTests: 0,
 
 	// Get Reporters
-	// Fetches our reporters when we need them, if none are set,
-	// then we fetch the reporter specified by the CLI arguments (if running in the CL), or the default reporter for the environment
+	// If no reporters have been set, attempt to load reporters
+	// Reporters will be loaded in order of descending preference
+	// the `--joe-reporter=value` command line arguments
+	// the `JOE_REPORTER` environment variable
 	getReporters () {
 		// Check if have no reporters
 		if ( joePrivate.reporters.length === 0 ) {
 			// Prepare
-			let reporterName = 'console'
+			const reporters = []
 
 			// Cycle through our CLI arguments
-			// to see if we can override our reporterName with one specified by the CLI
-			const args = process && process.argv || []
-			for ( const arg of args ) {
-				// Do we have our --joe-reporter=REPORTER argument?
-				const argResult = arg.replace(/^--joe-reporter=/, '')
-				if ( argResult !== arg ) {
-					reporterName = argResult
-					break
+			// looking for --joe-reporter=REPORTER
+			if ( process && process.argv ) {
+				const args = process.argv
+				for ( let i = 0; i < args.length; ++i ) {
+					const arg = args[i]
+					const reporter = arg.replace(/^--joe-reporter=/, '')
+					if ( reporter === arg )  continue
+					reporters.push(reporter)
 				}
 			}
 
-			// Load our default reporter
-			try {
-				joe.addReporter(reporterName)
+			// If the CLI arguments returned no reporters
+			// then attempt the environment variable
+			if ( reporters.length === 0 && process && process.env && process.env.JOE_REPORTER ) {
+				reporters.push(process.env.JOE_REPORTER)
 			}
-			catch ( err ) {
-				console.error(
-					`Joe could not load the reporter: ${reporterName}\n` +
-					"Perhaps it's not installed? Try install it using:\n" +
-					`\tnpm install --save-dev joe-reporter-${reporterName}\n` +
-					'The exact error was:\n' +
-					(err.stack || err.message || err)
-				)
-				joe.exit(1)
-				return
-			}
+
+			// Attempt to load each reporter
+			reporters.forEach(function (reporter) {
+				// Prepare
+				let Reporter = null
+
+				// Attempt
+				try {
+					Reporter = require(reporter)
+				}
+				catch ( pathError ) {
+					try {
+						Reporter = require(`joe-reporter-${reporter}`)
+					}
+					catch ( nameError ) {
+						throw new Error(`joe could not find the reporter: ${reporter}`)
+					}
+				}
+
+				// Add the reporter
+				joe.addReporter(new Reporter())
+			})
 		}
 
 		// Return our reporters
@@ -446,18 +428,12 @@ const joe = {
 
 	// Add Reporter
 	// Add a reporter to the list of reporters we will be using
-	addReporter (reporterInstance) {
-		// Load the reporter
-		if ( typeof reporterInstance === 'string' ) {
-			const Reporter = require(`joe-reporter-${reporterInstance}`)
-			reporterInstance = new Reporter()
-		}
-
+	addReporter (reporter) {
 		// Add joe to the reporter
-		reporterInstance.joe = joe
+		reporter.joe = joe
 
 		// Add the reporter to the list of reporters we have
-		joePrivate.reporters.push(reporterInstance)
+		joePrivate.reporters.push(reporter)
 
 		// Chain
 		return joe
@@ -483,7 +459,7 @@ const joe = {
 
 		// Check we have reporters
 		if ( reporters.length === 0 ) {
-			console.error('Joe has no reporters loaded, so cannot log anything...')
+			console.error('joe has no reporters to log:', event, ...args)
 			joe.exit(1)
 			return joe
 		}
@@ -503,26 +479,22 @@ const joe = {
 	// Exit
 	// Exit our process with the specifeid exitCode
 	// If no exitCode is set, then we determine it through the hasErrors call
-	exit (exitCode) {
+	exit (exitCode = 0, reason) {
 		// Check
-		if ( joe.hasExited() ) {
-			return
-		}
+		if ( joe.hasExited() )  return
 		joePrivate.exited = true
 
 		// Determine exit code
-		if ( exitCode == null ) {
+		if ( !exitCode ) {
 			exitCode = joe.hasErrors() ? 1 : 0
 		}
 
 		// Stop running more tests if we have begun
 		const suite = joePrivate.getGlobalSuite()
-		if ( suite ) {
-			suite.destroy()
-		}
+		if ( suite )  suite.destroy()
 
 		// Report our exit
-		joe.report('exit', exitCode)
+		joe.report('exit', exitCode, reason)
 
 		// Kill our process with the correct exit code
 		if ( process && process.exit ) {
@@ -531,46 +503,13 @@ const joe = {
 
 		// Chain
 		return joe
-	},
-
-	// Uncaught Exception
-	// Log an uncaughtException and die
-	uncaughtException (err) {
-		// Check
-		if ( joe.hasExited() ) {
-			return
-		}
-
-		// Report
-		if ( !util.isError(err) ) {
-			err = new Error(err)
-		}
-		joePrivate.addErrorLog({err, name: 'uncaughtException'})
-		joe.report('uncaughtException', err)
-		joe.exit(1)
-
-		// Chain
-		return joe
-	},
-
-	// Get Item Name
-	getItemName (item, separator) {
-		return item.names.join(separator)
 	}
 }
 
 
 // =================================
-// Setup
-
-// Bubbled uncaught exceptions
-joePrivate.getGlobalSuite().done(function (err) {
-	if ( err ) {
-		joe.uncaughtException(err)
-	}
-})
-
 // Interface
+
 // Create our public interface for creating suites and tests
 joe.describe = joe.suite = function suite (...args) {
 	return joePrivate.getGlobalSuite().suite(...args)
@@ -580,27 +519,42 @@ joe.it = joe.test = function test (...args) {
 }
 
 // Freeze our public interface from changes
-if ( !isBrowser && Object.freeze ) {
+if ( Object.freeze ) {
 	Object.freeze(joe)
 }
 
-// Handle system events
-// Have this last, as this way it won't silence errors that may have occured earlier
-if ( process != null ) {
-	if ( !isWindows ) {
-		process.on('SIGINT', function () {
-			joe.exit()
-		})
-	}
 
-	process.on('exit', function () {
-		joe.exit()
+// =================================
+// Events
+
+// On node systems, wait until the process exits
+// such that errors that occur outside of the tests can be caught before joe shuts down
+if ( process ) {
+	process.on('beforeExit', function () {
+		joe.exit(0, 'beforeExit')
 	})
 
+	process.on('exit', function () {
+		joe.exit(0, 'exit')
+	})
+
+	// Have last, as this way it won't silence errors that may have occured earlier
 	process.on('uncaughtException', function (err) {
-		joe.uncaughtException(err)
+		if ( !err )  err = new Error('uncaughtException was emitted without an error')
+		joePrivate.addErrorLog({err, name: 'uncaughtException'})
+		joe.exit(1, 'uncaughtException')
 	})
 }
 
+// On browser systems, wait until the tests have finished
+else {
+	joePrivate.getGlobalSuite().on('destroyed', function () {
+		joe.exit(0, 'destroyed')
+	})
+}
+
+
+// =================================
 // Export
+
 module.exports = joe
