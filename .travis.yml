@@ -21,7 +21,7 @@ cache:
 install: >
   export CURRENT_NPM_VERSION="$(npm --version)"
   export LATEST_NPM_VERSION="$(npm view npm version)"
-  if "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
+  if test "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
     npm instal npm --global --cache-min=Infinity
   fi
 
