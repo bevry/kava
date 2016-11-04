@@ -24,7 +24,6 @@ install: >
   if test "$CURRENT_NPM_VERSION" != "$LATEST_NPM_VERSION"; then
     npm instal npm --global --cache-min=Infinity
   fi
-
   export LTS_NODE_VERSIONS="$(nvm ls-remote --lts)"
   echo "TRAVIS_NODE_VERSION = $TRAVIS_NODE_VERSION"
   echo "CURRENT_NODE_VERSION = $(node --version)"
