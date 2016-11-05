@@ -1,23 +1,28 @@
-# 2016 November 4
+# 2016 November 5
 # https://github.com/bevry/base
 
 # Use the latest travis infrastructure
 sudo: false
 
-# We use node
+# https://github.com/nodejs/LTS
 language: node_js
 node_js:
-  - "0.8"   # legacy
-  - "0.10"  # maintenance
+  - "0.8"   # end of life
+  - "0.10"  # end of life
   - "0.12"  # maintenance
   - "4"     # lts
   - "6"     # lts
   - "7"     # stable
+matrix:
+  allow_failures:
+    - node_js: "0.8"
+    - node_js: "0.10"
 cache:
   directories:
     - node_modules
 
-# Ensure npm is up to date and that dependencies are installed using an LTS node version
+# Ensure npm is up to date
+# Ensure dependencies install with a LTS node version
 install: |
   export CURRENT_NPM_VERSION="$(npm --version)"
   export LATEST_NPM_VERSION="$(npm view npm version)"
