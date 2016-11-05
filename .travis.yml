@@ -14,6 +14,7 @@ node_js:
   - "6"     # lts
   - "7"     # stable
 matrix:
+  fast_finish: true
   allow_failures:
     - node_js: "0.8"
     - node_js: "0.10"
