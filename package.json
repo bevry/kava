@@ -1,7 +1,7 @@
 {
   "title": "Joe",
   "name": "joe",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
   "homepage": "https://github.com/bevry/joe",
   "license": {
@@ -34,7 +34,7 @@
   ],
   "contributors": [
     "balupton (https://github.com/balupton)",
-    "pflannery (https://github.com/pflannery)"
+    "Peter Flannery (https://github.com/pflannery)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/joe/issues"
@@ -47,7 +47,7 @@
     "node": ">=0.10"
   },
   "dependencies": {
-    "event-emitter-grouped": "^2.4.3",
+    "event-emitter-grouped": "~2.4.3",
     "taskgroup": "~4.2.0"
   },
   "devDependencies": {

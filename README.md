@@ -39,7 +39,7 @@ Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won'
 ### [Browserify](http://browserify.org/)
 - Use: `require('joe')`
 - Install: `npm install --save joe`
-- CDN URL: `//wzrd.in/bundle/joe@1.6.0`
+- CDN URL: `//wzrd.in/bundle/joe@1.6.1`
 
 ### [Ender](http://ender.jit.su/)
 - Use: `require('joe')`
@@ -161,7 +161,7 @@ No sponsors yet! Will you be the first?
 These amazing people have contributed code to this project:
 
 - [balupton](https://github.com/balupton) — [view contributions](https://github.com/bevry/joe/commits?author=balupton)
-- [pflannery](https://github.com/pflannery) — [view contributions](https://github.com/bevry/joe/commits?author=pflannery)
+- [Peter Flannery](https://github.com/pflannery) — [view contributions](https://github.com/bevry/joe/commits?author=pflannery)
 
 [Become a contributor!](https://github.com/bevry/joe/blob/master/CONTRIBUTING.md#files)
 

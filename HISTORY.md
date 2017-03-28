@@ -1,5 +1,33 @@
 # History
 
+## v1.6.1 March 29, 2017
+- Prevent usage with Event Emitter Grouped v2.5.0 as its ES6 class does not give us the prototype fields we need to mix it into our classes
+	- Changes semver of it from `^2.4.3` to `~2.4.3`
+	- So this release fixes the following issue (which we were encountering with DocPad v6.79 which uses Joe v1.6.0):
+
+		```
+		$ npm test
+
+		> joe@1.6.0 test /Users/balupton/Projects/active/joe
+		> node out/test/joe-test.js
+
+		/Users/balupton/Projects/active/joe/out/lib/joe.js:186
+				this.emitSerial('before', (function(_this) {
+						^
+
+		TypeError: this.emitSerial is not a function
+			at _Class.run (/Users/balupton/Projects/active/joe/out/lib/joe.js:186:14)
+			at Object.getGlobalSuite (/Users/balupton/Projects/active/joe/out/lib/joe.js:331:12)
+			at Object.exit (/Users/balupton/Projects/active/joe/out/lib/joe.js:456:18)
+			at Object.uncaughtException (/Users/balupton/Projects/active/joe/out/lib/joe.js:477:11)
+			at process.<anonymous> (/Users/balupton/Projects/active/joe/out/lib/joe.js:503:18)
+			at emitOne (events.js:96:13)
+			at process.emit (events.js:191:7)
+			at process._fatalException (bootstrap_node.js:301:26)
+		THE ABOVE IS -->NOT<-- WHAT WE EXPECTED. TESTS HAVE FAILED
+		npm ERR! Test failed.  See above for more details.
+		```
+
 ## v1.6.0 February 2, 2015
 - Updated for TaskGroup v4.2
 	- TaskGroup v4.2 should now let us catch more errors in Node v0.10 and above
