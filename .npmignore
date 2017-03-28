@@ -1,9 +1,13 @@
-# v1.3.23 October 11, 2014
+# 2016 October 17
 # https://github.com/bevry/base
 
 # Temp Files
-**/*.log
+yarn.lock
 **/.docpad.db
+**/out.*
+**/*.log
+**/*.cpuprofile
+**/*.heapsnapshot
 
 # Build Files
 build/
@@ -14,19 +18,25 @@ node_modules/
 # Private Files
 .env
 
-# Development Files
-.editorconfig
-.eslintrc
-.jshintrc
-coffeelint.json
-.travis*
-Cakefile
-Makefile
+# Documentation Files
+docs/
+guides/
 BACKERS.md
 CONTRIBUTING.md
 HISTORY.md
-**/src/
-**/test/
+
+# Development Files
+web/
+**/example*
+.editorconfig
+.eslintrc*
+.jshintrc
+.jscrc
+coffeelint*
+.travis*
+nakefile*
+Cakefile
+Makefile
 
 # Other Package Definitions
 template.js
@@ -36,4 +46,4 @@ bower.json
 # =====================================
 # CUSTOM MODIFICATIONS
 
-# None
+# Testing rule has been removed as we want to publish test files for use of the testing ecosystem

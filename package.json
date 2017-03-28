@@ -1,24 +1,9 @@
 {
-  "title": "Joe",
   "name": "joe",
-  "version": "1.6.1",
-  "description": "Joe is a JavaScript testing framework that actually works. Unlike Mocha, we won't die on you abruptly when executing dynamically created tests and are always able to associate the correct test to the correct corresponding test suite. Switching from Mocha is trivial and only takes a few minutes.",
+  "version": "2.0.2",
+  "description": "Joe is an accurate and powerful testing framework that can run on node and in the browser",
   "homepage": "https://github.com/bevry/joe",
-  "license": {
-    "type": "MIT"
-  },
-  "badges": {
-    "travis": true,
-    "npm": true,
-    "npmdownloads": true,
-    "david": true,
-    "daviddev": true,
-    "gratipay": "bevry",
-    "flattr": "344188/balupton-on-Flattr",
-    "paypal": "QB8GQPZAH84N6",
-    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
-    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
-  },
+  "license": "MIT",
   "keywords": [
     "mocha",
     "test",
@@ -27,13 +12,38 @@
     "tdd",
     "runner"
   ],
-  "browsers": true,
+  "badges": {
+    "list": [
+      "travisci",
+      "npmversion",
+      "npmdownloads",
+      "daviddm",
+      "daviddmdev",
+      "---",
+      "slackin",
+      "patreon",
+      "gratipay",
+      "flattr",
+      "paypal",
+      "bitcoin",
+      "wishlist"
+    ],
+    "config": {
+      "patreonUsername": "bevry",
+      "gratipayUsername": "bevry",
+      "flattrUsername": "balupton",
+      "paypalURL": "https://bevry.me/paypal",
+      "bitcoinURL": "https://bevry.me/bitcoin",
+      "wishlistURL": "https://bevry.me/wishlist",
+      "slackinURL": "https://slack.bevry.me"
+    }
+  },
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
   ],
   "contributors": [
-    "balupton (https://github.com/balupton)",
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
     "Peter Flannery (https://github.com/pflannery)"
   ],
   "bugs": {
@@ -44,29 +54,72 @@
     "url": "http://github.com/bevry/joe.git"
   },
   "engines": {
-    "node": ">=0.10"
+    "node": ">=0.12"
+  },
+  "editions": [
+    {
+      "description": "Source + ESNext + Require",
+      "entry": "index.js",
+      "directory": "source",
+      "syntaxes": [
+        "javascript",
+        "esnext",
+        "require",
+        "const",
+        "let",
+        "spread",
+        "rest",
+        "destructuring",
+        "classes",
+        "arrows",
+        "template strings",
+        "shorthand"
+      ]
+    },
+    {
+      "description": "Babel Compiled + ES2015 + Require",
+      "entry": "index.js",
+      "directory": "es2015",
+      "syntaxes": [
+        "javascript",
+        "es2015",
+        "require"
+      ]
+    }
+  ],
+  "main": "index.js",
+  "browser": "es2015/index.js",
+  "scripts": {
+    "our:setup": "npm install && npm run custom:setup:link",
+    "our:clean": "rm -Rf ./docs ./es2015",
+    "our:compile": "npm run our:compile:es2015",
+    "our:compile:es2015": "babel ./source --out-dir ./es2015 --presets es2015",
+    "our:meta": "npm run our:meta:projectz",
+    "our:meta:projectz": "projectz compile",
+    "our:verify": "npm run our:verify:eslint",
+    "our:verify:eslint": "eslint --fix ./source",
+    "our:test": "npm run our:verify && npm test",
+    "our:release": "npm run our:release:prepare && npm run our:release:publish && npm run our:release:tag && npm run our:release:push",
+    "our:release:prepare": "npm run our:clean && npm run our:compile && npm run our:test && npm run our:meta",
+    "our:release:publish": "npm publish",
+    "our:release:tag": "git tag v$npm_package_version -a",
+    "our:release:push": "git push origin master && git push origin --tags",
+    "test": "node --harmony ./test.js",
+    "custom:setup:link": "npm link && npm link joe"
   },
   "dependencies": {
-    "event-emitter-grouped": "~2.4.3",
-    "taskgroup": "~4.2.0"
+    "editions": "^1.3.1",
+    "event-emitter-grouped": "^2.5.0",
+    "taskgroup": "^5.0.1"
   },
   "devDependencies": {
-    "browserify": "~8.1.3",
-    "chai": "^1.9.1",
-    "coffee-script": "~1.9.0",
-    "joe-reporter-console": "~1.2.1",
-    "joe-reporter-list": "~1.2.0",
-    "projectz": "^0.3.14"
-  },
-  "directories": {
-    "lib": "./out/lib"
-  },
-  "scripts": {
-    "web": "./node_modules/.bin/browserify -r joe-reporter-console -e out/example/example1.js > test/web/example1.bundled.js",
-    "test": "node out/test/joe-test.js"
-  },
-  "main": "./out/lib/joe.js",
-  "cakeConfiguration": {
-    "COFFEE_SRC_PATH": "src"
+    "assert-helpers": "^4.4.0",
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "eslint": "^3.9.0",
+    "joe-reporter-console": "^2.0.1",
+    "joe-reporter-list": "^2.0.1",
+    "joe-examples": "^2.0.0",
+    "projectz": "^1.3.2"
   }
 }
