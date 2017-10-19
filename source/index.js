@@ -48,6 +48,52 @@ function finish (next, ...args) {
 }
 
 // =================================
+// Promise wrapper helper functions
+
+function isThenable(obj) {
+	return obj && obj.then && typeof obj.then === 'function'
+}
+
+function isAsyncFunctionOrAbsent(numSyncArgs, fn) {
+	return !fn || fn.length > numSyncArgs
+}
+
+function wrapper(done, fn, ...args) {
+	try {
+		const result = fn.apply(this, args)
+		if (isThenable(result)) {
+			result.then(
+				function () { done() },
+				function (err) { done(err) }
+			)
+		} else {
+			done()
+		}
+	} catch (err) {
+		done(err)
+	}
+}
+
+function wrapTestFn(fn) {
+	return function testWrapper(done) {
+		return wrapper.call(this, done, fn)
+	}
+}
+
+function wrapSuiteFn(fn) {
+	return function suiteWrapper(suite, test, done) {
+		return wrapper.call(this, done, fn, suite, test)
+	}
+}
+
+function getWrappedFn(numSyncArgs, fn, makeWrapper) {
+	if (isAsyncFunctionOrAbsent(numSyncArgs, fn)) {
+		return fn
+	}
+	return makeWrapper(fn)
+}
+
+// =================================
 // Test
 
 class Test extends Task {
@@ -100,7 +146,8 @@ class Suite extends TaskGroup {
 	}
 
 	suite (...args) {
-		const suite = new Suite(...args)
+		const suiteFn = args[args.length - 1]
+		const suite = new Suite(...args.slice(0, -1), getWrappedFn(2, suiteFn, wrapSuiteFn))
 		return this.addTaskGroup(suite)
 	}
 
@@ -109,7 +156,8 @@ class Suite extends TaskGroup {
 	}
 
 	test (...args) {
-		const test = new Test(...args)
+		const testFn = args[args.length - 1];
+		const test = new Test(...args.slice(0, -1), getWrappedFn(0, testFn, wrapTestFn))
 		return this.addTask(test)
 	}
 
