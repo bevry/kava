@@ -1,4 +1,4 @@
-# 2016 October 17
+# 2017 April 3
 # https://github.com/bevry/base
 
 # Temp Files
@@ -8,6 +8,10 @@ yarn.lock
 **/*.log
 **/*.cpuprofile
 **/*.heapsnapshot
+
+# Editor Files
+.c9/
+.vscode/
 
 # Build Files
 build/
@@ -28,6 +32,7 @@ HISTORY.md
 # Development Files
 web/
 **/example*
+**/test*
 .editorconfig
 .eslintrc*
 .jshintrc
@@ -46,4 +51,4 @@ bower.json
 # =====================================
 # CUSTOM MODIFICATIONS
 
-# Testing rule has been removed as we want to publish test files for use of the testing ecosystem
+# None
