@@ -427,7 +427,7 @@ const joe = {
 	// Has Reportes
 	// Do we have any reporters yet?
 	hasReporters () {
-		return joePrivate.reporters !== 0
+		return Array.isArray(joePrivate) && joePrivate.reporters.length !== 0
 	},
 
 	// Add Reporter
