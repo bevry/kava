@@ -705,8 +705,7 @@ const Public = {
 		const Klass = require(path)
 
 		// Instantiate
-		config.kava = this
-		const instance = new Klass(config)
+		const instance = new Klass({ kava: this, ...config })
 
 		// Add the reporter to the list of reporters we have
 		Private.reporters.push(instance)
