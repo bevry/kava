@@ -24,6 +24,21 @@ const { Task, TaskGroup } = require('taskgroup')
  * @typedef {Object} Reporter
  */
 
+/**
+ * @typedef Totals
+ * @property {number} totalSuites
+ * @property {number} totalPassedSuites
+ * @property {number} totalFailedSuites
+ * @property {number} totalIncompleteSuites
+ * @property {number} totalTests
+ * @property {number} totalPassedTests
+ * @property {number} totalFailedTests
+ * @property {number} totalIncompleteTests
+ * @property {number} totalErrors
+ * @property {boolean} success
+ *
+ */
+
 // =================================
 // Generic
 
@@ -581,20 +596,6 @@ const Private = {
 // =================================
 // Public Interface
 
-/**
- * @typedef Totals
- * @property {number} totalSuites
- * @property {number} totalPassedSuites
- * @property {number} totalFailedSuites
- * @property {number} totalIncompleteSuites
- * @property {number} totalTests
- * @property {number} totalPassedTests
- * @property {number} totalFailedTests
- * @property {number} totalIncompleteTests
- * @property {number} totalErrors
- * @property {boolean} success
- *
- */
 /**
  * Kava's Public Interface.
  * Creates the publicly accessible interface for Kava, which is exposed via `require('kava')`.
