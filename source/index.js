@@ -5,9 +5,36 @@
 const EventEmitterGrouped = require('event-emitter-grouped')
 const { Task, TaskGroup } = require('taskgroup')
 
+/**
+ * Error Log.
+ * @typedef {Object} ErrorLog
+ * @property {Error} error
+ * @property {Suite} [suite]
+ * @property {Test} [test]
+ * @property {string} name
+ */
+
+/**
+ * Error Logs.
+ * @typedef {Array<ErrorLog>} ErrorLogs
+ */
+
+/**
+ * Reporter.
+ * @typedef {Object} Reporter
+ */
+
 // =================================
 // Generic
 
+/**
+ * Set Configuration
+ * Used by {@link Test.setConfig} and {@link Suite.setConfig} to add support for before and after.
+ * @listens before
+ * @listens after
+ * @returns {Suite|Test} the context of the caller
+ * @private
+ */
 function setConfig () {
 	const { before, after } = this.config
 	if (before) {
@@ -21,6 +48,16 @@ function setConfig () {
 	return this
 }
 
+/**
+ * Run
+ * Used by {@link Test.run} and {@link Suite.run} to emit before, and error if it failed.
+ * @emits before
+ * @emits error
+ * @param {function} next
+ * @param  {...any} args
+ * @returns {Suite|Test} the context of the caller
+ * @private
+ */
 function run (next, ...args) {
 	if (!this.started) {
 		this.emitSerial('before', (err) => {
@@ -34,6 +71,16 @@ function run (next, ...args) {
 	return this
 }
 
+/**
+ * Finish
+ * Used by {@link Test.finish} and {@link Suite.finish} to emit after, and error if it failed.
+ * @emits after
+ * @emits error
+ * @param {function} next
+ * @param  {...any} args
+ * @returns {Suite|Test} the context of the caller
+ * @private
+ */
 function finish (next, ...args) {
 	if (!this.exited) {
 		this.emitSerial('after', (err) => {
@@ -50,24 +97,56 @@ function finish (next, ...args) {
 // =================================
 // Test
 
+/**
+ * Test
+ * The Test class extends the {@link TaskGroup.Task} class.
+ */
 class Test extends Task {
+	/**
+	 * Create a new instance of the Test class with the provided arguments.
+	 * @param  {...any} args
+	 * @returns {Test}
+	 */
 	static create (...args) {
 		return new this(...args)
 	}
 
-	static isTest (test) {
-		return test instanceof Test
+	/**
+	 * Check if the input is an instance of the Test class.
+	 * @param {*} value
+	 * @returns {boolean}
+	 */
+	static isTest (value) {
+		return value instanceof Test
 	}
 
+	/**
+	 * Set Configuration
+	 * Fires {@link Task.setConfig}, then fires {@link setConfig}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	setConfig (...args) {
 		super.setConfig(...args)
 		return setConfig.call(this)
 	}
 
+	/**
+	 * Run
+	 * Fires {@link Task.run} , then fires {@link run}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	run (...args) {
 		return run.call(this, super.run, args)
 	}
 
+	/**
+	 * Finish
+	 * Fires {@link Task.finish}, then fires {@link finish}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	finish (...args) {
 		return finish.call(this, super.finish, args)
 	}
@@ -77,46 +156,108 @@ class Test extends Task {
 // =================================
 // Suite
 
+/**
+ * Suite
+ * The Suite class extends the {@link TaskGroup.TaskGroup} class.
+ */
 class Suite extends TaskGroup {
+	/**
+	 * Create a new instance of the Suite class with the provided arguments.
+	 * @param  {...any} args
+	 * @returns {Suite}
+	 */
 	static create (...args) {
 		return new this(...args)
 	}
 
-	static isSuite (suite) {
-		return suite instanceof Suite
+	/**
+	 * Check if the input is an instance of the Suite class.
+	 * @param {*} value
+	 * @returns {boolean}
+	 */
+	static isSuite (value) {
+		return value instanceof Suite
 	}
 
+	/**
+	 * Set Configuration
+	 * Fires {@link TaskGroup.setConfig}, then fires {@link setConfig}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	setConfig (...args) {
 		super.setConfig(...args)
 		return setConfig.call(this)
 	}
 
+	/**
+	 * Run
+	 * Fires {@link TaskGroup.run} , then fires {@link run}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	run (...args) {
 		return run.call(this, super.run, ...args)
 	}
 
+	/**
+	 * Finish
+	 * Fires {@link TaskGroup.finish}, then fires {@link finish}.
+	 * @param {...any} args
+	 * @returns {this}
+	 */
 	finish (...args) {
 		return finish.call(this, super.finish, ...args)
 	}
 
+	/**
+	 * Wrapper around {@link TaskGroup.addTaskGroup} for creating a nested suite.
+	 * @param  {...any} args
+	 * @returns {Suite}
+	 */
 	suite (...args) {
 		const suite = new Suite(...args)
 		return this.addTaskGroup(suite)
 	}
 
+	/**
+	 * Alias for {@link Suite.suite}.
+	 * @param  {...any} args
+	 * @returns {Suite}
+	 */
 	describe (...args) {
 		return this.suite(...args)
 	}
 
+	/**
+	 * Wrapper around {@link TaskGroup.addTask} for creating a nested test.
+	 * @param  {...any} args
+	 * @returns {Suite}
+	 */
 	test (...args) {
 		const test = new Test(...args)
 		return this.addTask(test)
 	}
 
+	/**
+	 * Alias for {@link Suite.it}.
+	 * @param  {...any} args
+	 * @returns {Test}
+	 */
 	it (...args) {
 		return this.test(...args)
 	}
 
+	/**
+	 * Suite Constructor.
+	 * Listens to our added events on the TaskGroup, storing the results, for use for our reporters.
+	 * @emits test.before
+	 * @emits test.after
+	 * @emits suite.before
+	 * @emits suite.after
+	 * @constructor
+	 * @param  {...any} args
+	 */
 	constructor (...args) {
 		super(...args)
 		const me = this
@@ -161,6 +302,16 @@ class Suite extends TaskGroup {
 		return this
 	}
 
+	/**
+	 * Add Method.
+	 * Wrapped around {@link TaskGroup.addMethod} that sets the defaults the taskgroup initializer.
+	 * Defaults config.reporting to false, to prevent the initialiser for suites being included in the reporting results.
+	 * Defaults config.name to mention that it is a suite initalizer.
+	 * Defaults the args to start with {@link Suite.suite} and {@link Suite.test}.
+	 * @param {*} method
+	 * @param {*} config
+	 * @returns {any} whatever {@link TaskGroup.addMethod} returns
+	 */
 	addMethod (method, config = {}) {
 		if (config.reporting == null) config.reporting = false
 		if (config.name == null) config.name = `suite initializer for ${this.name}`
@@ -172,6 +323,13 @@ class Suite extends TaskGroup {
 	// =================================
 	// Callbacks
 
+	/**
+	 * Suite Run Callback.
+	 * Handles {@link Private.totalSuites}.
+	 * Fires the startSuite report.
+	 * @param {Suite} suite
+	 * @returns {void}
+	 */
 	suiteRunCallback (suite) {
 		const report = suite.config.reporting !== false
 
@@ -181,11 +339,19 @@ class Suite extends TaskGroup {
 		}
 	}
 
-	suiteCompleteCallback (suite, err) {
+	/**
+	 * Suite Complete Callback.
+	 * Handles {@link Private.totalFailedSuites}, {@link Private.totalPassedSuites}.
+	 * Fires the startSuite report.
+	 * @param {Suite} suite
+	 * @param {Error?} error
+	 * @returns {void}
+	 */
+	suiteCompleteCallback (suite, error) {
 		const report = suite.config.reporting !== false
 
-		if (err) {
-			Private.addErrorLog({ suite, err })
+		if (error) {
+			Private.addErrorLog({ error, suite })
 			if (report) {
 				++Private.totalFailedSuites
 			}
@@ -194,11 +360,18 @@ class Suite extends TaskGroup {
 			++Private.totalPassedSuites
 		}
 
-		if (err || report) {
-			Public.report('finishSuite', suite, err)
+		if (error || report) {
+			Public.report('finishSuite', suite, error)
 		}
 	}
 
+	/**
+	 * Test Run Callback.
+	 * Handles {@link Private.totalTests}.
+	 * Fires the startTest report.
+	 * @param {Test} test
+	 * @returns {void}
+	 */
 	testRunCallback (test) {
 		const report = test.config.reporting !== false
 
@@ -208,11 +381,19 @@ class Suite extends TaskGroup {
 		}
 	}
 
-	testCompleteCallback (test, err) {
+	/**
+	 * Test Complete Callback.
+	 * Handles {@link Private.totalFailedTests}, {@link Private.totalPassedTests}.
+	 * Fires the finishTest report.
+	 * @param {Test} test
+	 * @param {Error?} error
+	 * @returns {void}
+	 */
+	testCompleteCallback (test, error) {
 		const report = test.config.reporting !== false
 
-		if (err) {
-			Private.addErrorLog({ test, err })
+		if (error) {
+			Private.addErrorLog({ error, test })
 			if (report) {
 				++Private.totalFailedTests
 			}
@@ -221,8 +402,8 @@ class Suite extends TaskGroup {
 			++Private.totalPassedTests
 		}
 
-		if (err || report) {
-			Public.report('finishTest', test, err)
+		if (error || report) {
+			Public.report('finishTest', test, error)
 		}
 	}
 }
@@ -239,17 +420,27 @@ Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (key)
 // =================================
 // Private Interface
 
-// Creare out private interface
-// The reason we have a public and private interface is that we do not want tests being able to modify the test results
-// As such, the private interface contains properties that must be mutable by the public interface, but not mutable by the bad tests
+/**
+ * Kava's Private Interface.
+ * The reason we have a public and private interface is that we do not want tests being able to modify the test results.
+ * As such, the private interface contains properties that must be mutable by the public interface, but not mutable by the bad tests.
+ * @private
+ * @namespace
+ */
 const Private = {
 
-	// Global Suite
-	// We use a global suite to contain all of the Suite suites and tests
+	/**
+	 * Global Suite.
+	 * We use a global suite to contain all of the Suite suites and tests.
+	 * @type {Suite?}
+	 */
 	globalSuite: null,
 
-	// Get Global Suite
-	// We have a getter for the global suite to create it when it is actually needed
+	/**
+	 * Get Global Suite.
+	 * We have a getter for the global suite to create it when it is actually needed.
+	 * @returns {Suite}
+	 */
 	getGlobalSuite () {
 		// If it doesn't exist, then create it and name it kava
 		if (Private.globalSuite == null) {
@@ -263,77 +454,108 @@ const Private = {
 		return Private.globalSuite
 	},
 
-	// Error Logs
-	// We log all the errors that have occured with their suite and test
-	// so the reporters can access them
-	errorLogs: [], // [{err, suite, test, name}]
+	/**
+	 * Error Logs.
+	 * We log all the errors that have occured with their suite and test, so the reporters can access them.
+	 * @type {ErrorLogs}
+	 */
+	errorLogs: [],
 
-	// Add Error Log
-	// Logs an error into the errors array, however only if we haven't already logged it
-	// log = {err,suite,test,name}
+	/**
+	 * Add Error Log.
+	 * Logs an error into the errors array, however only if we haven't already logged it.
+	 * @param {ErrorLog} errorLog
+	 * @returns {Private}
+	 */
 	addErrorLog (errorLog) {
-		const lastLog = Private.errorLogs[Private.errorLogs.length - 1]
-		if (errorLog.err === (lastLog && lastLog.err)) {
+		const lastLog = this.errorLogs[this.errorLogs.length - 1]
+		if (errorLog.error === (lastLog && lastLog.error)) {
 			// ignore
 		}
 		else {
-			Private.errorLogs.push(errorLog)
+			this.errorLogs.push(errorLog)
 		}
-		return Private
+		return this
 	},
 
-	// Exited?
-	// Whether or not we have already exited, either via error or via finishing everything it is meant to be doing
-	// We store this flag, as we do not want to exit multiple times if we have multiple errors or exit signals
+	/**
+	 * Exited?
+	 * Whether or not we have already exited, either via error or via finishing everything it is meant to be doing.
+	 * We store this flag, as we do not want to exit multiple times if we have multiple errors or exit signals.
+	 * @type {Boolean}
+	 */
 	exited: false,
 
-	// Reports
-	// This is a listing of all the reporters we will be using
-	// Reporters are what output the results of our tests/suites to the user (we just run them)
+	/**
+	 * Reporters.
+	 * This is a listing of all the reporters we will be using.
+	 * Reporters are what output the results of our tests/suites to the user (we just run them).
+	 * @type {Array<Reporter>}
+	 */
 	reporters: [],
 
-	// Totals
-	// Here are a bunch of totals we use to calculate our progress
-	// They are mostly used by reporters, however we do use them to figure out if we were successful or not
+	/**
+	 * Total Suites.
+	 * The total amount of suites that we are currently aware of.
+	 * @type {number}
+	 */
 	totalSuites: 0,
+
+	/**
+	 * Total Passed Suites.
+	 * The total amount of passed suites that we are currently aware of.
+	 * @type {number}
+	 */
 	totalPassedSuites: 0,
+
+	/**
+	 * Total Failed Suites.
+	 * The total amount of failed suites that we are currently aware of.
+	 * @type {number}
+	 */
 	totalFailedSuites: 0,
+
+	/**
+	 * Total Tests.
+	 * The total amount of tests that we are currently aware of.
+	 * @type {number}
+	 */
 	totalTests: 0,
+
+	/**
+	 * Total Passed Tests.
+	 * The total amount of passed tests that we are currently aware of.
+	 * @type {number}
+	 */
 	totalPassedTests: 0,
+
+	/**
+	 * Total Failed Tests.
+	 * The total amount of failed tests that we are currently aware of.
+	 * @type {number}
+	 */
 	totalFailedTests: 0,
 
-	// Get Reporters
-	// If no reporters have been set, attempt to load reporters
-	// Reporters will be loaded in order of descending preference
-	// the `--kava-reporter=value` command line arguments
-	// the `KAVA_REPORTER` environment variable
+	/**
+	 * Get Reporters.
+	 * If no reporters have been set, attempt to load reporters.
+	 * Reporters will be loaded in order of descending preference.
+	 * If none are defined, the `KAVA_REPORTER` environment variable is relied upon, and if that doesn't exist, then it will default to console.
+	 * @returns {Array<Reporter>}
+	 */
 	getReporters () {
 		// Check if have no reporters
 		if (Private.reporters.length === 0) {
 			// Prepare
 			const reporters = []
 
-			// Cycle through our CLI arguments
-			// looking for --kava-reporter=REPORTER
-			if (process && process.argv) {
-				const args = process.argv
-				for (let i = 0; i < args.length; ++i) {
-					const arg = args[i]
-					const reporter = arg.replace(/^--kava-reporter=/, '')
-					if (reporter === arg) continue
-					reporters.push(reporter)
-				}
+			// If there are no reporters, then make use of the KAVA_REPORTER environment variable
+			if (process && process.env && process.env.KAVA_REPORTER) {
+				reporters.push(process.env.KAVA_REPORTER)
 			}
-
-			// If the CLI arguments returned no reporters
-			// then attempt the environment variable
-			if (reporters.length === 0) {
-				if (process && process.env && process.env.KAVA_REPORTER) {
-					reporters.push(process.env.KAVA_REPORTER)
-				}
-				else {
-					reporters.push('console')
-				}
+			// Otherwise make use of console
+			else {
+				reporters.push('console')
 			}
 
 			// Attempt to load each reporter
@@ -352,12 +574,34 @@ const Private = {
 // =================================
 // Public Interface
 
-// Create the interface for Kava
+/**
+ * @typedef Totals
+ * @property {number} totalSuites
+ * @property {number} totalPassedSuites
+ * @property {number} totalFailedSuites
+ * @property {number} totalIncompleteSuites
+ * @property {number} totalTests
+ * @property {number} totalPassedTests
+ * @property {number} totalFailedTests
+ * @property {number} totalIncompleteTests
+ * @property {number} totalErrors
+ * @property {boolean} success
+ *
+ */
+/**
+ * Kava's Public Interface.
+ * Creates the publicly accessible interface for Kava, which is exposed via `require('kava')`.
+ * @namespace
+ */
 const Public = {
-	// Get Totals
-	// Fetches all the different types of totals we have collected
-	// and determines the incomplete suites and tasks
-	// as well as whether or not everything has succeeded correctly (no incomplete, no failures, no errors)
+
+	/**
+	 * Get Totals.
+	 * Fetches all the different types of totals we have collected
+	 * and determines the incomplete suites and tasks
+	 * as well as whether or not everything has succeeded correctly (no incomplete, no failures, no errors)
+	 * @returns {Totals}
+	 */
 	getTotals () {
 		// Fetch
 		const { totalSuites, totalPassedSuites, totalFailedSuites, totalTests, totalPassedTests, totalFailedTests, errorLogs } = Private
@@ -390,37 +634,53 @@ const Public = {
 		return result
 	},
 
-	// Get Errors
-	// Returns a cloned array of all the error logs
+	/**
+	 * Get Errors.
+	 * Returns a cloned array of all the error logs.
+	 * @returns {ErrorLogs}
+	 */
 	getErrorLogs () {
 		return Private.errorLogs.slice()
 	},
 
-	// Has Errors
-	// Returns false if there were no incomplete, no failures and no errors
+	/**
+	 * Has Errors.
+	 * Returns false if there were no incomplete, no failures and no errors.
+	 * @returns {boolean}
+	 */
 	hasErrors () {
 		return this.getTotals().success === false
 	},
 
-	// Has Exited
-	// Returns true if we have exited already
-	// we do not want to exit multiple times
+	/**
+	 * Has Exited.
+	 * Returns true if we have exited already, as we do not want to exit multiple times.
+	 * @returns {boolean}
+	 */
 	hasExited () {
 		return Private.exited === true
 	},
 
-	// Has Reportes
-	// Do we have any reporters yet?
+	/**
+	 * Has Reporters.
+	 * Do we have any reporters yet?
+	 * @returns {boolean}
+	 */
 	hasReporters () {
 		return Array.isArray(Private.reporters) && Private.reporters.length !== 0
 	},
 
-	// Add Reporter
-	// Add a reporter to the list of reporters we will be using
-	addReporter (nameOrPath, config = {}) {
+	/**
+	 * Add Reporter.
+	 * Add a reporter to the list of reporters we will be using.
+	 * @param {string} reporter The name or path of the reporter to use.
+	 * @param {Object} [config] Any custom configuration that you want to configure the reporter with.
+	 * @returns {Reporter}
+	 */
+	addReporter (reporter, config = {}) {
 		// Match
 		let path
-		switch (nameOrPath) {
+		switch (reporter) {
 			case 'console':
 			case 'kava-reporter-console':
 				path = './reporters/console/index.js'
@@ -430,37 +690,42 @@ const Public = {
 				path = './reporters/console/list.js'
 				break
 			default:
-				path = nameOrPath
+				path = reporter
 		}
 
 		// Load
-		const Reporter = require(path)
+		const Klass = require(path)
 
 		// Instantiate
 		config.kava = this
-		const reporter = new Reporter(config)
+		const instance = new Klass(config)
 
 		// Add the reporter to the list of reporters we have
-		Private.reporters.push(reporter)
+		Private.reporters.push(instance)
 
 		// Chain
-		return this
+		return instance
 	},
 
-	// Set Reporter
-	// Clear all the other reporters we may be using, and just use this one
-	setReporter (reporter) {
+	/**
+	 * Set Reporter.
+	 * Clear all the other reporters we may be using, and just use this one.
+	 * @param {string} reporter The name or path of the reporter to use.
+	 * @param {Object} [config] Any custom configuration that you want to configure the reporter with.
+	 * @returns {Reporter}
+	 */
+	setReporter (reporter, config) {
 		Private.reporters = []
-		if (reporter) {
-			this.addReporter(reporter)
-		}
-
-		// Chain
-		return this
+		return this.addReporter(reporter, config)
 	},
 
-	// Report
-	// Report and event to our reporters
+	/**
+	 * Report.
+	 * Report an event to our reporters.
+	 * @param {string} event
+	 * @param {...any} args
+	 * @returns {Public}
+	 */
 	report (event, ...args) {
 		// Fetch the reporters
 		const reporters = Private.getReporters()
@@ -483,9 +748,14 @@ const Public = {
 		return this
 	},
 
-	// Exit
-	// Exit our process with the specifeid exitCode
-	// If no exitCode is set, then we determine it through the hasErrors call
+	/**
+	 * Exit.
+	 * Exit our process with the specifeid exitCode.
+	 * If no exitCode is set, then we determine it through the hasErrors call.
+	 * @param {number} [exitCode=0]
+	 * @param {string} [reason]
+	 * @returns {Public}
+	 */
 	exit (exitCode = 0, reason) {
 		// Check
 		if (this.hasExited()) return
@@ -510,19 +780,43 @@ const Public = {
 
 		// Chain
 		return this
+	},
+
+	/**
+	 * Creates a nested suite on the global suite instance.
+	 * @param {...any} args
+    * @returns {any} Whatever {@link Suite.suite} returns.
+	 */
+	suite (...args) {
+		return Private.getGlobalSuite().suite(...args)
+	},
+
+	/**
+	 * Alias for {@link Public.suite}.
+	 * @param {...any} args
+    * @returns {any} Whatever {@link Suite.suite} returns.
+	 */
+	describe (...args) {
+		return this.suite(...args)
+	},
+
+	/**
+	 * Creates a nested test on the global suite instance.
+	 * @param {...any} args
+    * @returns {any} Whatever {@link Suite.test} returns.
+	 */
+	test (...args) {
+		return Private.getGlobalSuite().test(...args)
+	},
+
+	/**
+	 * Alias for {@link Public.test}.
+	 * @param {...any} args
+    * @returns {any} Whatever {@link Suite.test} returns.
+	 */
+	it (...args) {
+		return this.test(...args)
 	}
-}
-
-
-// =================================
-// Interface
-
-// Create our public interface for creating suites and tests
-Public.describe = Public.suite = function suite (...args) {
-	return Private.getGlobalSuite().suite(...args)
-}
-Public.it = Public.test = function test (...args) {
-	return Private.getGlobalSuite().test(...args)
 }
 
 // Freeze our public interface from changes
@@ -546,9 +840,9 @@ if (process) {
 	})
 
 	// Have last, as this way it won't silence errors that may have occured earlier
-	process.on('uncaughtException', function (err) {
-		if (!err) err = new Error('uncaughtException was emitted without an error')
-		Private.addErrorLog({ err, name: 'uncaughtException' })
+	process.on('uncaughtException', function (error) {
+		if (!error) error = new Error('uncaughtException was emitted without an error')
+		Private.addErrorLog({ error, name: 'uncaughtException' })
 		Public.exit(1, 'uncaughtException')
 	})
 }

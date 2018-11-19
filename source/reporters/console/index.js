@@ -122,19 +122,19 @@ class ConsoleReporter {
 	/**
 	 * Report that a suite has finished.
 	 * @param {Suite} suite
-	 * @param {Error} [err]
+	 * @param {Error} [error]
 	 * @returns {this}
 	 * @chainable
 	 * @access protected
 	 */
-	finishSuite (suite, err) {
+	finishSuite (suite, error) {
 		const format = this.config.itemFinish
 		if (!format) return this
 
 		const name = this.getItemName(suite)
 		if (!name) return this
 
-		const mark = err ? this.config.markFail : this.config.markPass
+		const mark = error ? this.config.markFail : this.config.markPass
 		const message = this.formatMessage(format, { name, mark })
 		if (!message) return this
 
@@ -166,19 +166,19 @@ class ConsoleReporter {
 	/**
 	 * Report that a test has finished.
 	 * @param {Test} test
-	 * @param {Error} [err]
+	 * @param {Error} [error]
 	 * @returns {this}
 	 * @chainable
 	 * @access protected
 	 */
-	finishTest (test, err) {
+	finishTest (test, error) {
 		const format = this.config.itemFinish
 		if (!format) return this
 
 		const name = this.getItemName(test)
 		if (!name) return this
 
-		const mark = err ? this.config.markFail : this.config.markPass
+		const mark = error ? this.config.markFail : this.config.markPass
 		const message = this.formatMessage(format, { name, mark })
 		if (!message) return this
 
@@ -201,12 +201,12 @@ class ConsoleReporter {
 			: this.formatMessage(this.config.summaryPass, totals)
 		)
 		this.config.kava.getErrorLogs().forEach((errorLog, index) => {
-			const { suite, test, name, err } = errorLog
+			const { suite, test, name, error } = errorLog
 			const item = test || suite
 			const message = this.formatMessage(this.config.summaryError, {
 				index: index + 1,
 				name: name || this.getItemName(item),
-				error: err.fullStack || err.stack || err.message || err
+				error: error.fullStack || error.stack || error.message || error
 			})
 			console.log(message)
 		})

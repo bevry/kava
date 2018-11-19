@@ -51,13 +51,13 @@ class ListReporter extends ConsoleReporter {
 	/**
 	 * Override the console reporters finish suite to do nothing
 	 * @param {Suite} suite
-	 * @param {Error} [err]
+	 * @param {Error} [error]
 	 * @returns {this}
 	 * @chainable
 	 * @access protected
 	 */
-	finishSuite (suite, err) {
-		if (err) return super.finishSuite(suite, err)
+	finishSuite (suite, error) {
+		if (error) return super.finishSuite(suite, error)
 		return this
 	}
 }

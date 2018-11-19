@@ -23,10 +23,11 @@ function test (opts) {
 
 		// Test Reporter
 		let output = ''
-		const args = [script, `--kava-reporter=${reporter}`, '--no-colors']
+		const env = { KAVA_REPORTER: reporter, ...process.env }
+		const args = [script, '--no-colors']
 		const str = args.join(' ')
 		process.stdout.write(sep(str.length, '=') + '\n' + str + '\n\n')
-		const runner = spawn('node', args, { env: process.env })
+		const runner = spawn('node', args, { env })
 		runner.stdout.on('data', function (data) {
 			output += data
 			process.stdout.write(data)

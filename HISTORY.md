@@ -3,15 +3,20 @@
 ## v3.0.0 2018 November 19
 - Renamed from `joe` to `kava`
     - The package name is currently `@bevry/kava` as we do not yet have access to the `kava` npm package name
+- Added [Technical API Documentation](http://master.kava.bevry.surge.sh/docs/)
+    - Closes [issue #12](https://github.com/bevry/kava/issues/12)
 - Changed the way adding reporters work
     - As a consumer, you can now specify custom configuration to `addReporter`
     - As a reporter author, the kava instance is now sent via the configuration, rather than applied to the instance after the constructor
+- Errors in Error Logs are now named `error` instead of `err`
 - Removed the need to install reporters separately
     - This is enabled because the following repositories have been inlined:
         - [joe-examples](https://github.com/bevry/joe-examples)
         - [joe-reporter-console](https://github.com/bevry/joe-reporter-console)
         - [joe-reporter-list](https://github.com/bevry/joe-reporter-list)
     - The console reporter is once again the default, allowing you to avoid having to manually specify the reporter to use
+    - Reporters can still be changed via the environment variable, now named `KAVA_REPORTER`
+    - Changing reporters via command line arguments is no longer supported for simplicity's sake
 - Fixed `hasReporters` not working
     - Closes [pull request #23](https://github.com/bevry/joe/pull/23) thanks to [Robert de Forest](https://github.com/rdeforest)
 - Updated [base files](https://github.com/bevry/base) and [editions](https://github.com/bevry/editions) using [boundation](https://github.com/bevry/boundation)
