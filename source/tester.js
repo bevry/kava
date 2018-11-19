@@ -1,14 +1,14 @@
 'use strict'
 
 // Import
-const {spawn} = require('child_process')
-const {equal} = require('assert-helpers')
-const {Task, TaskGroup} = require('taskgroup')
+const { spawn } = require('child_process')
+const { equal } = require('assert-helpers')
+const { Task, TaskGroup } = require('taskgroup')
 
 // Create a seperator
 function sep (length, sep) {
 	let str = ''
-	for ( let i = 0; i < length; ++i ) {
+	for (let i = 0; i < length; ++i) {
 		str += sep
 	}
 	return str
@@ -16,17 +16,17 @@ function sep (length, sep) {
 
 // Run a single test
 function test (opts) {
-	const {expected, script, reporter} = opts
+	const { expected, script, reporter } = opts
 	return new Task(function (complete) {
 		// Prepare
 		const expectedCleaned = expected.trim()
 
 		// Test Reporter
 		let output = ''
-		const args = [script, `--joe-reporter=${reporter}`, '--no-colors']
+		const args = [script, `--kava-reporter=${reporter}`, '--no-colors']
 		const str = args.join(' ')
 		process.stdout.write(sep(str.length, '=') + '\n' + str + '\n\n')
-		const runner = spawn('node', args, {env: process.env})
+		const runner = spawn('node', args, { env: process.env })
 		runner.stdout.on('data', function (data) {
 			output += data
 			process.stdout.write(data)
@@ -40,7 +40,7 @@ function test (opts) {
 			try {
 				equal(output.trim(), expectedCleaned.trim())
 			}
-			catch ( err ) {
+			catch (err) {
 				return complete(err)
 			}
 			process.stdout.write('\n^^ the above was as expected ^^\n')
@@ -59,7 +59,7 @@ function tests (opts, list) {
 			return test(item)
 		})
 	}).done(function (err) {
-		if ( err ) {
+		if (err) {
 			/* eslint no-console:0 */
 			console.error(err.stack || err.message || err)
 			process.exit(1)
@@ -68,4 +68,4 @@ function tests (opts, list) {
 }
 
 // Export
-module.exports = {test, tests}
+module.exports = { test, tests }

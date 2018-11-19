@@ -1,3 +1,3 @@
 'use strict'
 
-require('joe-reporter-console/test.js').done(() => require('joe-reporter-list/test.js'))
+require('./reporters/console/test.js').done(() => require('./reporters/list/test.js'))

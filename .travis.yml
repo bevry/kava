@@ -7,26 +7,25 @@ node_js:
 - '4'
 - '6'
 - '8'
-- '9'
+- '10'
+- '11'
 matrix:
   fast_finish: true
   allow_failures:
   - node_js: '0.8'
   - node_js: '0.10'
-  - node_js: '9'
 cache:
   directories:
   - "$HOME/.npm"
   - "$HOME/.yarn-cache"
 install:
-- eval "$(curl -s https://raw.githubusercontent.com/bevry/awesome-travis/ef794235b7094de5e49fb64e226da032ce135ecd/scripts/node-install.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/a16fffacc146944edb58d02bbc565bf467099b18/scripts/node-install.bash)"
 before_script:
-- eval "$(curl -s https://raw.githubusercontent.com/bevry/awesome-travis/ef794235b7094de5e49fb64e226da032ce135ecd/scripts/node-verify.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/a16fffacc146944edb58d02bbc565bf467099b18/scripts/node-verify.bash)"
 after_success:
-- eval "$(curl -s https://raw.githubusercontent.com/bevry/awesome-travis/ef794235b7094de5e49fb64e226da032ce135ecd/scripts/node-publish.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/a16fffacc146944edb58d02bbc565bf467099b18/scripts/surge.bash)"
+- eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/a16fffacc146944edb58d02bbc565bf467099b18/scripts/node-publish.bash)"
 notifications:
-  slack:
-    secure: bcLSNxpwIzS467y5Ylc6uyNb+SwutqSCR4bZPgO3b5k4csf0obwj3tKIsY7SutYpQ6LPqYZU7mJV9XgwwYuUtyy+HUHyG+xGs7NWHtrGuj5mX2afZgex7QC6MVmggWW2hHn48NXirk71MPx6zBSC292HwinGb/SPFYH6ywhcoRA=
   email:
     recipients:
-      secure: a+Lw/7SpXlJmSbt3fe9YGX+1se/rqK38QF7fEBZNr3NwPOMvoYgtP8GHNAj5EmY4bRQh01ZfIwDrjbjWn5vkUMVktbt0/RwXSeXZvG//g4UR2TfoC1NFXk50a7XFJw8tFhwnvUOCHRa50mpWWrfg04mj6uYW5AjoGKaU5jOk/e0=
+      secure: PR2HNlYbkzAA/wCvjeDfh5Z8SRyrRV7IQcQMEhxbTMiY8xvNF0Z6Nrb3rNjvg9pEPYcfQrpLDr3LkCEb1lU32jvY5QYfClgzEKjUL/RUBHZYKeiNVsab1R0x4x3WF5/EcCWvB1c4o0x3hEhL0TztE4+S57poMYJxMCGwPdC1f34=

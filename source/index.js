@@ -3,18 +3,18 @@
 
 // Import
 const EventEmitterGrouped = require('event-emitter-grouped')
-const {Task, TaskGroup} = require('taskgroup')
+const { Task, TaskGroup } = require('taskgroup')
 
 // =================================
 // Generic
 
 function setConfig () {
-	const {before, after} = this.config
-	if ( before ) {
+	const { before, after } = this.config
+	if (before) {
 		delete this.config.before
 		this.on('before', before)
 	}
-	if ( after ) {
+	if (after) {
 		delete this.config.after
 		this.on('after', after)
 	}
@@ -22,9 +22,9 @@ function setConfig () {
 }
 
 function run (next, ...args) {
-	if ( !this.started ) {
+	if (!this.started) {
 		this.emitSerial('before', (err) => {
-			if ( err )  this.emit('error', err)
+			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
 	}
@@ -35,9 +35,9 @@ function run (next, ...args) {
 }
 
 function finish (next, ...args) {
-	if ( !this.exited ) {
+	if (!this.exited) {
 		this.emitSerial('after', (err) => {
-			if ( err )  this.emit('error', err)
+			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
 	}
@@ -123,7 +123,7 @@ class Suite extends TaskGroup {
 
 		// Shallow Listeners
 		this.on('item.add', function (item) {
-			if ( Test.isTest(item) ) {
+			if (Test.isTest(item)) {
 				item.on('running', function () {
 					me.testRunCallback(item)
 				})
@@ -138,7 +138,7 @@ class Suite extends TaskGroup {
 				})
 			}
 
-			else if ( Suite.isSuite(item) ) {
+			else if (Suite.isSuite(item)) {
 				item.on('running', function () {
 					me.suiteRunCallback(item)
 				})
@@ -162,9 +162,9 @@ class Suite extends TaskGroup {
 	}
 
 	addMethod (method, config = {}) {
-		if ( config.reporting == null )  config.reporting = false
-		if ( config.name == null )  config.name = `suite initializer for ${this.name}`
-		if ( config.args == null )  config.args = [this.suite.bind(this), this.test.bind(this)]
+		if (config.reporting == null) config.reporting = false
+		if (config.name == null) config.name = `suite initializer for ${this.name}`
+		if (config.args == null) config.args = [this.suite.bind(this), this.test.bind(this)]
 		return super.addMethod(method, config)
 	}
 
@@ -175,54 +175,54 @@ class Suite extends TaskGroup {
 	suiteRunCallback (suite) {
 		const report = suite.config.reporting !== false
 
-		if ( report ) {
-			++joePrivate.totalSuites
-			joe.report('startSuite', suite)
+		if (report) {
+			++Private.totalSuites
+			Public.report('startSuite', suite)
 		}
 	}
 
 	suiteCompleteCallback (suite, err) {
 		const report = suite.config.reporting !== false
 
-		if ( err ) {
-			joePrivate.addErrorLog({suite, err})
-			if ( report ) {
-				++joePrivate.totalFailedSuites
+		if (err) {
+			Private.addErrorLog({ suite, err })
+			if (report) {
+				++Private.totalFailedSuites
 			}
 		}
-		else if ( report ) {
-			++joePrivate.totalPassedSuites
+		else if (report) {
+			++Private.totalPassedSuites
 		}
 
-		if ( err || report ) {
-			joe.report('finishSuite', suite, err)
+		if (err || report) {
+			Public.report('finishSuite', suite, err)
 		}
 	}
 
 	testRunCallback (test) {
 		const report = test.config.reporting !== false
 
-		if ( report ) {
-			++joePrivate.totalTests
-			joe.report('startTest', test)
+		if (report) {
+			++Private.totalTests
+			Public.report('startTest', test)
 		}
 	}
 
 	testCompleteCallback (test, err) {
 		const report = test.config.reporting !== false
 
-		if ( err ) {
-			joePrivate.addErrorLog({test, err})
-			if ( report ) {
-				++joePrivate.totalFailedTests
+		if (err) {
+			Private.addErrorLog({ test, err })
+			if (report) {
+				++Private.totalFailedTests
 			}
 		}
-		else if ( report ) {
-			++joePrivate.totalPassedTests
+		else if (report) {
+			++Private.totalPassedTests
 		}
 
-		if ( err || report ) {
-			joe.report('finishTest', test, err)
+		if (err || report) {
+			Public.report('finishTest', test, err)
 		}
 	}
 }
@@ -239,28 +239,28 @@ Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (key)
 // =================================
 // Private Interface
 
-// Creare out private interface for Joe
-// The reason we have a public and private interface for joe is that we do not want tests being able to modify the test results
+// Creare out private interface
+// The reason we have a public and private interface is that we do not want tests being able to modify the test results
 // As such, the private interface contains properties that must be mutable by the public interface, but not mutable by the bad tests
-const joePrivate = {
+const Private = {
 
 	// Global Suite
-	// We use a global suite to contain all of the Suite suites and joe.test tests
+	// We use a global suite to contain all of the Suite suites and tests
 	globalSuite: null,
 
 	// Get Global Suite
 	// We have a getter for the global suite to create it when it is actually needed
 	getGlobalSuite () {
-		// If it doesn't exist, then create it and name it joe
-		if ( joePrivate.globalSuite == null ) {
-			joePrivate.globalSuite = new Suite({
+		// If it doesn't exist, then create it and name it kava
+		if (Private.globalSuite == null) {
+			Private.globalSuite = new Suite({
 				reporting: false,
-				name: 'global joe suite'
+				name: 'global kava suite'
 			}).run()
 		}
 
 		// Return the global suite
-		return joePrivate.globalSuite
+		return Private.globalSuite
 	},
 
 	// Error Logs
@@ -272,29 +272,29 @@ const joePrivate = {
 	// Logs an error into the errors array, however only if we haven't already logged it
 	// log = {err,suite,test,name}
 	addErrorLog (errorLog) {
-		const lastLog = joePrivate.errorLogs[joePrivate.errorLogs.length - 1]
-		if ( errorLog.err === (lastLog && lastLog.err) ) {
+		const lastLog = Private.errorLogs[Private.errorLogs.length - 1]
+		if (errorLog.err === (lastLog && lastLog.err)) {
 			// ignore
 		}
 		else {
-			joePrivate.errorLogs.push(errorLog)
+			Private.errorLogs.push(errorLog)
 		}
-		return joePrivate
+		return Private
 	},
 
 	// Exited?
-	// Whether or not joe has already exited, either via error or via finishing everything it is meant to be doing
+	// Whether or not we have already exited, either via error or via finishing everything it is meant to be doing
 	// We store this flag, as we do not want to exit multiple times if we have multiple errors or exit signals
 	exited: false,
 
 	// Reports
 	// This is a listing of all the reporters we will be using
-	// Reporters are what output the results of our tests/suites to the user (Joe just runs them)
+	// Reporters are what output the results of our tests/suites to the user (we just run them)
 	reporters: [],
 
 	// Totals
 	// Here are a bunch of totals we use to calculate our progress
-	// They are mostly used by reporters, however we do use them to figure out if joe was successful or not
+	// They are mostly used by reporters, however we do use them to figure out if we were successful or not
 	totalSuites: 0,
 	totalPassedSuites: 0,
 	totalFailedSuites: 0,
@@ -305,61 +305,46 @@ const joePrivate = {
 	// Get Reporters
 	// If no reporters have been set, attempt to load reporters
 	// Reporters will be loaded in order of descending preference
-	// the `--joe-reporter=value` command line arguments
-	// the `JOE_REPORTER` environment variable
+	// the `--kava-reporter=value` command line arguments
+	// the `KAVA_REPORTER` environment variable
 	getReporters () {
 		// Check if have no reporters
-		if ( joePrivate.reporters.length === 0 ) {
+		if (Private.reporters.length === 0) {
 			// Prepare
 			const reporters = []
 
 			// Cycle through our CLI arguments
-			// looking for --joe-reporter=REPORTER
-			if ( process && process.argv ) {
+			// looking for --kava-reporter=REPORTER
+			if (process && process.argv) {
 				const args = process.argv
-				for ( let i = 0; i < args.length; ++i ) {
+				for (let i = 0; i < args.length; ++i) {
 					const arg = args[i]
-					const reporter = arg.replace(/^--joe-reporter=/, '')
-					if ( reporter === arg )  continue
+					const reporter = arg.replace(/^--kava-reporter=/, '')
+					if (reporter === arg) continue
 					reporters.push(reporter)
 				}
 			}
 
 			// If the CLI arguments returned no reporters
 			// then attempt the environment variable
-			if ( reporters.length === 0 && process && process.env && process.env.JOE_REPORTER ) {
-				reporters.push(process.env.JOE_REPORTER)
+			if (reporters.length === 0) {
+				if (process && process.env && process.env.KAVA_REPORTER) {
+					reporters.push(process.env.KAVA_REPORTER)
+				}
+				else {
+					reporters.push('console')
+				}
 			}
 
 			// Attempt to load each reporter
-			reporters.forEach(function (nameOrPath) {
-				// Prepare
-				let Reporter = null
-
-				// Attempt joe-reporter-nameOrPath first
-				// as require('console') will return the console
-				try {
-					Reporter = require(`joe-reporter-${nameOrPath}`)
-				}
-				catch ( nameError ) {
-					try {
-						Reporter = require(nameOrPath)
-					}
-					catch ( pathError ) {
-						throw new Error(`joe could not find the reporter: ${reporter}`)
-					}
-				}
-
-				// Instantiate the reporter
-				const reporter = new Reporter()
-
-				// Add the reporter
-				joe.addReporter(reporter)
-			})
+			for (let index = 0; index < reporters.length; index++) {
+				const value = reporters[index]
+				Public.addReporter(value)
+			}
 		}
 
 		// Return our reporters
-		return joePrivate.reporters
+		return Private.reporters
 	}
 }
 
@@ -367,15 +352,15 @@ const joePrivate = {
 // =================================
 // Public Interface
 
-// Create the interface for Joe
-const joe = {
+// Create the interface for Kava
+const Public = {
 	// Get Totals
 	// Fetches all the different types of totals we have collected
 	// and determines the incomplete suites and tasks
 	// as well as whether or not everything has succeeded correctly (no incomplete, no failures, no errors)
 	getTotals () {
 		// Fetch
-		const {totalSuites, totalPassedSuites, totalFailedSuites, totalTests, totalPassedTests, totalFailedTests, errorLogs} = joePrivate
+		const { totalSuites, totalPassedSuites, totalFailedSuites, totalTests, totalPassedTests, totalFailedTests, errorLogs } = Private
 
 		// Calculate
 		const totalIncompleteSuites = totalSuites - totalPassedSuites - totalFailedSuites
@@ -408,75 +393,94 @@ const joe = {
 	// Get Errors
 	// Returns a cloned array of all the error logs
 	getErrorLogs () {
-		return joePrivate.errorLogs.slice()
+		return Private.errorLogs.slice()
 	},
 
 	// Has Errors
 	// Returns false if there were no incomplete, no failures and no errors
 	hasErrors () {
-		return joe.getTotals().success === false
+		return this.getTotals().success === false
 	},
 
 	// Has Exited
 	// Returns true if we have exited already
 	// we do not want to exit multiple times
 	hasExited () {
-		return joePrivate.exited === true
+		return Private.exited === true
 	},
 
 	// Has Reportes
 	// Do we have any reporters yet?
 	hasReporters () {
-		return Array.isArray(joePrivate.reporters) && reporters.length !== 0
+		return Array.isArray(Private.reporters) && Private.reporters.length !== 0
 	},
 
 	// Add Reporter
 	// Add a reporter to the list of reporters we will be using
-	addReporter (reporter) {
-		// Add joe to the reporter
-		reporter.joe = joe
+	addReporter (nameOrPath, config = {}) {
+		// Match
+		let path
+		switch (nameOrPath) {
+			case 'console':
+			case 'kava-reporter-console':
+				path = './reporters/console/index.js'
+				break
+			case 'list':
+			case 'kava-reporter-list':
+				path = './reporters/console/list.js'
+				break
+			default:
+				path = nameOrPath
+		}
+
+		// Load
+		const Reporter = require(path)
+
+		// Instantiate
+		config.kava = this
+		const reporter = new Reporter(config)
 
 		// Add the reporter to the list of reporters we have
-		joePrivate.reporters.push(reporter)
+		Private.reporters.push(reporter)
 
 		// Chain
-		return joe
+		return this
 	},
 
 	// Set Reporter
 	// Clear all the other reporters we may be using, and just use this one
-	setReporter (reporterInstance) {
-		joePrivate.reporters = []
-		if ( reporterInstance ) {
-			joe.addReporter(reporterInstance)
+	setReporter (reporter) {
+		Private.reporters = []
+		if (reporter) {
+			this.addReporter(reporter)
 		}
 
 		// Chain
-		return joe
+		return this
 	},
 
 	// Report
 	// Report and event to our reporters
 	report (event, ...args) {
 		// Fetch the reporters
-		const reporters = joePrivate.getReporters()
+		const reporters = Private.getReporters()
 
 		// Check we have reporters
-		if ( reporters.length === 0 ) {
-			console.error('joe has no reporters to log:', event, ...args)
-			joe.exit(1)
-			return joe
+		if (reporters.length === 0) {
+			console.error('kava has no reporters to log:', event, ...args)
+			this.exit(1)
+			return this
 		}
 
 		// For each reporter that we have
 		// Trigger the event handler if it exists for it
-		for ( let i = 0; i < reporters.length; ++i ) {
+		for (let i = 0; i < reporters.length; ++i) {
 			const reporter = reporters[i]
-			if ( reporter[event] )  reporter[event](...args)
+			if (reporter[event]) reporter[event](...args)
 		}
 
 		// Chain
-		return joe
+		return this
 	},
 
 	// Exit
@@ -484,28 +488,28 @@ const joe = {
 	// If no exitCode is set, then we determine it through the hasErrors call
 	exit (exitCode = 0, reason) {
 		// Check
-		if ( joe.hasExited() )  return
-		joePrivate.exited = true
+		if (this.hasExited()) return
+		Private.exited = true
 
 		// Determine exit code
-		if ( !exitCode ) {
-			exitCode = joe.hasErrors() ? 1 : 0
+		if (!exitCode) {
+			exitCode = this.hasErrors() ? 1 : 0
 		}
 
 		// Stop running more tests if we have begun
-		const suite = joePrivate.getGlobalSuite()
-		if ( suite )  suite.destroy()
+		const suite = Private.getGlobalSuite()
+		if (suite) suite.destroy()
 
 		// Report our exit
-		joe.report('exit', exitCode, reason)
+		this.report('exit', exitCode, reason)
 
 		// Kill our process with the correct exit code
-		if ( process && process.exit ) {
+		if (process && process.exit) {
 			process.exit(exitCode)
 		}
 
 		// Chain
-		return joe
+		return this
 	}
 }
 
@@ -514,16 +518,16 @@ const joe = {
 // Interface
 
 // Create our public interface for creating suites and tests
-joe.describe = joe.suite = function suite (...args) {
-	return joePrivate.getGlobalSuite().suite(...args)
+Public.describe = Public.suite = function suite (...args) {
+	return Private.getGlobalSuite().suite(...args)
 }
-joe.it = joe.test = function test (...args) {
-	return joePrivate.getGlobalSuite().test(...args)
+Public.it = Public.test = function test (...args) {
+	return Private.getGlobalSuite().test(...args)
 }
 
 // Freeze our public interface from changes
-if ( Object.freeze ) {
-	Object.freeze(joe)
+if (Object.freeze) {
+	Object.freeze(Public)
 }
 
 
@@ -531,28 +535,28 @@ if ( Object.freeze ) {
 // Events
 
 // On node systems, wait until the process exits
-// such that errors that occur outside of the tests can be caught before joe shuts down
-if ( process ) {
+// such that errors that occur outside of the tests can be caught before we shut down
+if (process) {
 	process.on('beforeExit', function () {
-		joe.exit(0, 'beforeExit')
+		Public.exit(0, 'beforeExit')
 	})
 
 	process.on('exit', function () {
-		joe.exit(0, 'exit')
+		Public.exit(0, 'exit')
 	})
 
 	// Have last, as this way it won't silence errors that may have occured earlier
 	process.on('uncaughtException', function (err) {
-		if ( !err )  err = new Error('uncaughtException was emitted without an error')
-		joePrivate.addErrorLog({err, name: 'uncaughtException'})
-		joe.exit(1, 'uncaughtException')
+		if (!err) err = new Error('uncaughtException was emitted without an error')
+		Private.addErrorLog({ err, name: 'uncaughtException' })
+		Public.exit(1, 'uncaughtException')
 	})
 }
 
 // On browser systems, wait until the tests have finished
 else {
-	joePrivate.getGlobalSuite().on('destroyed', function () {
-		joe.exit(0, 'destroyed')
+	Private.getGlobalSuite().on('destroyed', function () {
+		Public.exit(0, 'destroyed')
 	})
 }
 
@@ -560,4 +564,4 @@ else {
 // =================================
 // Export
 
-module.exports = joe
+module.exports = Public
