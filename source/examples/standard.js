@@ -14,7 +14,7 @@ function wait (delay, fn) {
 // Tests
 kava.suite('standard example', function (suite, test) {
 
-	suite('tests', function (suite) {
+	suite('tests', function (suite, test) {
 
 		suite('async-tests', function (suite, test) {
 			const checks = []

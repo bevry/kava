@@ -192,7 +192,7 @@ class Suite extends TaskGroup {
 
 	/**
 	 * Run
-	 * Fires {@link TaskGroup.run} , then fires {@link run}.
+	 * Fires {@link TaskGroup.run}, then fires {@link run}.
 	 * @param {...any} args
 	 * @returns {this}
 	 */
@@ -316,6 +316,13 @@ class Suite extends TaskGroup {
 		if (config.reporting == null) config.reporting = false
 		if (config.name == null) config.name = `suite initializer for ${this.name}`
 		if (config.args == null) config.args = [this.suite.bind(this), this.test.bind(this)]
+		if (method.length !== 2 && method.length !== 3) {
+			const error = new Error(
+				`${config.name} did not have 2 or 3 arguments, did you intend to create a test instead?\n${method.toString()}`
+			)
+			console.error(error)
+			throw error
+		}
 		return super.addMethod(method, config)
 	}
 
