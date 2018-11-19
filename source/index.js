@@ -11,7 +11,7 @@ const { Task, TaskGroup } = require('taskgroup')
  * @property {Error} error
  * @property {Suite} [suite]
  * @property {Test} [test]
- * @property {string} name
+ * @property {string} [name] used for things like uncaught exceptions, where suite and test are both null
  */
 
 /**
