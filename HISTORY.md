@@ -3,7 +3,7 @@
 ## v3.0.0 2018 November 19
 
 -   Renamed from `joe` to `kava`
-    -   The package name is currently `@bevry/kava` as we do not yet have access to the `kava` npm package name
+    -   To upgrade `npm install --save-dev kava` then `npm uninstall --save-dev joe joe-reporter-console joe-reporter-list`
 -   Added [Technical API Documentation](http://master.kava.bevry.surge.sh/docs/)
     -   Closes [issue #12](https://github.com/bevry/kava/issues/12)
 -   Changed the way adding reporters work
@@ -20,7 +20,7 @@
     -   Changing reporters via command line arguments is no longer supported for simplicity's sake
 -   Fixed `hasReporters` not working
     -   Closes [pull request #23](https://github.com/bevry/joe/pull/23) thanks to [Robert de Forest](https://github.com/rdeforest)
--   Updated [base files](https://github.com/bevry/base) and [editions](https://github.com/bevry/editions) using [boundation](https://github.com/bevry/boundation)
+-   Updated [base files](https://github.com/bevry/base) and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
 
 ## v2.0.2 2016 November 4
 

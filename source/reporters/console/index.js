@@ -2,15 +2,15 @@
 'use strict'
 
 // Prepare
-const isWindows = process && process.platform && process.platform.indexOf('win') === 0
+const isWindows =
+	process && process.platform && process.platform.indexOf('win') === 0
 
 // Optional
 let cliColor = null
 if (process) {
 	try {
 		cliColor = require('cli-color')
-	}
-	catch (e) { }
+	} catch (e) {}
 }
 
 /**
@@ -32,32 +32,48 @@ if (process) {
  * @param {string} [config.summaryPass] - What to display if all goes well
  * @param {string} [config.summaryFail] - What to display if all went badly
  * @public
-*/
+ */
 class ConsoleReporter {
-	constructor (config = {}) {
+	constructor(config = {}) {
 		this.errors = []
 		this.config = config
 
 		// Defaults
-		if (this.config.color == null) this.config.color = ((process && process.argv) || []).indexOf('--no-colors') === -1
+		if (this.config.color == null)
+			this.config.color =
+				((process && process.argv) || []).indexOf('--no-colors') === -1
 		if (this.config.utf8 == null) this.config.utf8 = !isWindows
-		if (this.config.markFail == null) this.config.markFail = this.config.utf8 ? '✘' : 'ERR!'
-		if (this.config.markPass == null) this.config.markPass = this.config.utf8 ? '✔' : 'OK  '
-		if (this.config.itemNames == null) this.config.itemNames = this.config.utf8 ? '$a ➞ $b' : '$a > $b'
+		if (this.config.markFail == null)
+			this.config.markFail = this.config.utf8 ? '✘' : 'ERR!'
+		if (this.config.markPass == null)
+			this.config.markPass = this.config.utf8 ? '✔' : 'OK  '
+		if (this.config.itemNames == null)
+			this.config.itemNames = this.config.utf8 ? '$a ➞ $b' : '$a > $b'
 		if (this.config.itemStart == null) this.config.itemStart = '$name'
 		if (this.config.itemFinish == null) this.config.itemFinish = '$name $mark'
-		if (this.config.summaryError == null) this.config.summaryError = '\nError #$index:\n$name\n$error'
-		if (this.config.summaryPass == null) this.config.summaryPass = '\n$totalPassedTests/$totalTests tests ran successfully, everything passed'
-		if (this.config.summaryFail == null) this.config.summaryFail = '\nFAILURE: $totalPassedTests/$totalTests tests ran successfully; $totalFailedTests failed, $totalIncompleteTests incomplete, $totalErrors errors'
+		if (this.config.summaryError == null)
+			this.config.summaryError = '\nError #$index:\n$name\n$error'
+		if (this.config.summaryPass == null)
+			this.config.summaryPass =
+				'\n$totalPassedTests/$totalTests tests ran successfully, everything passed'
+		if (this.config.summaryFail == null)
+			this.config.summaryFail =
+				'\nFAILURE: $totalPassedTests/$totalTests tests ran successfully; $totalFailedTests failed, $totalIncompleteTests incomplete, $totalErrors errors'
 
 		// Colors
 		if (cliColor && this.config.color) {
 			this.config.markFail = cliColor.red(this.config.markFail)
 			this.config.markPass = cliColor.green(this.config.markPass)
 			this.config.itemArrow = cliColor.black(this.config.itemArrow)
-			this.config.summaryError = cliColor.red.underline(this.config.summaryError)
-			this.config.summaryPass = cliColor.green.underline(this.config.summaryPass)
-			this.config.summaryFail = cliColor.red.bold.underline(this.config.summaryFail)
+			this.config.summaryError = cliColor.red.underline(
+				this.config.summaryError
+			)
+			this.config.summaryPass = cliColor.green.underline(
+				this.config.summaryPass
+			)
+			this.config.summaryFail = cliColor.red.bold.underline(
+				this.config.summaryFail
+			)
 		}
 	}
 
@@ -68,7 +84,7 @@ class ConsoleReporter {
 	 * @static
 	 * @public
 	 */
-	static create (...args) {
+	static create(...args) {
 		return new this(...args)
 	}
 
@@ -78,8 +94,10 @@ class ConsoleReporter {
 	 * @returns {string}
 	 * @access private
 	 */
-	getItemName (item) {
-		return item.names.filter((name) => name !== 'global kava suite').reduce((a, b) => this.formatMessage(this.config.itemNames, { a, b }))
+	getItemName(item) {
+		return item.names
+			.filter(name => name !== 'global kava suite')
+			.reduce((a, b) => this.formatMessage(this.config.itemNames, { a, b }))
 	}
 
 	/**
@@ -90,8 +108,8 @@ class ConsoleReporter {
 	 * @access private
 	 */
 	/* eslint class-methods-use-this:0 */
-	formatMessage (message, opts) {
-		Object.keys(opts).forEach(function (key) {
+	formatMessage(message, opts) {
+		Object.keys(opts).forEach(function(key) {
 			const value = opts[key]
 			message = message.replace('$' + key, value)
 		})
@@ -105,7 +123,7 @@ class ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	startSuite (suite) {
+	startSuite(suite) {
 		const format = this.config.itemStart
 		if (!format) return this
 
@@ -127,7 +145,7 @@ class ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	finishSuite (suite, error) {
+	finishSuite(suite, error) {
 		const format = this.config.itemFinish
 		if (!format) return this
 
@@ -149,7 +167,7 @@ class ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	startTest (test) {
+	startTest(test) {
 		const format = this.config.itemStart
 		if (!format) return this
 
@@ -171,7 +189,7 @@ class ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	finishTest (test, error) {
+	finishTest(test, error) {
 		const format = this.config.itemFinish
 		if (!format) return this
 
@@ -194,11 +212,12 @@ class ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	exit (exitCode) {
+	exit(exitCode) {
 		const totals = this.config.kava.getTotals()
-		console.log(exitCode
-			? this.formatMessage(this.config.summaryFail, totals)
-			: this.formatMessage(this.config.summaryPass, totals)
+		console.log(
+			exitCode
+				? this.formatMessage(this.config.summaryFail, totals)
+				: this.formatMessage(this.config.summaryPass, totals)
 		)
 		this.config.kava.getErrorLogs().forEach((errorLog, index) => {
 			const { suite, test, name, error } = errorLog

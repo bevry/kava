@@ -1,6 +1,6 @@
 {
-  "name": "@bevry/kava",
-  "version": "2.0.2",
+  "name": "kava",
+  "version": "3.0.0",
   "description": "Kava has been powering accurate test suites in node.js and the browser since 2012",
   "homepage": "https://github.com/bevry/kava",
   "license": "MIT",
@@ -76,41 +76,54 @@
       "description": "esnext source code with require for modules",
       "directory": "source",
       "entry": "index.js",
-      "engines": {
-        "node": "6 || 8 || 10 || 11",
-        "browsers": false
-      },
       "tags": [
         "javascript",
         "esnext",
         "require"
-      ]
+      ],
+      "engines": {
+        "node": "8 || 10 || 11",
+        "browsers": false
+      }
     },
     {
       "description": "esnext compiled for browsers with require for modules",
       "directory": "edition-browsers",
       "entry": "index.js",
+      "tags": [
+        "javascript",
+        "require"
+      ],
       "engines": {
         "node": false,
         "browsers": "defaults"
-      },
+      }
+    },
+    {
+      "description": "esnext compiled for node.js 11 with require for modules",
+      "directory": "edition-node-11",
+      "entry": "index.js",
       "tags": [
         "javascript",
         "require"
-      ]
+      ],
+      "engines": {
+        "node": "6 || 8 || 10 || 11",
+        "browsers": false
+      }
     },
     {
-      "description": "esnext compiled for node.js >=0.12 with require for modules",
+      "description": "esnext compiled for node.js 0.12 with require for modules",
       "directory": "edition-node-0.12",
       "entry": "index.js",
+      "tags": [
+        "javascript",
+        "require"
+      ],
       "engines": {
         "node": "0.12 || 4",
         "browsers": false
-      },
-      "tags": [
-        "javascript",
-        "require"
-      ]
+      }
     }
   ],
   "main": "index.js",
@@ -123,20 +136,26 @@
   "devDependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.6",
     "assert-helpers": "^4.5.1",
     "eslint": "^5.9.0",
+    "eslint-config-bevry": "^1.0.2",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "jsdoc": "^3.5.5",
     "minami": "^1.2.3",
+    "prettier": "^1.15.3",
     "projectz": "^1.5.3",
     "surge": "^0.20.1",
     "valid-directory": "^1.0.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out",
-    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-0.12",
+    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-0.12 && npm run our:compile:edition-node-11",
     "our:compile:edition-browsers": "env BABEL_ENV=edition-browsers babel --out-dir ./edition-browsers ./source",
     "our:compile:edition-node-0.12": "env BABEL_ENV=edition-node-0.12 babel --out-dir ./edition-node-0.12 ./source",
+    "our:compile:edition-node-11": "env BABEL_ENV=edition-node-11 babel --out-dir ./edition-node-11 ./source",
     "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:docs && npm run our:meta:projectz",
     "our:meta:docs": "rm -Rf ./docs && jsdoc --recurse --pedantic --access all --destination ./docs --package ./package.json --readme ./README.md --template ./node_modules/minami ./source && mv ./docs/$npm_package_name/$npm_package_version/* ./docs/ && rm -Rf ./docs/$npm_package_name/$npm_package_version",
@@ -152,8 +171,17 @@
     "our:test": "npm run our:verify && npm test",
     "our:verify": "npm run our:verify:directory && npm run our:verify:eslint",
     "our:verify:directory": "npx valid-directory",
-    "our:verify:eslint": "eslint --fix ./source/**",
+    "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' './source/**'",
     "test": "node --harmony ./test.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "bevry"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   },
   "babel": {
     "env": {
@@ -167,6 +195,24 @@
               }
             }
           ]
+        ],
+        "plugins": [
+          "@babel/proposal-object-rest-spread"
+        ]
+      },
+      "edition-node-11": {
+        "presets": [
+          [
+            "@babel/preset-env",
+            {
+              "targets": {
+                "node": "11"
+              }
+            }
+          ]
+        ],
+        "plugins": [
+          "@babel/proposal-object-rest-spread"
         ]
       },
       "edition-node-0.12": {
@@ -179,6 +225,9 @@
               }
             }
           ]
+        ],
+        "plugins": [
+          "@babel/proposal-object-rest-spread"
         ]
       }
     }

@@ -1,6 +1,6 @@
 <!-- TITLE/ -->
 
-<h1>@bevry/kava</h1>
+<h1>kava</h1>
 
 <!-- /TITLE -->
 
@@ -8,15 +8,15 @@
 <!-- BADGES/ -->
 
 <span class="badge-travisci"><a href="http://travis-ci.org/bevry/kava" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/bevry/kava/master.svg" alt="Travis CI Build Status" /></a></span>
-<span class="badge-npmversion"><a href="https://npmjs.org/package/@bevry/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/v/@bevry/kava.svg" alt="NPM version" /></a></span>
-<span class="badge-npmdownloads"><a href="https://npmjs.org/package/@bevry/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/@bevry/kava.svg" alt="NPM downloads" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/v/kava.svg" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/kava.svg" alt="NPM downloads" /></a></span>
 <span class="badge-daviddm"><a href="https://david-dm.org/bevry/kava" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/bevry/kava.svg" alt="Dependency Status" /></a></span>
 <span class="badge-daviddmdev"><a href="https://david-dm.org/bevry/kava#info=devDependencies" title="View the status of this project's development dependencies on DavidDM"><img src="https://img.shields.io/david/dev/bevry/kava.svg" alt="Dev Dependency Status" /></a></span>
 <br class="badge-separator" />
 <span class="badge-patreon"><a href="https://patreon.com/bevry" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
 <span class="badge-flattr"><a href="https://flattr.com/profile/balupton" title="Donate to this project using Flattr"><img src="https://img.shields.io/badge/flattr-donate-yellow.svg" alt="Flattr donate button" /></a></span>
 <span class="badge-liberapay"><a href="https://liberapay.com/bevry" title="Donate to this project using Liberapay"><img src="https://img.shields.io/badge/liberapay-donate-yellow.svg" alt="Liberapay donate button" /></a></span>
-<span class="badge-thanksapp"><a href="https://givethanks.app/donate/npm/@bevry/kava" title="Donate to this project using Thanks App"><img src="https://img.shields.io/badge/thanksapp-donate-yellow.svg" alt="Thanks App donate button" /></a></span>
+<span class="badge-thanksapp"><a href="https://givethanks.app/donate/npm/kava" title="Donate to this project using Thanks App"><img src="https://img.shields.io/badge/thanksapp-donate-yellow.svg" alt="Thanks App donate button" /></a></span>
 <span class="badge-boostlab"><a href="https://boost-lab.app/bevry/kava" title="Donate to this project using Boost Lab"><img src="https://img.shields.io/badge/boostlab-donate-yellow.svg" alt="Boost Lab donate button" /></a></span>
 <span class="badge-buymeacoffee"><a href="https://buymeacoffee.com/balupton" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee donate button" /></a></span>
 <span class="badge-opencollective"><a href="https://opencollective.com/bevry" title="Donate to this project using Open Collective"><img src="https://img.shields.io/badge/open%20collective-donate-yellow.svg" alt="Open Collective donate button" /></a></span>
@@ -39,26 +39,27 @@ Kava has been powering accurate test suites in node.js and the browser since 201
 <h2>Install</h2>
 
 <a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>NPM</h3></a><ul>
-<li>Install: <code>npm install --save @bevry/kava</code></li>
-<li>Module: <code>require('@bevry/kava')</code></li></ul>
+<li>Install: <code>npm install --save kava</code></li>
+<li>Module: <code>require('kava')</code></li></ul>
 
 <a href="http://browserify.org" title="Browserify lets you require('modules') in the browser by bundling up all of your dependencies"><h3>Browserify</h3></a><ul>
-<li>Install: <code>npm install --save @bevry/kava</code></li>
-<li>Module: <code>require('@bevry/kava')</code></li>
-<li>CDN URL: <code>//wzrd.in/bundle/@bevry/kava@2.0.2</code></li></ul>
+<li>Install: <code>npm install --save kava</code></li>
+<li>Module: <code>require('kava')</code></li>
+<li>CDN URL: <code>//wzrd.in/bundle/kava@3.0.0</code></li></ul>
 
 <a href="http://enderjs.com" title="Ender is a full featured package manager for your browser"><h3>Ender</h3></a><ul>
-<li>Install: <code>ender add @bevry/kava</code></li>
-<li>Module: <code>require('@bevry/kava')</code></li></ul>
+<li>Install: <code>ender add kava</code></li>
+<li>Module: <code>require('kava')</code></li></ul>
 
 <h3><a href="https://github.com/bevry/editions" title="Editions are the best way to produce and consume packages you care about.">Editions</a></h3>
 
 <p>This package is published with the following editions:</p>
 
-<ul><li><code>@bevry/kava</code> aliases <code>@bevry/kava/index.js</code> which uses <a href="https://github.com/bevry/editions" title="Editions are the best way to produce and consume packages you care about.">Editions</a> to automatically select the correct edition for the consumers environment</li>
-<li><code>@bevry/kava/source/index.js</code> is esnext source code with require for modules</li>
-<li><code>@bevry/kava/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li>
-<li><code>@bevry/kava/edition-node-0.12/index.js</code> is esnext compiled for node.js >=0.12 with require for modules</li></ul>
+<ul><li><code>kava</code> aliases <code>kava/index.js</code> which uses <a href="https://github.com/bevry/editions" title="Editions are the best way to produce and consume packages you care about.">Editions</a> to automatically select the correct edition for the consumers environment</li>
+<li><code>kava/source/index.js</code> is esnext source code with require for modules</li>
+<li><code>kava/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li>
+<li><code>kava/edition-node-11/index.js</code> is esnext compiled for node.js 11 with require for modules</li>
+<li><code>kava/edition-node-0.12/index.js</code> is esnext compiled for node.js 0.12 with require for modules</li></ul>
 
 <!-- /INSTALL -->
 
@@ -105,7 +106,7 @@ No sponsors yet! Will you be the first?
 <span class="badge-patreon"><a href="https://patreon.com/bevry" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
 <span class="badge-flattr"><a href="https://flattr.com/profile/balupton" title="Donate to this project using Flattr"><img src="https://img.shields.io/badge/flattr-donate-yellow.svg" alt="Flattr donate button" /></a></span>
 <span class="badge-liberapay"><a href="https://liberapay.com/bevry" title="Donate to this project using Liberapay"><img src="https://img.shields.io/badge/liberapay-donate-yellow.svg" alt="Liberapay donate button" /></a></span>
-<span class="badge-thanksapp"><a href="https://givethanks.app/donate/npm/@bevry/kava" title="Donate to this project using Thanks App"><img src="https://img.shields.io/badge/thanksapp-donate-yellow.svg" alt="Thanks App donate button" /></a></span>
+<span class="badge-thanksapp"><a href="https://givethanks.app/donate/npm/kava" title="Donate to this project using Thanks App"><img src="https://img.shields.io/badge/thanksapp-donate-yellow.svg" alt="Thanks App donate button" /></a></span>
 <span class="badge-boostlab"><a href="https://boost-lab.app/bevry/kava" title="Donate to this project using Boost Lab"><img src="https://img.shields.io/badge/boostlab-donate-yellow.svg" alt="Boost Lab donate button" /></a></span>
 <span class="badge-buymeacoffee"><a href="https://buymeacoffee.com/balupton" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee donate button" /></a></span>
 <span class="badge-opencollective"><a href="https://opencollective.com/bevry" title="Donate to this project using Open Collective"><img src="https://img.shields.io/badge/open%20collective-donate-yellow.svg" alt="Open Collective donate button" /></a></span>

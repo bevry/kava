@@ -50,7 +50,7 @@ const { Task, TaskGroup } = require('taskgroup')
  * @returns {Suite|Test} the context of the caller
  * @private
  */
-function setConfig () {
+function setConfig() {
 	const { before, after } = this.config
 	if (before) {
 		delete this.config.before
@@ -73,14 +73,13 @@ function setConfig () {
  * @returns {Suite|Test} the context of the caller
  * @private
  */
-function run (next, ...args) {
+function run(next, ...args) {
 	if (!this.started) {
-		this.emitSerial('before', (err) => {
+		this.emitSerial('before', err => {
 			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
-	}
-	else {
+	} else {
 		next.apply(this, args)
 	}
 	return this
@@ -96,14 +95,13 @@ function run (next, ...args) {
  * @returns {Suite|Test} the context of the caller
  * @private
  */
-function finish (next, ...args) {
+function finish(next, ...args) {
 	if (!this.exited) {
-		this.emitSerial('after', (err) => {
+		this.emitSerial('after', err => {
 			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
-	}
-	else {
+	} else {
 		next.apply(this, args)
 	}
 	return this
@@ -122,7 +120,7 @@ class Test extends Task {
 	 * @param  {...any} args
 	 * @returns {Test}
 	 */
-	static create (...args) {
+	static create(...args) {
 		return new this(...args)
 	}
 
@@ -131,7 +129,7 @@ class Test extends Task {
 	 * @param {*} value
 	 * @returns {boolean}
 	 */
-	static isTest (value) {
+	static isTest(value) {
 		return value instanceof Test
 	}
 
@@ -141,7 +139,7 @@ class Test extends Task {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	setConfig (...args) {
+	setConfig(...args) {
 		super.setConfig(...args)
 		return setConfig.call(this)
 	}
@@ -152,7 +150,7 @@ class Test extends Task {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	run (...args) {
+	run(...args) {
 		return run.call(this, super.run, args)
 	}
 
@@ -162,11 +160,10 @@ class Test extends Task {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	finish (...args) {
+	finish(...args) {
 		return finish.call(this, super.finish, args)
 	}
 }
-
 
 // =================================
 // Suite
@@ -181,7 +178,7 @@ class Suite extends TaskGroup {
 	 * @param  {...any} args
 	 * @returns {Suite}
 	 */
-	static create (...args) {
+	static create(...args) {
 		return new this(...args)
 	}
 
@@ -190,7 +187,7 @@ class Suite extends TaskGroup {
 	 * @param {*} value
 	 * @returns {boolean}
 	 */
-	static isSuite (value) {
+	static isSuite(value) {
 		return value instanceof Suite
 	}
 
@@ -200,7 +197,7 @@ class Suite extends TaskGroup {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	setConfig (...args) {
+	setConfig(...args) {
 		super.setConfig(...args)
 		return setConfig.call(this)
 	}
@@ -211,7 +208,7 @@ class Suite extends TaskGroup {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	run (...args) {
+	run(...args) {
 		return run.call(this, super.run, ...args)
 	}
 
@@ -221,7 +218,7 @@ class Suite extends TaskGroup {
 	 * @param {...any} args
 	 * @returns {this}
 	 */
-	finish (...args) {
+	finish(...args) {
 		return finish.call(this, super.finish, ...args)
 	}
 
@@ -230,7 +227,7 @@ class Suite extends TaskGroup {
 	 * @param  {...any} args
 	 * @returns {Suite}
 	 */
-	suite (...args) {
+	suite(...args) {
 		const suite = new Suite(...args)
 		return this.addTaskGroup(suite)
 	}
@@ -240,7 +237,7 @@ class Suite extends TaskGroup {
 	 * @param  {...any} args
 	 * @returns {Suite}
 	 */
-	describe (...args) {
+	describe(...args) {
 		return this.suite(...args)
 	}
 
@@ -249,7 +246,7 @@ class Suite extends TaskGroup {
 	 * @param  {...any} args
 	 * @returns {Suite}
 	 */
-	test (...args) {
+	test(...args) {
 		const test = new Test(...args)
 		return this.addTask(test)
 	}
@@ -259,7 +256,7 @@ class Suite extends TaskGroup {
 	 * @param  {...any} args
 	 * @returns {Test}
 	 */
-	it (...args) {
+	it(...args) {
 		return this.test(...args)
 	}
 
@@ -273,38 +270,36 @@ class Suite extends TaskGroup {
 	 * @constructor
 	 * @param  {...any} args
 	 */
-	constructor (...args) {
+	constructor(...args) {
 		super(...args)
 		const me = this
 
 		// Shallow Listeners
-		this.on('item.add', function (item) {
+		this.on('item.add', function(item) {
 			if (Test.isTest(item)) {
-				item.on('running', function () {
+				item.on('running', function() {
 					me.testRunCallback(item)
 				})
-				item.done(function (err) {
+				item.done(function(err) {
 					me.testCompleteCallback(item, err)
 				})
-				item.on('before', function (complete) {
+				item.on('before', function(complete) {
 					me.emitSerial('test.before', this, complete)
 				})
-				item.on('after', function (complete) {
+				item.on('after', function(complete) {
 					me.emitSerial('test.after', this, complete)
 				})
-			}
-
-			else if (Suite.isSuite(item)) {
-				item.on('running', function () {
+			} else if (Suite.isSuite(item)) {
+				item.on('running', function() {
 					me.suiteRunCallback(item)
 				})
-				item.done(function (err) {
+				item.done(function(err) {
 					me.suiteCompleteCallback(item, err)
 				})
-				item.on('before', function (complete) {
+				item.on('before', function(complete) {
 					me.emitSerial('suite.before', this, complete)
 				})
-				item.on('after', function (complete) {
+				item.on('after', function(complete) {
 					me.emitSerial('suite.after', this, complete)
 				})
 			}
@@ -327,22 +322,24 @@ class Suite extends TaskGroup {
 	 * @param {*} config
 	 * @returns {any} whatever {@link TaskGroup.addMethod} returns
 	 */
-	addMethod (method, config = {}) {
+	addMethod(method, config = {}) {
 		if (config.reporting == null) config.reporting = false
 		if (config.name == null) config.name = `suite initializer for ${this.name}`
-		if (config.args == null) config.args = [this.suite.bind(this), this.test.bind(this)]
+		if (config.args == null)
+			config.args = [this.suite.bind(this), this.test.bind(this)]
 		if (method.length === 0) {
 			const error = new Error(
-				`An invalid amount of arguments were specified for the Suite: ${config.name}\n` +
-				'Did you intend to create a test instead?\n' +
-				method.toString()
+				`An invalid amount of arguments were specified for the Suite: ${
+					config.name
+				}\n` +
+					'Did you intend to create a test instead?\n' +
+					method.toString()
 			)
 			console.error(error)
 			throw error
 		}
 		return super.addMethod(method, config)
 	}
-
 
 	// =================================
 	// Callbacks
@@ -354,7 +351,7 @@ class Suite extends TaskGroup {
 	 * @param {Suite} suite
 	 * @returns {void}
 	 */
-	suiteRunCallback (suite) {
+	suiteRunCallback(suite) {
 		const report = suite.config.reporting !== false
 
 		if (report) {
@@ -371,7 +368,7 @@ class Suite extends TaskGroup {
 	 * @param {Error?} error
 	 * @returns {void}
 	 */
-	suiteCompleteCallback (suite, error) {
+	suiteCompleteCallback(suite, error) {
 		const report = suite.config.reporting !== false
 
 		if (error) {
@@ -379,8 +376,7 @@ class Suite extends TaskGroup {
 			if (report) {
 				++Private.totalFailedSuites
 			}
-		}
-		else if (report) {
+		} else if (report) {
 			++Private.totalPassedSuites
 		}
 
@@ -396,7 +392,7 @@ class Suite extends TaskGroup {
 	 * @param {Test} test
 	 * @returns {void}
 	 */
-	testRunCallback (test) {
+	testRunCallback(test) {
 		const report = test.config.reporting !== false
 
 		if (report) {
@@ -413,7 +409,7 @@ class Suite extends TaskGroup {
 	 * @param {Error?} error
 	 * @returns {void}
 	 */
-	testCompleteCallback (test, error) {
+	testCompleteCallback(test, error) {
 		const report = test.config.reporting !== false
 
 		if (error) {
@@ -421,8 +417,7 @@ class Suite extends TaskGroup {
 			if (report) {
 				++Private.totalFailedTests
 			}
-		}
-		else if (report) {
+		} else if (report) {
 			++Private.totalPassedTests
 		}
 
@@ -436,10 +431,12 @@ class Suite extends TaskGroup {
 // Event Emitter Grouped
 
 // Add event emitter grouped to our classes
-Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (key) {
-	Test.prototype[key] = Suite.prototype[key] = EventEmitterGrouped.prototype[key]
+Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function(
+	key
+) {
+	Test.prototype[key] = Suite.prototype[key] =
+		EventEmitterGrouped.prototype[key]
 })
-
 
 // =================================
 // Private Interface
@@ -452,7 +449,6 @@ Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (key)
  * @namespace
  */
 const Private = {
-
 	/**
 	 * Global Suite.
 	 * We use a global suite to contain all of the Suite suites and tests.
@@ -465,7 +461,7 @@ const Private = {
 	 * We have a getter for the global suite to create it when it is actually needed.
 	 * @returns {Suite}
 	 */
-	getGlobalSuite () {
+	getGlobalSuite() {
 		// If it doesn't exist, then create it and name it kava
 		if (Private.globalSuite == null) {
 			Private.globalSuite = new Suite({
@@ -491,12 +487,11 @@ const Private = {
 	 * @param {ErrorLog} errorLog
 	 * @returns {Private}
 	 */
-	addErrorLog (errorLog) {
+	addErrorLog(errorLog) {
 		const lastLog = this.errorLogs[this.errorLogs.length - 1]
 		if (errorLog.error === (lastLog && lastLog.error)) {
 			// ignore
-		}
-		else {
+		} else {
 			this.errorLogs.push(errorLog)
 		}
 		return this
@@ -567,7 +562,7 @@ const Private = {
 	 * If none are defined, the `KAVA_REPORTER` environment variable is relied upon, and if that doesn't exist, then it will default to console.
 	 * @returns {Array<Reporter>}
 	 */
-	getReporters () {
+	getReporters() {
 		// Check if have no reporters
 		if (Private.reporters.length === 0) {
 			// Prepare
@@ -594,7 +589,6 @@ const Private = {
 	}
 }
 
-
 // =================================
 // Public Interface
 
@@ -604,7 +598,6 @@ const Private = {
  * @namespace
  */
 const Public = {
-
 	/**
 	 * Get Totals.
 	 * Fetches all the different types of totals we have collected
@@ -612,20 +605,30 @@ const Public = {
 	 * as well as whether or not everything has succeeded correctly (no incomplete, no failures, no errors)
 	 * @returns {Totals}
 	 */
-	getTotals () {
+	getTotals() {
 		// Fetch
-		const { totalSuites, totalPassedSuites, totalFailedSuites, totalTests, totalPassedTests, totalFailedTests, errorLogs } = Private
+		const {
+			totalSuites,
+			totalPassedSuites,
+			totalFailedSuites,
+			totalTests,
+			totalPassedTests,
+			totalFailedTests,
+			errorLogs
+		} = Private
 
 		// Calculate
-		const totalIncompleteSuites = totalSuites - totalPassedSuites - totalFailedSuites
-		const totalIncompleteTests = totalTests - totalPassedTests - totalFailedTests
+		const totalIncompleteSuites =
+			totalSuites - totalPassedSuites - totalFailedSuites
+		const totalIncompleteTests =
+			totalTests - totalPassedTests - totalFailedTests
 		const totalErrors = errorLogs.length
 		const success =
-			(totalIncompleteSuites === 0) &&
-			(totalFailedSuites === 0) &&
-			(totalIncompleteTests === 0) &&
-			(totalFailedTests === 0) &&
-			(totalErrors === 0)
+			totalIncompleteSuites === 0 &&
+			totalFailedSuites === 0 &&
+			totalIncompleteTests === 0 &&
+			totalFailedTests === 0 &&
+			totalErrors === 0
 
 		// Return
 		const result = {
@@ -649,7 +652,7 @@ const Public = {
 	 * Returns a cloned array of all the error logs.
 	 * @returns {ErrorLogs}
 	 */
-	getErrorLogs () {
+	getErrorLogs() {
 		return Private.errorLogs.slice()
 	},
 
@@ -658,7 +661,7 @@ const Public = {
 	 * Returns false if there were no incomplete, no failures and no errors.
 	 * @returns {boolean}
 	 */
-	hasErrors () {
+	hasErrors() {
 		return this.getTotals().success === false
 	},
 
@@ -667,7 +670,7 @@ const Public = {
 	 * Returns true if we have exited already, as we do not want to exit multiple times.
 	 * @returns {boolean}
 	 */
-	hasExited () {
+	hasExited() {
 		return Private.exited === true
 	},
 
@@ -676,7 +679,7 @@ const Public = {
 	 * Do we have any reporters yet?
 	 * @returns {boolean}
 	 */
-	hasReporters () {
+	hasReporters() {
 		return Array.isArray(Private.reporters) && Private.reporters.length !== 0
 	},
 
@@ -687,7 +690,7 @@ const Public = {
 	 * @param {Object} [config] Any custom configuration that you want to configure the reporter with.
 	 * @returns {Reporter}
 	 */
-	addReporter (reporter, config = {}) {
+	addReporter(reporter, config = {}) {
 		// Match
 		let path
 		switch (reporter) {
@@ -723,7 +726,7 @@ const Public = {
 	 * @param {Object} [config] Any custom configuration that you want to configure the reporter with.
 	 * @returns {Reporter}
 	 */
-	setReporter (reporter, config) {
+	setReporter(reporter, config) {
 		Private.reporters = []
 		return this.addReporter(reporter, config)
 	},
@@ -735,7 +738,7 @@ const Public = {
 	 * @param {...any} args
 	 * @returns {Public}
 	 */
-	report (event, ...args) {
+	report(event, ...args) {
 		// Fetch the reporters
 		const reporters = Private.getReporters()
 
@@ -765,7 +768,7 @@ const Public = {
 	 * @param {string} [reason]
 	 * @returns {Public}
 	 */
-	exit (exitCode = 0, reason) {
+	exit(exitCode = 0, reason) {
 		// Check
 		if (this.hasExited()) return
 		Private.exited = true
@@ -794,36 +797,36 @@ const Public = {
 	/**
 	 * Creates a nested suite on the global suite instance.
 	 * @param {...any} args
-    * @returns {any} Whatever {@link Suite.suite} returns.
+	 * @returns {any} Whatever {@link Suite.suite} returns.
 	 */
-	suite (...args) {
+	suite(...args) {
 		return Private.getGlobalSuite().suite(...args)
 	},
 
 	/**
 	 * Alias for {@link Public.suite}.
 	 * @param {...any} args
-    * @returns {any} Whatever {@link Suite.suite} returns.
+	 * @returns {any} Whatever {@link Suite.suite} returns.
 	 */
-	describe (...args) {
+	describe(...args) {
 		return this.suite(...args)
 	},
 
 	/**
 	 * Creates a nested test on the global suite instance.
 	 * @param {...any} args
-    * @returns {any} Whatever {@link Suite.test} returns.
+	 * @returns {any} Whatever {@link Suite.test} returns.
 	 */
-	test (...args) {
+	test(...args) {
 		return Private.getGlobalSuite().test(...args)
 	},
 
 	/**
 	 * Alias for {@link Public.test}.
 	 * @param {...any} args
-    * @returns {any} Whatever {@link Suite.test} returns.
+	 * @returns {any} Whatever {@link Suite.test} returns.
 	 */
-	it (...args) {
+	it(...args) {
 		return this.test(...args)
 	}
 }
@@ -833,24 +836,24 @@ if (Object.freeze) {
 	Object.freeze(Public)
 }
 
-
 // =================================
 // Events
 
 // On node systems, wait until the process exits
 // such that errors that occur outside of the tests can be caught before we shut down
 if (process) {
-	process.on('beforeExit', function () {
+	process.on('beforeExit', function() {
 		Public.exit(0, 'beforeExit')
 	})
 
-	process.on('exit', function () {
+	process.on('exit', function() {
 		Public.exit(0, 'exit')
 	})
 
 	// Have last, as this way it won't silence errors that may have occured earlier
-	process.on('uncaughtException', function (error) {
-		if (!error) error = new Error('uncaughtException was emitted without an error')
+	process.on('uncaughtException', function(error) {
+		if (!error)
+			error = new Error('uncaughtException was emitted without an error')
 		Private.addErrorLog({ error, name: 'uncaughtException' })
 		Public.exit(1, 'uncaughtException')
 	})
@@ -858,11 +861,10 @@ if (process) {
 
 // On browser systems, wait until the tests have finished
 else {
-	Private.getGlobalSuite().on('destroyed', function () {
+	Private.getGlobalSuite().on('destroyed', function() {
 		Public.exit(0, 'destroyed')
 	})
 }
-
 
 // =================================
 // Export

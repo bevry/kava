@@ -20,13 +20,15 @@ class ListReporter extends ConsoleReporter {
 	 * Set the configuration for our instance.
 	 * @param {...*} args
 	 * @public
-	*/
-	constructor (...args) {
+	 */
+	constructor(...args) {
 		super(...args)
 
 		// Defaults
-		if (this.config.markFail == null) this.config.markFail = this.config.utf8 ? '✘ ' : 'ERR! '
-		if (this.config.markPass == null) this.config.markPass = this.config.utf8 ? '✔ ' : 'OK   '
+		if (this.config.markFail == null)
+			this.config.markFail = this.config.utf8 ? '✘ ' : 'ERR! '
+		if (this.config.markPass == null)
+			this.config.markPass = this.config.utf8 ? '✔ ' : 'OK   '
 
 		// Overrides
 		this.config.itemFinish = '$mark $name'
@@ -36,7 +38,7 @@ class ListReporter extends ConsoleReporter {
 	 * Override the console reporters start suite to do nothing
 	 * @returns {this}
 	 */
-	startSuite () {
+	startSuite() {
 		return this
 	}
 
@@ -44,7 +46,7 @@ class ListReporter extends ConsoleReporter {
 	 * Override the console reporters start test to do nothing
 	 * @returns {this}
 	 */
-	startTest () {
+	startTest() {
 		return this
 	}
 
@@ -56,7 +58,7 @@ class ListReporter extends ConsoleReporter {
 	 * @chainable
 	 * @access protected
 	 */
-	finishSuite (suite, error) {
+	finishSuite(suite, error) {
 		if (error) return super.finishSuite(suite, error)
 		return this
 	}
