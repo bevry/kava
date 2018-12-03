@@ -4,6 +4,7 @@
 
 -   Renamed from `joe` to `kava`
     -   To upgrade `npm install --save-dev kava` then `npm uninstall --save-dev joe joe-reporter-console joe-reporter-list`
+    -   Credit to [Sam Holmes](https://github.com/samholmes) for the `kava` package name
 -   Added [Technical API Documentation](http://master.kava.bevry.surge.sh/docs/)
     -   Closes [issue #12](https://github.com/bevry/kava/issues/12)
 -   Changed the way adding reporters work
