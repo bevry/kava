@@ -1,7 +1,7 @@
 {
   "name": "kava",
-  "version": "3.0.0",
-  "description": "Kava has been powering accurate test suites in node.js and the browser since 2012",
+  "version": "3.1.0",
+  "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "MIT",
   "keywords": [
@@ -126,6 +126,7 @@
       }
     }
   ],
+  "types": "index.d.ts",
   "main": "index.js",
   "browser": "edition-browsers/index.js",
   "dependencies": {
@@ -179,6 +180,9 @@
       "bevry"
     ]
   },
+  "eslintIgnore": [
+    "index.d.ts"
+  ],
   "prettier": {
     "semi": false,
     "singleQuote": true

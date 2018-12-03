@@ -1,5 +1,9 @@
 # History
 
+## v3.1.0 2018 November 19
+
+-   Added minimal TypeScript types for common usage
+
 ## v3.0.0 2018 November 19
 
 -   Renamed from `joe` to `kava`
