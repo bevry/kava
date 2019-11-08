@@ -142,7 +142,7 @@
     "assert-helpers": "^4.5.1",
     "eslint": "^5.9.0",
     "eslint-config-bevry": "^1.0.2",
-    "eslint-config-prettier": "^3.3.0",
+    "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-prettier": "^3.0.0",
     "jsdoc": "^3.5.5",
     "minami": "^1.2.3",
