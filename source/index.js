@@ -329,9 +329,7 @@ class Suite extends TaskGroup {
 			config.args = [this.suite.bind(this), this.test.bind(this)]
 		if (method.length === 0) {
 			const error = new Error(
-				`An invalid amount of arguments were specified for the Suite: ${
-					config.name
-				}\n` +
+				`An invalid amount of arguments were specified for the Suite: ${config.name}\n` +
 					'Did you intend to create a test instead?\n' +
 					method.toString()
 			)
