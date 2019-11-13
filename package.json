@@ -136,7 +136,7 @@
   "dependencies": {
     "editions": "^2.2.0",
     "event-emitter-grouped": "^2.7.1",
-    "taskgroup": "5.5.0"
+    "taskgroup": "6.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
