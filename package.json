@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "MIT",
@@ -51,10 +51,7 @@
       "travisTLD": "com"
     }
   },
-  "funding": {
-    "type": "cooperative",
-    "url": "https://bevry.me/fund"
-  },
+  "funding": "https://bevry.me/fund",
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
@@ -63,7 +60,8 @@
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
     "Peter Flannery (https://github.com/pflannery)",
     "Robert de Forest <guitar.robot@gmail.com> (https://github.com/rdeforest)",
-    "dependabot[bot] (http://github.com/apps/dependabot)"
+    "dependabot[bot] (http://github.com/apps/dependabot)",
+    "dependabot-preview[bot] (http://github.com/apps/dependabot-preview)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/kava/issues"
@@ -73,7 +71,7 @@
     "url": "https://github.com/bevry/kava.git"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=8"
   },
   "editions": [
     {
@@ -86,7 +84,7 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 12 || 13",
+        "node": "8 || 10 || 12",
         "browsers": false
       }
     },
@@ -102,65 +100,36 @@
         "node": false,
         "browsers": "defaults"
       }
-    },
-    {
-      "description": "esnext compiled for node.js 13 with require for modules",
-      "directory": "edition-node-13",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "require"
-      ],
-      "engines": {
-        "node": "6 || 8 || 10 || 12 || 13",
-        "browsers": false
-      }
-    },
-    {
-      "description": "esnext compiled for node.js 0.12 with require for modules",
-      "directory": "edition-node-0.12",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "require"
-      ],
-      "engines": {
-        "node": "0.12 || 4",
-        "browsers": false
-      }
     }
   ],
   "types": "index.d.ts",
-  "main": "index.js",
+  "main": "source/index.js",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^2.2.0",
-    "event-emitter-grouped": "^2.7.1",
-    "taskgroup": "5.5.0"
+    "event-emitter-grouped": "^2.8.0",
+    "taskgroup": "6.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
-    "assert-helpers": "4.10.0",
+    "assert-helpers": "^5.3.0",
     "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
     "jsdoc": "^3.6.3",
     "minami": "^1.2.3",
     "prettier": "^1.19.1",
-    "projectz": "^1.9.0",
+    "projectz": "^1.10.0",
     "surge": "^0.21.3",
-    "valid-directory": "^1.0.0"
+    "valid-directory": "^1.1.1"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-0.12 && npm run our:compile:edition-node-13",
+    "our:compile": "npm run our:compile:edition-browsers",
     "our:compile:edition-browsers": "env BABEL_ENV=edition-browsers babel --out-dir ./edition-browsers ./source",
-    "our:compile:edition-node-0.12": "env BABEL_ENV=edition-node-0.12 babel --out-dir ./edition-node-0.12 ./source",
-    "our:compile:edition-node-13": "env BABEL_ENV=edition-node-13 babel --out-dir ./edition-node-13 ./source",
     "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:docs && npm run our:meta:projectz",
     "our:meta:docs": "npm run our:meta:docs:jsdoc",
@@ -179,7 +148,7 @@
     "our:verify:directory": "npx valid-directory",
     "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
     "our:verify:prettier": "prettier --write ./source/**",
-    "test": "node ./test.js"
+    "test": "node ./source/test.js"
   },
   "eslintConfig": {
     "extends": [
@@ -199,40 +168,6 @@
             "@babel/preset-env",
             {
               "targets": "defaults",
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "plugins": [
-          "@babel/proposal-object-rest-spread"
-        ]
-      },
-      "edition-node-13": {
-        "sourceType": "script",
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "13"
-              },
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "plugins": [
-          "@babel/proposal-object-rest-spread"
-        ]
-      },
-      "edition-node-0.12": {
-        "sourceType": "script",
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "0.12"
-              },
               "modules": "commonjs"
             }
           ]

@@ -54,11 +54,9 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 <p>This package is published with the following editions:</p>
 
-<ul><li><code>kava</code> aliases <code>kava/index.js</code> which uses <a href="https://editions.bevry.me" title="Editions are the best way to produce and consume packages you care about.">Editions</a> to automatically select the correct edition for the consumers environment</li>
+<ul><li><code>kava</code> aliases <code>kava/source/index.js</code></li>
 <li><code>kava/source/index.js</code> is esnext source code with require for modules</li>
-<li><code>kava/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li>
-<li><code>kava/edition-node-13/index.js</code> is esnext compiled for node.js 13 with require for modules</li>
-<li><code>kava/edition-node-0.12/index.js</code> is esnext compiled for node.js 0.12 with require for modules</li></ul>
+<li><code>kava/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li></ul>
 
 <h3><a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a></h3>
 
@@ -130,7 +128,8 @@ These amazing people have contributed code to this project:
 <ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/kava/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/kava">view contributions</a></li>
 <li><a href="https://github.com/pflannery">Peter Flannery</a> — <a href="https://github.com/bevry/kava/commits?author=pflannery" title="View the GitHub contributions of Peter Flannery on repository bevry/kava">view contributions</a></li>
 <li><a href="https://github.com/rdeforest">Robert de Forest</a> — <a href="https://github.com/bevry/kava/commits?author=rdeforest" title="View the GitHub contributions of Robert de Forest on repository bevry/kava">view contributions</a></li>
-<li><a href="http://github.com/apps/dependabot">dependabot[bot]</a> — <a href="https://github.com/bevry/kava/commits?author=dependabot[bot]" title="View the GitHub contributions of dependabot[bot] on repository bevry/kava">view contributions</a></li></ul>
+<li><a href="http://github.com/apps/dependabot">dependabot[bot]</a> — <a href="https://github.com/bevry/kava/commits?author=dependabot[bot]" title="View the GitHub contributions of dependabot[bot] on repository bevry/kava">view contributions</a></li>
+<li><a href="http://github.com/apps/dependabot-preview">dependabot-preview[bot]</a> — <a href="https://github.com/bevry/kava/commits?author=dependabot-preview[bot]" title="View the GitHub contributions of dependabot-preview[bot] on repository bevry/kava">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/kava/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 

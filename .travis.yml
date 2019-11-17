@@ -1,13 +1,9 @@
 sudo: false
 language: node_js
 node_js:
-- '0.12'
-- '4'
-- '6'
 - '8'
 - '10'
 - '12'
-- '13'
 matrix:
   fast_finish: true
   allow_failures: []
@@ -22,4 +18,4 @@ after_success:
 notifications:
   email:
     recipients:
-      secure: FohkRfTkcLaeyOJDPEwu8knDwrPixq45PSDJYScJqGg2qxCO36IIScDjsoM5YT3Y3xqYnCChMVhY0FrCK4b0XCYXehftKOWhg4k94TC4QR78hazdzwHuIGkjpvkVWKCV+Keg/ExCLyHlD81ZnHrYbxTMbDq+8CZ/SXhdR91oCPM=
+      secure: UASK+KL21pV3yqGywgPdc48ddjveDQGukHk8x4hXv9Johi0bglk4koxJuKDncfJQKPQTyjXcFKYHtxZ/iQseSq6yZd3RPPDz5kM5MVagA6/QnawJTDmTwH/BBlFYcu5aXU8WymunZ+gNldjdOKGBy2IBjfpVeVFTAN6q2NcGQow=
