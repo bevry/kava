@@ -107,7 +107,7 @@
   "browser": "edition-browsers/index.js",
   "dependencies": {
     "event-emitter-grouped": "^3.0.0",
-    "taskgroup": "6.1.0"
+    "taskgroup": "6.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
