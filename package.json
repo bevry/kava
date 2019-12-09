@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "MIT",
@@ -30,6 +30,7 @@
       "daviddm",
       "daviddmdev",
       "---",
+      "githubsponsors",
       "patreon",
       "flattr",
       "liberapay",
@@ -40,6 +41,7 @@
       "wishlist"
     ],
     "config": {
+      "githubSponsorsUsername": "balupton",
       "buymeacoffeeUsername": "balupton",
       "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
@@ -103,28 +105,29 @@
     }
   ],
   "types": "index.d.ts",
+  "type": "commonjs",
   "main": "source/index.js",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "event-emitter-grouped": "^3.3.0",
-    "taskgroup": "^6.3.0"
+    "event-emitter-grouped": "^3.4.0",
+    "taskgroup": "^6.4.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.4",
-    "@babel/core": "^7.7.4",
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "assert-helpers": "^5.7.0",
+    "@babel/preset-env": "^7.7.6",
+    "assert-helpers": "^5.8.0",
     "eslint": "^6.7.2",
-    "eslint-config-bevry": "^2.2.0",
+    "eslint-config-bevry": "^2.3.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
     "jsdoc": "^3.6.3",
     "minami": "^1.2.3",
     "prettier": "^1.19.1",
-    "projectz": "^1.13.0",
+    "projectz": "^1.15.0",
     "surge": "^0.21.3",
-    "valid-directory": "^1.4.0"
+    "valid-directory": "^1.5.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
@@ -168,7 +171,7 @@
             "@babel/preset-env",
             {
               "targets": "defaults",
-              "modules": "commonjs"
+              "modules": false
             }
           ]
         ],
