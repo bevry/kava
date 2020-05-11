@@ -32,7 +32,7 @@ multi extra async test example ✔
 multi extra sync test example
 multi extra sync test example ✔
 
-8/8 tests ran successfully, everything passed`
+8/8 tests ran successfully, everything passed`,
 		},
 
 		// ------------------------------------
@@ -49,7 +49,7 @@ this will be outputted third
 timing example ➞ second test ✔
 timing example ✔
 
-2/2 tests ran successfully, everything passed`
+2/2 tests ran successfully, everything passed`,
 		},
 
 		// ------------------------------------
@@ -119,7 +119,7 @@ Error: deliberate error 2
 
 Error #3:
 standard example ➞ tests ➞ deliberate-test-failure ➞ 1/2
-Error: deliberate error`
+Error: deliberate error`,
 		},
 
 		// ------------------------------------
@@ -128,7 +128,7 @@ Error: deliberate error`
 			expected: `
 fail never finish example
 
-FAILURE: 0/1 tests ran successfully; 0 failed, 1 incomplete, 0 errors`
+FAILURE: 0/1 tests ran successfully; 0 failed, 1 incomplete, 0 errors`,
 		},
 
 		// ------------------------------------
@@ -142,7 +142,7 @@ FAILURE: 0/0 tests ran successfully; 0 failed, 0 incomplete, 1 errors
 
 Error #1:
 fail throw suite example
-Error: I am the deliberate throw that occured during the suite`
+Error: I am the deliberate throw that occured during the suite`,
 		},
 
 		// ------------------------------------
@@ -158,8 +158,8 @@ FAILURE: 1/1 tests ran successfully; 0 failed, 0 incomplete, 1 errors
 
 Error #1:
 uncaughtException
-Error: I am the deliberate throw that occured in the test, but after the test has completed`
-		}
+Error: I am the deliberate throw that occured in the test, but after the test has completed`,
+		},
 
 		// All done
 	]

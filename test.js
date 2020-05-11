@@ -1,7 +1,8 @@
-// 2016 March 8
-// https://github.com/bevry/editions
+'use strict'
+
+/** @type {typeof import("./source/test.js") } */
 module.exports = require('editions').requirePackage(
 	__dirname,
 	require,
-	'tester.js'
+	'test.js'
 )

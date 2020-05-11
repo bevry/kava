@@ -75,7 +75,7 @@ function setConfig() {
  */
 function run(next, ...args) {
 	if (!this.started) {
-		this.emitSerial('before', err => {
+		this.emitSerial('before', (err) => {
 			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
@@ -97,7 +97,7 @@ function run(next, ...args) {
  */
 function finish(next, ...args) {
 	if (!this.exited) {
-		this.emitSerial('after', err => {
+		this.emitSerial('after', (err) => {
 			if (err) this.emit('error', err)
 			next.apply(this, args)
 		})
@@ -275,31 +275,31 @@ class Suite extends TaskGroup {
 		const me = this
 
 		// Shallow Listeners
-		this.on('item.add', function(item) {
+		this.on('item.add', function (item) {
 			if (Test.isTest(item)) {
-				item.on('running', function() {
+				item.on('running', function () {
 					me.testRunCallback(item)
 				})
-				item.done(function(err) {
+				item.done(function (err) {
 					me.testCompleteCallback(item, err)
 				})
-				item.on('before', function(complete) {
+				item.on('before', function (complete) {
 					me.emitSerial('test.before', this, complete)
 				})
-				item.on('after', function(complete) {
+				item.on('after', function (complete) {
 					me.emitSerial('test.after', this, complete)
 				})
 			} else if (Suite.isSuite(item)) {
-				item.on('running', function() {
+				item.on('running', function () {
 					me.suiteRunCallback(item)
 				})
-				item.done(function(err) {
+				item.done(function (err) {
 					me.suiteCompleteCallback(item, err)
 				})
-				item.on('before', function(complete) {
+				item.on('before', function (complete) {
 					me.emitSerial('suite.before', this, complete)
 				})
-				item.on('after', function(complete) {
+				item.on('after', function (complete) {
 					me.emitSerial('suite.after', this, complete)
 				})
 			}
@@ -429,7 +429,7 @@ class Suite extends TaskGroup {
 // Event Emitter Grouped
 
 // Add event emitter grouped to our classes
-Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function(
+Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (
 	key
 ) {
 	Test.prototype[key] = Suite.prototype[key] =
@@ -464,7 +464,7 @@ const Private = {
 		if (Private.globalSuite == null) {
 			Private.globalSuite = new Suite({
 				reporting: false,
-				name: 'global kava suite'
+				name: 'global kava suite',
 			}).run()
 		}
 
@@ -584,7 +584,7 @@ const Private = {
 
 		// Return our reporters
 		return Private.reporters
-	}
+	},
 }
 
 // =================================
@@ -612,7 +612,7 @@ const Public = {
 			totalTests,
 			totalPassedTests,
 			totalFailedTests,
-			errorLogs
+			errorLogs,
 		} = Private
 
 		// Calculate
@@ -639,7 +639,7 @@ const Public = {
 			totalFailedTests,
 			totalIncompleteTests,
 			totalErrors,
-			success
+			success,
 		}
 
 		return result
@@ -826,7 +826,7 @@ const Public = {
 	 */
 	it(...args) {
 		return this.test(...args)
-	}
+	},
 }
 
 // Freeze our public interface from changes
@@ -840,16 +840,16 @@ if (Object.freeze) {
 // On node systems, wait until the process exits
 // such that errors that occur outside of the tests can be caught before we shut down
 if (process) {
-	process.on('beforeExit', function() {
+	process.on('beforeExit', function () {
 		Public.exit(0, 'beforeExit')
 	})
 
-	process.on('exit', function() {
+	process.on('exit', function () {
 		Public.exit(0, 'exit')
 	})
 
 	// Have last, as this way it won't silence errors that may have occured earlier
-	process.on('uncaughtException', function(error) {
+	process.on('uncaughtException', function (error) {
 		if (!error)
 			error = new Error('uncaughtException was emitted without an error')
 		Private.addErrorLog({ error, name: 'uncaughtException' })
@@ -859,7 +859,7 @@ if (process) {
 
 // On browser systems, wait until the tests have finished
 else {
-	Private.getGlobalSuite().on('destroyed', function() {
+	Private.getGlobalSuite().on('destroyed', function () {
 		Public.exit(0, 'destroyed')
 	})
 }

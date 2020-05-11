@@ -5,4 +5,4 @@
 const kava = require('../index.js')
 
 // Test
-kava.test('fail never finish example', function(done) {})
+kava.test('fail never finish example', function (done) {})

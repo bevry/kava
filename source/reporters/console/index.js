@@ -96,7 +96,7 @@ class ConsoleReporter {
 	 */
 	getItemName(item) {
 		return item.names
-			.filter(name => name !== 'global kava suite')
+			.filter((name) => name !== 'global kava suite')
 			.reduce((a, b) => this.formatMessage(this.config.itemNames, { a, b }))
 	}
 
@@ -109,7 +109,7 @@ class ConsoleReporter {
 	 */
 	/* eslint class-methods-use-this:0 */
 	formatMessage(message, opts) {
-		Object.keys(opts).forEach(function(key) {
+		Object.keys(opts).forEach(function (key) {
 			const value = opts[key]
 			message = message.replace('$' + key, value)
 		})
@@ -225,7 +225,7 @@ class ConsoleReporter {
 			const message = this.formatMessage(this.config.summaryError, {
 				index: index + 1,
 				name: name || this.getItemName(item),
-				error: error.fullStack || error.stack || error.message || error
+				error: error.fullStack || error.stack || error.message || error,
 			})
 			console.log(message)
 		})
