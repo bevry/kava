@@ -52,7 +52,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/kava@5.2.0'
+    import * as pkg from '//dev.jspm.io/kava@5.3.0'
 </script>
 ```
 
