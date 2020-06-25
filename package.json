@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "5.7.0",
+  "version": "5.8.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "MIT",
@@ -114,26 +114,25 @@
   "main": "source/index.js",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "3.5.0",
-    "event-emitter-grouped": "4.5.0",
-    "taskgroup": "7.7.0"
+    "event-emitter-grouped": "4.10.0",
+    "taskgroup": "7.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
-    "@babel/preset-env": "^7.7.6",
-    "@bevry/update-contributors": "1.9.0",
-    "assert-helpers": "6.8.0",
-    "eslint": "^7.3.0",
-    "eslint-config-bevry": "3.8.0",
-    "eslint-config-prettier": "^6.7.0",
+    "@babel/core": "^7.10.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "@bevry/update-contributors": "^1.12.0",
+    "assert-helpers": "^6.13.0",
+    "eslint": "^7.3.1",
+    "eslint-config-bevry": "^3.13.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jsdoc": "^3.6.4",
     "prettier": "^2.0.5",
-    "projectz": "2.5.0",
+    "projectz": "^2.10.1",
     "surge": "^0.21.3",
-    "valid-directory": "2.2.0"
+    "valid-directory": "^2.5.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
