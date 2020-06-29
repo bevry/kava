@@ -1763,7 +1763,7 @@ extendr@5.9.0:
   dependencies:
     typechecker "7.5.0"
 
-extendr@^5.7.0:
+extendr@^5.10.0, extendr@^5.7.0:
   version "5.10.0"
   resolved "https://registry.yarnpkg.com/extendr/-/extendr-5.10.0.tgz#0c3afd261220eace50ec66394ce0f643073134ed"
   integrity sha512-F1rkARf8rc5nuzljYD6lBE5O1kzTFkb5p6ir+mC1S0cRqiKG6AYgcKQEHmqAqA9EDDFJdnmW+S36R4J+XNl8pA==
@@ -3637,6 +3637,16 @@ taskgroup@7.11.0:
     eachr "^4.5.0"
     extendr "^5.7.0"
     unbounded "3.4.0"
+
+taskgroup@7.12.0:
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/taskgroup/-/taskgroup-7.12.0.tgz#002dc8ba3031f2c553d60aaa42511bff06038033"
+  integrity sha512-xXMrDo/ayRXV4AP5TazfDm5Ly9dctQLZzqMgezTmaU1C7ArliyFyvf5uBNshkE/wdw/EIOurmRqyVTKOzp3azQ==
+  dependencies:
+    ambi "3"
+    eachr "^4.5.0"
+    extendr "^5.10.0"
+    unbounded "3.7.0"
 
 text-table@^0.2.0:
   version "0.2.0"
