@@ -52,7 +52,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/kava@5.8.0'
+    import * as pkg from '//dev.jspm.io/kava@5.9.0'
 </script>
 ```
 
@@ -61,7 +61,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 <p>This package is published with the following editions:</p>
 
 <ul><li><code>kava</code> aliases <code>kava/source/index.js</code></li>
-<li><code>kava/source/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> source code for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li>
+<li><code>kava/source/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> source code for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> 10 || 12 || 13 || 14 with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li>
 <li><code>kava/edition-browsers/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> compiled for web browsers with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li></ul>
 
 <h3><a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a></h3>
