@@ -37,6 +37,8 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 [Complete API Documentation.](http://master.kava.bevry.surge.sh/docs/index.html)
 
+[Guides & Documentation.](https://kava.bevry.me)
+
 <!-- INSTALL/ -->
 
 <h2>Install</h2>
