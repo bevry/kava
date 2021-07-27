@@ -12,13 +12,12 @@ kava.test('multi async test example', function (done) {
 
 // Suites
 kava.suite('multi empty sync suite test example', function (suite, test) {})
-kava.suite('multi empty async suite test example', function (
-	suite,
-	test,
-	done
-) {
-	done()
-})
+kava.suite(
+	'multi empty async suite test example',
+	function (suite, test, done) {
+		done()
+	}
+)
 
 // Nested
 kava.suite('multi sync suite example', function (suite, test) {

@@ -7,7 +7,7 @@
 
 <!-- BADGES/ -->
 
-<span class="badge-travisci"><a href="http://travis-ci.com/bevry/kava" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/com/bevry/kava/master.svg" alt="Travis CI Build Status" /></a></span>
+<span class="badge-githubworkflow"><a href="https://github.com/bevry/kava/actions?query=workflow%3Abevry" title="View the status of this project's GitHub Workflow: bevry"><img src="https://github.com/bevry/kava/workflows/bevry/badge.svg" alt="Status of the GitHub Workflow: bevry" /></a></span>
 <span class="badge-npmversion"><a href="https://npmjs.org/package/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/v/kava.svg" alt="NPM version" /></a></span>
 <span class="badge-npmdownloads"><a href="https://npmjs.org/package/kava" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/kava.svg" alt="NPM downloads" /></a></span>
 <span class="badge-daviddm"><a href="https://david-dm.org/bevry/kava" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/bevry/kava.svg" alt="Dependency Status" /></a></span>
@@ -54,7 +54,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/kava@5.13.0'
+    import * as pkg from '//dev.jspm.io/kava@5.14.0'
 </script>
 ```
 
@@ -63,7 +63,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 <p>This package is published with the following editions:</p>
 
 <ul><li><code>kava</code> aliases <code>kava/source/index.js</code></li>
-<li><code>kava/source/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> source code for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> 10 || 12 || 14 || 15 with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li>
+<li><code>kava/source/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> source code for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> 10 || 12 || 14 with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li>
 <li><code>kava/edition-browsers/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> compiled for web browsers with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li></ul>
 
 <h3><a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a></h3>
