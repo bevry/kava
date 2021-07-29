@@ -35,7 +35,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ## Usage
 
-[Complete API Documentation.](http://master.kava.bevry.surge.sh/docs/index.html)
+[Complete API Documentation.](http://master.kava.bevry.surge.sh/docs/)
 
 [Guides & Documentation.](https://kava.bevry.me)
 
@@ -54,7 +54,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/kava@5.15.0'
+    import * as pkg from '//dev.jspm.io/kava@5.16.0'
 </script>
 ```
 
