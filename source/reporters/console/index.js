@@ -66,13 +66,13 @@ class ConsoleReporter {
 			this.config.markPass = cliColor.green(this.config.markPass)
 			this.config.itemArrow = cliColor.black(this.config.itemArrow)
 			this.config.summaryError = cliColor.red.underline(
-				this.config.summaryError
+				this.config.summaryError,
 			)
 			this.config.summaryPass = cliColor.green.underline(
-				this.config.summaryPass
+				this.config.summaryPass,
 			)
 			this.config.summaryFail = cliColor.red.bold.underline(
-				this.config.summaryFail
+				this.config.summaryFail,
 			)
 		}
 	}
@@ -217,7 +217,7 @@ class ConsoleReporter {
 		console.log(
 			exitCode
 				? this.formatMessage(this.config.summaryFail, totals)
-				: this.formatMessage(this.config.summaryPass, totals)
+				: this.formatMessage(this.config.summaryPass, totals),
 		)
 		this.config.kava.getErrorLogs().forEach((errorLog, index) => {
 			const { suite, test, name, error } = errorLog

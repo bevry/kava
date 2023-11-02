@@ -331,7 +331,7 @@ class Suite extends TaskGroup {
 			const error = new Error(
 				`An invalid amount of arguments were specified for the Suite: ${config.name}\n` +
 					'Did you intend to create a test instead?\n' +
-					method.toString()
+					method.toString(),
 			)
 			console.error(error)
 			throw error
@@ -429,12 +429,12 @@ class Suite extends TaskGroup {
 // Event Emitter Grouped
 
 // Add event emitter grouped to our classes
-Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(function (
-	key
-) {
-	Test.prototype[key] = Suite.prototype[key] =
-		EventEmitterGrouped.prototype[key]
-})
+Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(
+	function (key) {
+		Test.prototype[key] = Suite.prototype[key] =
+			EventEmitterGrouped.prototype[key]
+	},
+)
 
 // =================================
 // Private Interface
@@ -474,7 +474,7 @@ const Private = {
 
 	/**
 	 * Error Logs.
-	 * We log all the errors that have occured with their suite and test, so the reporters can access them.
+	 * We log all the errors that have occurred with their suite and test, so the reporters can access them.
 	 * @type {ErrorLogs}
 	 */
 	errorLogs: [],
@@ -848,7 +848,7 @@ if (process) {
 		Public.exit(0, 'exit')
 	})
 
-	// Have last, as this way it won't silence errors that may have occured earlier
+	// Have last, as this way it won't silence errors that may have occurred earlier
 	process.on('uncaughtException', function (error) {
 		if (!error)
 			error = new Error('uncaughtException was emitted without an error')

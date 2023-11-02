@@ -20,7 +20,7 @@ kava.suite('freeze example', function (suite, test) {
 			assert.equal(
 				kava.blah == null,
 				true,
-				'modification test, result: ' + kava.blah
+				'modification test, result: ' + kava.blah,
 			)
 		}
 	})

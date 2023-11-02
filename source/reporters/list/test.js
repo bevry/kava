@@ -88,7 +88,7 @@ FAILURE: 0/0 tests ran successfully; 0 failed, 0 incomplete, 1 errors
 
 Error #1:
 fail throw suite example
-Error: I am the deliberate throw that occured during the suite`,
+Error: I am the deliberate throw that occurred during the suite`,
 		},
 
 		// ------------------------------------
@@ -101,9 +101,9 @@ FAILURE: 1/1 tests ran successfully; 0 failed, 0 incomplete, 1 errors
 
 Error #1:
 uncaughtException
-Error: I am the deliberate throw that occured in the test, but after the test has completed`,
+Error: I am the deliberate throw that occurred in the test, but after the test has completed`,
 		},
 
 		// All done
-	]
+	],
 )
