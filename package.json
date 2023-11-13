@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "Artistic-2.0",
@@ -144,9 +144,9 @@
   "main": "index.cjs",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^6.10.0",
-    "event-emitter-grouped": "^6.0.0",
-    "taskgroup": "^9.1.0"
+    "editions": "^6.11.0",
+    "event-emitter-grouped": "^6.1.0",
+    "taskgroup": "^9.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",
@@ -154,7 +154,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.3",
     "@bevry/update-contributors": "^1.23.0",
-    "assert-helpers": "^11.1.0",
+    "assert-helpers": "^11.2.0",
     "eslint": "^8.53.0",
     "eslint-config-bevry": "^3.29.0",
     "eslint-config-prettier": "^9.0.0",
