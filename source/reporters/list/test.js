@@ -105,5 +105,5 @@ Error: I am the deliberate throw that occurred in the test, but after the test h
 		},
 
 		// All done
-	],
+	]
 )

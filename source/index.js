@@ -331,7 +331,7 @@ class Suite extends TaskGroup {
 			const error = new Error(
 				`An invalid amount of arguments were specified for the Suite: ${config.name}\n` +
 					'Did you intend to create a test instead?\n' +
-					method.toString(),
+					method.toString()
 			)
 			console.error(error)
 			throw error
@@ -433,7 +433,7 @@ Object.getOwnPropertyNames(EventEmitterGrouped.prototype).forEach(
 	function (key) {
 		Test.prototype[key] = Suite.prototype[key] =
 			EventEmitterGrouped.prototype[key]
-	},
+	}
 )
 
 // =================================

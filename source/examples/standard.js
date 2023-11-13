@@ -171,7 +171,7 @@ kava.suite('standard example', function (suite, test) {
 						'before - test 3 - part 2',
 						'test 3',
 					],
-					'test 3 checks',
+					'test 3 checks'
 				)
 			})
 
@@ -203,7 +203,7 @@ kava.suite('standard example', function (suite, test) {
 						'before - test 4 - part 2',
 						'test 4',
 					],
-					'test 4 checks',
+					'test 4 checks'
 				)
 			})
 		})

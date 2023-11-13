@@ -16,7 +16,7 @@ kava.suite(
 	'multi empty async suite test example',
 	function (suite, test, done) {
 		done()
-	},
+	}
 )
 
 // Nested
