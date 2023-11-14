@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "Artistic-2.0",
@@ -144,9 +144,9 @@
   "main": "index.cjs",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^6.11.0",
-    "event-emitter-grouped": "^6.1.0",
-    "taskgroup": "^9.2.0"
+    "editions": "^6.13.0",
+    "event-emitter-grouped": "^6.2.0",
+    "taskgroup": "^9.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",
@@ -154,19 +154,19 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.3",
     "@bevry/update-contributors": "^1.23.0",
-    "assert-helpers": "^11.2.0",
+    "assert-helpers": "^11.4.0",
     "eslint": "^8.53.0",
-    "eslint-config-bevry": "^3.29.0",
+    "eslint-config-bevry": "^4.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jsdoc": "^4.0.2",
     "prettier": "^3.1.0",
-    "projectz": "^2.23.0",
+    "projectz": "^3.0.0",
     "surge": "^0.23.1",
-    "valid-directory": "^4.1.0"
+    "valid-directory": "^4.2.0"
   },
   "scripts": {
-    "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
+    "our:clean": "rm -rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
     "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-21 && npm run our:compile:edition-node-4",
     "our:compile:edition-browsers": "env BABEL_ENV=edition-browsers babel --out-dir ./edition-browsers ./source",
     "our:compile:edition-node-21": "env BABEL_ENV=edition-node-21 babel --out-dir ./edition-node-21 ./source && printf '%s' '{\"type\": \"commonjs\"}' > edition-node-21/package.json",
@@ -175,7 +175,7 @@
     "our:meta": "npm run our:meta:contributors && npm run our:meta:docs && npm run our:meta:projectz",
     "our:meta:contributors": "update-contributors",
     "our:meta:docs": "npm run our:meta:docs:jsdoc",
-    "our:meta:docs:jsdoc": "rm -Rf ./docs && jsdoc --recurse --pedantic --access all --destination ./docs --package ./package.json --readme ./README.md ./source && mv ./docs/$npm_package_name/$npm_package_version/* ./docs/ && rm -Rf ./docs/$npm_package_name/$npm_package_version",
+    "our:meta:docs:jsdoc": "rm -rf ./docs && jsdoc --recurse --pedantic --access all --destination ./docs --package ./package.json --readme ./README.md ./source && mv ./docs/$npm_package_name/$npm_package_version/* ./docs/ && rm -rf ./docs/$npm_package_name/$npm_package_version",
     "our:meta:projectz": "projectz compile",
     "our:release": "npm run our:release:prepare && npm run our:release:check-changelog && npm run our:release:check-dirty && npm run our:release:tag && npm run our:release:push",
     "our:release:check-changelog": "cat ./HISTORY.md | grep \"v$npm_package_version\" || (printf '%s\n' \"add a changelog entry for v$npm_package_version\" && exit -1)",
