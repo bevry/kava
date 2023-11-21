@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "Artistic-2.0",
@@ -34,18 +34,19 @@
       "githubsponsors",
       "thanksdev",
       "patreon",
-      "flattr",
       "liberapay",
       "buymeacoffee",
       "opencollective",
       "crypto",
       "paypal",
-      "wishlist"
+      "---",
+      "discord",
+      "twitch"
     ],
     "config": {
       "githubWorkflow": "bevry",
       "githubSponsorsUsername": "balupton",
-      "thanksdevGithubUsername": "balupton",
+      "thanksdevGithubUsername": "bevry",
       "buymeacoffeeUsername": "balupton",
       "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
@@ -54,6 +55,9 @@
       "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
       "wishlistURL": "https://bevry.me/wishlist",
+      "discordServerID": "1147436445783560193",
+      "discordServerInvite": "nQuXddV7VP",
+      "twitchUsername": "balupton",
       "githubUsername": "bevry",
       "githubRepository": "kava",
       "githubSlug": "bevry/kava",
@@ -137,6 +141,16 @@
         "node": "4",
         "browsers": false
       }
+    },
+    {
+      "description": "ESNext compiled Types with Require for modules",
+      "directory": ".",
+      "entry": "index.d.ts",
+      "tags": [
+        "types",
+        "require"
+      ],
+      "engines": false
     }
   ],
   "types": "index.d.ts",
@@ -145,25 +159,25 @@
   "browser": "edition-browsers/index.js",
   "dependencies": {
     "editions": "^6.13.0",
-    "event-emitter-grouped": "^6.2.0",
-    "taskgroup": "^9.3.0"
+    "event-emitter-grouped": "^6.3.0",
+    "taskgroup": "^9.4.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
+    "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.3",
     "@bevry/update-contributors": "^1.23.0",
-    "assert-helpers": "^11.4.0",
-    "eslint": "^8.53.0",
-    "eslint-config-bevry": "^4.0.0",
+    "assert-helpers": "^11.5.0",
+    "eslint": "^8.54.0",
+    "eslint-config-bevry": "^5.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jsdoc": "^4.0.2",
     "prettier": "^3.1.0",
-    "projectz": "^3.0.0",
+    "projectz": "^3.2.0",
     "surge": "^0.23.1",
-    "valid-directory": "^4.2.0"
+    "valid-directory": "^4.4.0"
   },
   "scripts": {
     "our:clean": "rm -rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
