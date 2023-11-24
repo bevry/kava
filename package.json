@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "7.3.0",
+  "version": "7.4.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "Artistic-2.0",
@@ -158,8 +158,8 @@
   "main": "index.cjs",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^6.13.0",
-    "event-emitter-grouped": "^6.3.0",
+    "editions": "^6.16.0",
+    "event-emitter-grouped": "^6.4.0",
     "taskgroup": "^9.4.0"
   },
   "devDependencies": {
@@ -168,16 +168,16 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.3",
     "@bevry/update-contributors": "^1.23.0",
-    "assert-helpers": "^11.5.0",
+    "assert-helpers": "^11.6.0",
     "eslint": "^8.54.0",
-    "eslint-config-bevry": "^5.0.0",
+    "eslint-config-bevry": "^5.2.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jsdoc": "^4.0.2",
     "prettier": "^3.1.0",
-    "projectz": "^3.2.0",
+    "projectz": "^3.3.0",
     "surge": "^0.23.1",
-    "valid-directory": "^4.4.0"
+    "valid-directory": "^4.5.0"
   },
   "scripts": {
     "our:clean": "rm -rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
