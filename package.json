@@ -1,12 +1,14 @@
 {
   "name": "kava",
-  "version": "7.4.0",
+  "version": "7.5.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
   "license": "Artistic-2.0",
   "keywords": [
     "bdd",
     "browser",
+    "es2015",
+    "es5",
     "esnext",
     "framework",
     "joe",
@@ -115,12 +117,13 @@
       }
     },
     {
-      "description": "ESNext compiled for Node.js 21 with Require for modules",
-      "directory": "edition-node-21",
+      "description": "ESNext compiled for Node.js 6 with Require for modules",
+      "directory": "edition-node-6",
       "entry": "index.js",
       "tags": [
         "compiled",
         "javascript",
+        "es2015",
         "require"
       ],
       "engines": {
@@ -135,6 +138,7 @@
       "tags": [
         "compiled",
         "javascript",
+        "es5",
         "require"
       ],
       "engines": {
@@ -158,33 +162,32 @@
   "main": "index.cjs",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^6.16.0",
+    "editions": "^6.19.0",
     "event-emitter-grouped": "^6.4.0",
-    "taskgroup": "^9.4.0"
+    "taskgroup": "^9.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.23.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-env": "^7.23.5",
     "@bevry/update-contributors": "^1.23.0",
-    "assert-helpers": "^11.6.0",
-    "eslint": "^8.54.0",
+    "assert-helpers": "^11.9.0",
+    "eslint": "^8.55.0",
     "eslint-config-bevry": "^5.2.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jsdoc": "^4.0.2",
     "prettier": "^3.1.0",
-    "projectz": "^3.3.0",
-    "surge": "^0.23.1",
-    "valid-directory": "^4.5.0"
+    "projectz": "^3.4.0",
+    "valid-directory": "^4.6.0"
   },
   "scripts": {
     "our:clean": "rm -rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-21 && npm run our:compile:edition-node-4",
+    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-4 && npm run our:compile:edition-node-6",
     "our:compile:edition-browsers": "env BABEL_ENV=edition-browsers babel --out-dir ./edition-browsers ./source",
-    "our:compile:edition-node-21": "env BABEL_ENV=edition-node-21 babel --out-dir ./edition-node-21 ./source && printf '%s' '{\"type\": \"commonjs\"}' > edition-node-21/package.json",
     "our:compile:edition-node-4": "env BABEL_ENV=edition-node-4 babel --out-dir ./edition-node-4 ./source && printf '%s' '{\"type\": \"commonjs\"}' > edition-node-4/package.json",
+    "our:compile:edition-node-6": "env BABEL_ENV=edition-node-6 babel --out-dir ./edition-node-6 ./source && printf '%s' '{\"type\": \"commonjs\"}' > edition-node-6/package.json",
     "our:deploy": "printf '%s\n' 'no need for this project'",
     "our:meta": "npm run our:meta:contributors && npm run our:meta:docs && npm run our:meta:projectz",
     "our:meta:contributors": "update-contributors",
@@ -214,7 +217,8 @@
   "prettier": {
     "semi": false,
     "singleQuote": true,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "endOfLine": "lf"
   },
   "babel": {
     "env": {
@@ -236,14 +240,14 @@
           "@babel/proposal-object-rest-spread"
         ]
       },
-      "edition-node-21": {
+      "edition-node-6": {
         "sourceType": "script",
         "presets": [
           [
             "@babel/preset-env",
             {
               "targets": {
-                "node": "21"
+                "node": "6"
               },
               "modules": "commonjs"
             }
