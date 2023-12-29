@@ -1,6 +1,6 @@
 {
   "name": "kava",
-  "version": "7.7.0",
+  "version": "7.8.0",
   "license": "Artistic-2.0",
   "description": "Kava has been powering accurate test suites for Node.js and Web Browsers since 2012.",
   "homepage": "https://github.com/bevry/kava",
@@ -112,7 +112,7 @@
     "Mohammed Shah <shah@idk.uno> (https://github.com/smashah) (https://thanks.dev/d/gh/smashah) (https://twitter.com/smashah)",
     "Mr. Henry <hello@mrhenry.be> (https://mrhenry.be) (https://github.com/mrhenry)",
     "Nermal <nermalcat69@skiff.com> (https://arjunaditya.vercel.app) (https://github.com/nermalcat69)",
-    "Pleo (https://www.pleo.io) (https://github.com/pleo-io)",
+    "Pleo (https://pleo.io) (https://github.com/pleo-io)",
     "Poonacha Medappa (https://poonachamedappa.com) (https://github.com/km-Poonacha)",
     "Rob Morris <rob@prismatik.com.au> (https://github.com/Rob-Morris)",
     "Robert de Forest <guitar.robot@gmail.com> (https://github.com/rdeforest)",
@@ -202,13 +202,13 @@
   "browser": "edition-browsers/index.js",
   "dependencies": {
     "editions": "^6.21.0",
-    "event-emitter-grouped": "^6.4.0",
-    "taskgroup": "^9.6.0"
+    "event-emitter-grouped": "^6.6.0",
+    "taskgroup": "^9.7.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/preset-env": "^7.23.6",
     "assert-helpers": "^11.12.0",
     "eslint": "^8.56.0",
@@ -261,7 +261,7 @@
           ]
         ],
         "plugins": [
-          "@babel/proposal-object-rest-spread"
+          "@babel/plugin-transform-object-rest-spread"
         ]
       },
       "edition-node-6": {
@@ -278,7 +278,7 @@
           ]
         ],
         "plugins": [
-          "@babel/proposal-object-rest-spread"
+          "@babel/plugin-transform-object-rest-spread"
         ]
       },
       "edition-node-4": {
@@ -295,7 +295,7 @@
           ]
         ],
         "plugins": [
-          "@babel/proposal-object-rest-spread"
+          "@babel/plugin-transform-object-rest-spread"
         ]
       }
     }
