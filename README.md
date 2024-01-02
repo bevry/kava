@@ -51,7 +51,7 @@ Kava has been powering accurate test suites for Node.js and Web Browsers since 2
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/kava@7.8.0'
+    import * as pkg from '//dev.jspm.io/kava@7.9.0'
 </script>
 ```
 ### [Editions](https://editions.bevry.me "Editions are the best way to produce and consume packages you care about.")
